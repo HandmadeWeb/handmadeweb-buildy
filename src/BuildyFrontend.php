@@ -103,9 +103,7 @@ class BuildyFrontend
 
         if (! empty($content)) {
             foreach ($content as $data) {
-                if ($data->attributes->renderDisabled ?? false && ! empty($_GET['preview'])) {
-                    continue;
-                }
+                $data = apply_filters('handmadeweb-buildy_filter_all_data', $data);
 
                 /**
                  * str_replace text-module to text.
@@ -114,10 +112,11 @@ class BuildyFrontend
                  * Otherwise it is located in the modules folder.
                  */
                 $type = str_replace('-module', '', $data->type);
+
                 $template = $data->options->moduleStyle ?? null;
 
                 if (! empty($template)) {
-                    $template = static::seoUrl($template);
+                    $data = apply_filters("handmadeweb-buildy_filter_template:{$template}", $data);
                 }
 
                 $location = 'modules';
@@ -126,79 +125,15 @@ class BuildyFrontend
                     $location = 'layouts';
                 }
 
-                /**
-                 * Generate the Bootstrap col-X-X classes for the current loop.
-                 */
-                $columns = '';
-                if (! empty($data->options->columns)) {
-                    foreach ($data->options->columns as $key => $val) {
-                        if (! empty($val)) {
-                            // Legacy -- XS no longer exists and is defaulted to just col-val
-                            if ($key == 'xs') {
-                                // This is for backwards compatibility
-                                $columns .= "col-{$val} ";
-                            } else {
-                                $columns .= "col-{$key}-{$val} ";
-                            }
-                        }
-                    }
-                    $columns = rtrim($columns, ' ');
-                }
+                $data = apply_filters("handmadeweb-buildy_filter_type:{$type}", $data);
 
-                /**
-                 * Generate the spacing classes (margin/paddings) for each breakpoint size.
-                 */
-                $margins = collect($data->inline->margin ?? []);
-                $paddings = collect($data->inline->padding ?? []);
-                $spacingClasses = '';
-
-                foreach ($margins as $breakpoint => $direction) :
-                    $direction = collect($direction ?? []);
-                if (! $breakpoint || ! $direction) {
-                    continue;
+                $locations = [];
+                if (! empty($template)) {
+                    $locations[] = "{$location}.{$type}-{$template}";
                 }
-                foreach ($direction as $name => $val) :
-                        if (! $name || $val !== 0 && ! $val) {
-                            continue;
-                        }
-                $first_char = substr($name, 0, 1);
-                $marginClasses = ($breakpoint === 'xs' ? '' : "$breakpoint:").'m'.$first_char.'-'.$val;
-                if (isset($spacingClasses)) {
-                    $spacingClasses .= " $marginClasses";
-                } else {
-                    $spacingClasses = $marginClasses;
-                }
-                endforeach;
-                endforeach;
+                $locations[] = "{$location}.{$type}";
 
-                foreach ($paddings as $breakpoint => $direction) :
-                    $direction = collect($direction);
-                if (! $breakpoint || ! $direction) {
-                    continue;
-                }
-                foreach ($direction as $name => $val) :
-                        if (! $name || $val !== 0 && ! $val) {
-                            continue;
-                        }
-                $first_char = substr($name, 0, 1);
-                $paddingClasses = ($breakpoint === 'xs' ? '' : "$breakpoint:").'p'.$first_char.'-'.$val;
-                if (isset($spacingClasses)) {
-                    $spacingClasses .= " $paddingClasses";
-                } else {
-                    $spacingClasses = $paddingClasses;
-                }
-                endforeach;
-                endforeach;
-
-                /*
-                 * Append data to $data->generatedAttributes // $bladeData->generatedAttributes on the view.
-                 */
-                $data->generatedAttributes = (object) [
-                    'columns' => $columns,
-                    'spacing' => $spacingClasses,
-                ];
-
-                $html .= view()->first(["{$location}.{$type}-{$template}", "{$location}.{$type}"], ['buildy' => static::class, 'bladeData' => $data]);
+                $html .= view()->first($locations, ['buildy' => static::class, 'bladeData' => $data]);
             }
         }
 
