@@ -1,0 +1,42 @@
+$containerWidth: 1280px;
+$sectionPadding: 8rem !default;
+
+$column_count: 12 !default;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 480px,
+  md: 768px,
+  lg: 980px,
+  xl: $containerWidth,
+) !default;
+
+// Quickly modify global styling by enabling or disabling optional features.
+$enable-rfs: true !default;
+$enable-negative-margins: false !default;
+
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: 1rem,
+  2: 2rem,
+  3: 3rem,
+  4: 4rem,
+  6: 6rem,
+  8: 8rem,
+  12: 12rem,
+  16: 16rem,
+  24: 24rem,
+) !default;
+
+$negative-spacers: if(
+  $enable-negative-margins,
+  negativify-map($spacers),
+  null
+) !default;

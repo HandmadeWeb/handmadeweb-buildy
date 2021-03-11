@@ -1,0 +1,83 @@
+// Utilities
+
+$utilities: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$utilities: map-merge(
+  (
+    "overflow": (
+      property: overflow,
+      values: auto hidden
+    ),
+    "position": (
+      property: position,
+      values: static relative absolute fixed sticky
+    ),
+    // Text
+      "text-size":
+      (
+        property: font-size,
+        class: text,
+        values: (
+          sm: 1.6rem clamp(1.4rem, 1.6vw, 1.6rem)
+        )
+      ),
+    "font-weight": (
+      property: font-weight,
+      class: font,
+      values: (
+        light: $font-weight-light,
+        lighter: $font-weight-lighter,
+        normal: $font-weight-normal,
+        bold: $font-weight-bold,
+        semibold: $font-weight-semibold,
+        bolder: $font-weight-bolder
+      )
+    ),
+    "text-transform": (
+      property: text-transform,
+      class: text,
+      values: lowercase uppercase capitalize
+    ),
+    "text-align": (
+      responsive: true,
+      property: text-align,
+      class: text,
+      values: left right center
+    ),
+    "white-space": (
+      property: white-space,
+      class: text,
+      values: (
+        wrap: normal,
+        nowrap: nowrap
+      )
+    ),
+    "text-decoration": (
+      property: text-decoration,
+      values: none underline line-through
+    ),
+    "user-select": (
+      property: user-select,
+      values: all auto none
+    ),
+    "pointer-events": (
+      property: pointer-events,
+      class: pe,
+      values: none auto
+    ),
+    "visibility": (
+      property: visibility,
+      class: null,
+      values: (
+        visible: visible,
+        invisible: hidden
+      )
+    )
+  ),
+  $utilities
+);
+
+@import "spacing";
+@import "sizing";
+@import "flex";
+@import "border";
