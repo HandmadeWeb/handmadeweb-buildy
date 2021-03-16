@@ -24,6 +24,7 @@ class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HandmadeWeb\\Buildy\\BuildyBackend' => __DIR__ . '/../..' . '/src/BuildyBackend.php',
         'HandmadeWeb\\Buildy\\BuildyFrontend' => __DIR__ . '/../..' . '/src/BuildyFrontend.php',
+        'HandmadeWeb\\Buildy\\BuildyFrontendFilters' => __DIR__ . '/../..' . '/src/BuildyFrontendFilters.php',
         'HandmadeWeb\\Buildy\\Traits\\Helpers' => __DIR__ . '/../..' . '/src/Traits/Helpers.php',
     );
 

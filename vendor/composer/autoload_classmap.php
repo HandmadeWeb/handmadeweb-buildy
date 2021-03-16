@@ -9,5 +9,6 @@ return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'HandmadeWeb\\Buildy\\BuildyBackend' => $baseDir . '/src/BuildyBackend.php',
     'HandmadeWeb\\Buildy\\BuildyFrontend' => $baseDir . '/src/BuildyFrontend.php',
+    'HandmadeWeb\\Buildy\\BuildyFrontendFilters' => $baseDir . '/src/BuildyFrontendFilters.php',
     'HandmadeWeb\\Buildy\\Traits\\Helpers' => $baseDir . '/src/Traits/Helpers.php',
 );
