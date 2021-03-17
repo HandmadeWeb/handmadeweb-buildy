@@ -3,6 +3,7 @@
 namespace HandmadeWeb\Buildy;
 
 use HandmadeWeb\Buildy\Traits\Helpers;
+use HandmadeWeb\Illuminate\Facades\View;
 
 class BuildyFrontend
 {
@@ -12,36 +13,32 @@ class BuildyFrontend
     {
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
-        add_filter('handmadeweb-illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10, 1);
+        static::bladeViewPaths();
     }
 
-    public static function bladeViewPaths($viewPaths)
+    public static function bladeViewPaths()
     {
-        $views = [];
-
         /*
-         * If current theme is a child theme, then add the buildy-views folder of the child theme to the views path array.
+         * If current theme is a child theme, then add the buildy-views folder.
          */
-        if (true && is_child_theme()) {
+        if (is_child_theme()) {
             $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
 
-            static::locationExistsOrCreate($childThemeViewsPath) ? $views[] = $childThemeViewsPath : null;
+            static::locationExistsOrCreate($childThemeViewsPath) ? View::addLocation($childThemeViewsPath) : null;
         }
 
         /*
-         * Add current theme (or Parent Theme) buildy-views folder to the views path array.
+         * Add current theme (or Parent Theme) buildy-views folder
          */
         if (true) {
             $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
-            static::locationExistsOrCreate($themeViewsPath) ? $views[] = $themeViewsPath : null;
+            static::locationExistsOrCreate($themeViewsPath) ? View::addLocation($themeViewsPath) : null;
         }
 
         /*
-         * Add buildy views folder to the views path array.
+         * Add buildy views folder.
          */
-        $views[] = trailingslashit(__DIR__).'../resources/views/';
-
-        return array_merge($views, $viewPaths);
+        View::addLocation(trailingslashit(__DIR__).'../resources/views/');
     }
 
     public static function renderFrontend($post_id): string
