@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
 {
+    public static $files = array (
+        '2dcc1fe700145c8f64875eb0ae323e56' => __DIR__ . '/../..' . '/helpers.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'H' => 
         array (
@@ -22,10 +26,13 @@ class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'HandmadeWeb\\Buildy\\BuildyBackend' => __DIR__ . '/../..' . '/src/BuildyBackend.php',
-        'HandmadeWeb\\Buildy\\BuildyFrontend' => __DIR__ . '/../..' . '/src/BuildyFrontend.php',
-        'HandmadeWeb\\Buildy\\BuildyFrontendFilters' => __DIR__ . '/../..' . '/src/BuildyFrontendFilters.php',
-        'HandmadeWeb\\Buildy\\Traits\\Helpers' => __DIR__ . '/../..' . '/src/Traits/Helpers.php',
+        'HandmadeWeb\\Buildy\\Backend\\BackendLoader' => __DIR__ . '/../..' . '/src/Backend/BackendLoader.php',
+        'HandmadeWeb\\Buildy\\Buildy' => __DIR__ . '/../..' . '/src/Buildy.php',
+        'HandmadeWeb\\Buildy\\Frontend\\FrontendDirectives' => __DIR__ . '/../..' . '/src/Frontend/FrontendDirectives.php',
+        'HandmadeWeb\\Buildy\\Frontend\\FrontendFilters' => __DIR__ . '/../..' . '/src/Frontend/FrontendFilters.php',
+        'HandmadeWeb\\Buildy\\Frontend\\FrontendLoader' => __DIR__ . '/../..' . '/src/Frontend/FrontendLoader.php',
+        'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => __DIR__ . '/../..' . '/src/Traits/ContentCollector.php',
+        'HandmadeWeb\\Buildy\\Traits\\ContentRenderer' => __DIR__ . '/../..' . '/src/Traits/ContentRenderer.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

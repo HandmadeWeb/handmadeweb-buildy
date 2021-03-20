@@ -119,5 +119,5 @@ if (!empty($spacing)) {
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>
-    {!! \HandmadeWeb\Buildy\BuildyFrontend::renderContent($bladeData->content) !!}
+    {!! \HandmadeWeb\Buildy\Buildy::renderContent($bladeData->content) !!}
 </div>

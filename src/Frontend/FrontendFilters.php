@@ -1,8 +1,8 @@
 <?php
 
-namespace HandmadeWeb\Buildy;
+namespace HandmadeWeb\Buildy\Frontend;
 
-class BuildyFrontendFilters
+class FrontendFilters
 {
     /**
      * Define Filter/Method's to register.

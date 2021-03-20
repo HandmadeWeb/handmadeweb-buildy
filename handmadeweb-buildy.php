@@ -8,17 +8,26 @@ Version: 3.0.0
 Author URI: http://
 */
 
+use HandmadeWeb\Buildy\Backend\BackendLoader;
+use HandmadeWeb\Buildy\Frontend\FrontendDirectives;
+use HandmadeWeb\Buildy\Frontend\FrontendFilters;
+use HandmadeWeb\Buildy\Frontend\FrontendLoader;
+
 defined('ABSPATH') || die();
 
-use HandmadeWeb\Buildy\BuildyBackend;
-use HandmadeWeb\Buildy\BuildyFrontend;
-use HandmadeWeb\Buildy\BuildyFrontendDirectives;
-use HandmadeWeb\Buildy\BuildyFrontendFilters;
+define('BUILDY_ROOT', __DIR__);
 
-require_once __DIR__.'/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
-add_action('admin_init', [BuildyBackend::class, 'admin_boot']);
-add_action('init', [BuildyBackend::class, 'boot'], 100);
-add_action('init', [BuildyFrontend::class, 'boot'], 100);
-add_action('init', [BuildyFrontendFilters::class, 'boot'], 10);
-add_action('init', [BuildyFrontendDirectives::class, 'boot'], 10);
+/*
+ * Backend Actions
+ */
+add_action('admin_init', [BackendLoader::class, 'admin_boot'], 10);
+add_action('init', [BackendLoader::class, 'boot'], 100);
+
+/*
+ * Frontend Actions
+ */
+add_action('init', [FrontendLoader::class, 'boot'], 100);
+add_action('init', [FrontendFilters::class, 'boot'], 10);
+add_action('init', [FrontendDirectives::class, 'boot'], 10);

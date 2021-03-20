@@ -7,8 +7,11 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'HandmadeWeb\\Buildy\\BuildyBackend' => $baseDir . '/src/BuildyBackend.php',
-    'HandmadeWeb\\Buildy\\BuildyFrontend' => $baseDir . '/src/BuildyFrontend.php',
-    'HandmadeWeb\\Buildy\\BuildyFrontendFilters' => $baseDir . '/src/BuildyFrontendFilters.php',
-    'HandmadeWeb\\Buildy\\Traits\\Helpers' => $baseDir . '/src/Traits/Helpers.php',
+    'HandmadeWeb\\Buildy\\Backend\\BackendLoader' => $baseDir . '/src/Backend/BackendLoader.php',
+    'HandmadeWeb\\Buildy\\Buildy' => $baseDir . '/src/Buildy.php',
+    'HandmadeWeb\\Buildy\\Frontend\\FrontendDirectives' => $baseDir . '/src/Frontend/FrontendDirectives.php',
+    'HandmadeWeb\\Buildy\\Frontend\\FrontendFilters' => $baseDir . '/src/Frontend/FrontendFilters.php',
+    'HandmadeWeb\\Buildy\\Frontend\\FrontendLoader' => $baseDir . '/src/Frontend/FrontendLoader.php',
+    'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => $baseDir . '/src/Traits/ContentCollector.php',
+    'HandmadeWeb\\Buildy\\Traits\\ContentRenderer' => $baseDir . '/src/Traits/ContentRenderer.php',
 );

@@ -1,13 +1,9 @@
 <?php
 
-namespace HandmadeWeb\Buildy;
+namespace HandmadeWeb\Buildy\Backend;
 
-use HandmadeWeb\Buildy\Traits\Helpers;
-
-class BuildyBackend
+class BackendLoader
 {
-    use Helpers;
-
     public static function admin_boot()
     {
         add_action('admin_enqueue_scripts', [static::class, 'admin_enqueue_scripts']);
@@ -23,7 +19,7 @@ class BuildyBackend
          * If Page Builder is marked as enabled for this page/post.
          * Include the needed CSS/JS files.
          */
-        if (static::isPageBuilderEnabled()) {
+        if (isPageBuilderEnabled()) {
             $url = plugins_url().'/buildy-wp';
 
             wp_localize_script('hmw-child-frontend-scripts', 'global_vars', [
@@ -51,7 +47,7 @@ class BuildyBackend
          * If Page Builder is marked as enabled for this page/post.
          * Include the needed CSS/JS files.
          */
-        if (static::isPageBuilderEnabled()) {
+        if (isPageBuilderEnabled()) {
             $url = plugins_url().'/buildy-wp';
 
             echo "<link href='{$url}/buildy-wp-gui/dist/app.css' rel='stylesheet'>";
@@ -64,7 +60,7 @@ class BuildyBackend
          * If Page Builder is marked as enabled for this page/post.
          * Enqueue the needed scripts to allow the Media Library to function in the builder.
          */
-        if (is_admin() && static::isPageBuilderEnabled()) {
+        if (is_admin() && isPageBuilderEnabled()) {
             wp_enqueue_media();
         }
     }
@@ -80,7 +76,7 @@ class BuildyBackend
             $isGlobal = false;
         }
 
-        if (static::isPageBuilderEnabled()) {
+        if (isPageBuilderEnabled()) {
             /*
              * Create config array for the Page Builder.
              */
@@ -111,7 +107,7 @@ class BuildyBackend
 
     public static function admin_wp_default_editor($r)
     {
-        if (static::isPageBuilderEnabled()) {
+        if (isPageBuilderEnabled()) {
             return 'html'; // HTML / Text tab in TinyMCE
         }
 
@@ -141,9 +137,6 @@ class BuildyBackend
         static::acf_add_options_pages();
         static::acf_add_options_fields();
         //static::acf_add_editor_fields();
-
-        // add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
-        // add_filter('the_content', [static::class, 'the_content']);
     }
 
     /**
@@ -175,7 +168,7 @@ class BuildyBackend
 
     public static function acf_add_options_fields()
     {
-        if ($acfFile = file_get_contents(__DIR__.'/../acf/buildy-settings.json')) {
+        if ($acfFile = file_get_contents(BUILDY_ROOT.'/acf/buildy-settings.json')) {
             $acfFieldGroups = json_decode($acfFile, true);
         }
 

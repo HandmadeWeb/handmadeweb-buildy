@@ -94,7 +94,7 @@ if (!empty($spacing)) {
     @if (!empty($options) ? $options->inner_container ?? false : false)
         <div class="container">
     @endif
-        {!! \HandmadeWeb\Buildy\BuildyFrontend::renderContent($bladeData->content) !!}
+        {!! \HandmadeWeb\Buildy\Buildy::renderContent($bladeData->content) !!}
     @if (!empty($options) ? $options->inner_container ?? false : false)
         </div>
     @endif

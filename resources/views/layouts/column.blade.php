@@ -71,4 +71,4 @@ if (!empty($spacing)) {
     @if(!empty($bgRepeat)) {{ "background-repeat: $bgRepeat;" }} @endif"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
-    @endif>{!! \HandmadeWeb\Buildy\BuildyFrontend::renderContent($bladeData->content) !!}</div>
+    @endif>{!! \HandmadeWeb\Buildy\Buildy::renderContent($bladeData->content) !!}</div>

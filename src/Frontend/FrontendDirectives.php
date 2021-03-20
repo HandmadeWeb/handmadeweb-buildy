@@ -1,10 +1,10 @@
 <?php
 
-namespace HandmadeWeb\Buildy;
+namespace HandmadeWeb\Buildy\Frontend;
 
 use HandmadeWeb\Illuminate\Facades\BladeCompiler;
 
-class BuildyFrontendDirectives
+class FrontendDirectives
 {
     /**
      * Define Directives to register.

@@ -5,7 +5,10 @@
     "autoload": {
         "psr-4": {
             "HandmadeWeb\\Buildy\\": "src"
-        }
+        },
+        "files": [
+            "helpers.php"
+        ]
     },
     "config": {
         "optimize-autoloader": true,
