@@ -24,21 +24,19 @@ class FrontendLoader
          */
         if (is_child_theme()) {
             $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
-            locationExistsOrCreate($childThemeViewsPath) ? $additionalViewPaths[] = $childThemeViewsPath : null;
+            $additionalViewPaths[] = $childThemeViewsPath;
         }
 
         /*
          * Add current theme (or Parent Theme) buildy-views folder
          */
-        if (true) {
-            $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
-            locationExistsOrCreate($themeViewsPath) ? $additionalViewPaths[] = $themeViewsPath : null;
-        }
+        $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
+        $additionalViewPaths[] = $themeViewsPath;
 
         /*
          * Add buildy views folder.
          */
-        $additionalViewPaths[] = trailingslashit(BUILDY_ROOT).'/resources/views/';
+        $additionalViewPaths[] = trailingslashit(BUILDY_ROOT).'resources/views/';
 
         return array_merge($additionalViewPaths, $viewPaths);
     }
