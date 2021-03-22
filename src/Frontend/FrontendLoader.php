@@ -20,6 +20,7 @@ class FrontendLoader
          * $buildy->renderFrontend() should be replaced with Buildy::renderContentForId()
          * $buildy->renderContent() should be replaced with Buildy::renderContent()
          */
+        buildy();
         View::share('buildy', buildy());
     }
 
