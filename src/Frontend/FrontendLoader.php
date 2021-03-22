@@ -30,15 +30,13 @@ class FrontendLoader
          * If current theme is a child theme, then add the buildy-views folder.
          */
         if (is_child_theme()) {
-            $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
-            $additionalViewPaths['child-theme-buildy'] = $childThemeViewsPath;
+            $additionalViewPaths['child-theme-buildy'] = trailingslashit(get_stylesheet_directory()).'buildy-views/';
         }
 
         /*
          * Add current theme (or Parent Theme) buildy-views folder
          */
-        $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
-        $additionalViewPaths['parent-theme-buildy'] = $themeViewsPath;
+        $additionalViewPaths['parent-theme-buildy'] = trailingslashit(get_template_directory()).'buildy-views/';
 
         /*
          * Add buildy views folder.
