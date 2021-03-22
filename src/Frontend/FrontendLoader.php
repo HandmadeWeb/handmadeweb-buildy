@@ -23,7 +23,7 @@ class FrontendLoader
         View::share('buildy', buildy());
     }
 
-    public static function bladeViewPaths($viewPaths)
+    public static function bladeViewPaths($viewPaths = [])
     {
         $additionalViewPaths = [];
         /*
@@ -31,19 +31,19 @@ class FrontendLoader
          */
         if (is_child_theme()) {
             $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
-            $additionalViewPaths[] = $childThemeViewsPath;
+            $additionalViewPaths['child-theme-buildy'] = $childThemeViewsPath;
         }
 
         /*
          * Add current theme (or Parent Theme) buildy-views folder
          */
         $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
-        $additionalViewPaths[] = $themeViewsPath;
+        $additionalViewPaths['parent-theme-buildy'] = $themeViewsPath;
 
         /*
          * Add buildy views folder.
          */
-        $additionalViewPaths[] = trailingslashit(BUILDY_ROOT).'resources/views/';
+        $additionalViewPaths['buildy-plugin'] = trailingslashit(BUILDY_ROOT).'resources/views/';
 
         return array_merge($additionalViewPaths, $viewPaths);
     }
