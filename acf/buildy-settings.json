@@ -1,14 +1,14 @@
 [
     {
-        "key": "group_60498742ed422",
+        "key": "group_5d81b07219727",
         "title": "Buildy Settings",
         "fields": [
             {
-                "key": "field_604987f06ff9a",
+                "key": "field_5d81b912abb03",
                 "label": "Post Types",
                 "name": "BMCB_post_types",
                 "type": "repeater",
-                "instructions": "Enable buildy functionality on these post types",
+                "instructions": "Enable buildy functionality on these post types (Pages and Globals are automatically included)",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -23,7 +23,7 @@
                 "button_label": "",
                 "sub_fields": [
                     {
-                        "key": "field_604988156ff9b",
+                        "key": "field_5d81b924abb04",
                         "label": "Post Type",
                         "name": "BMCB_post_type",
                         "type": "text",

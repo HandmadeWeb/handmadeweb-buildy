@@ -168,13 +168,38 @@ class BackendLoader
 
     public static function acf_add_options_fields()
     {
-        if ($acfFile = file_get_contents(BUILDY_ROOT.'/acf/buildy-settings.json')) {
-            $acfFieldGroups = json_decode($acfFile, true);
-        }
-
         if (function_exists('acf_add_local_field_group')) {
-            foreach ($acfFieldGroups as $acfFieldGroup) {
-                //acf_add_local_field_group($acfFieldGroup);
+            $acfFiles = glob(BUILDY_ROOT.'/acf/*.json');
+
+            foreach ($acfFiles as $acfFile) {
+                if ($acfFileContent = file_get_contents($acfFile)) {
+                    $acfFieldGroups = json_decode($acfFileContent, true);
+                }
+
+                foreach ($acfFieldGroups ?? [] as $acfFieldGroup) {
+                    $isPageBuilderField = false;
+
+                    foreach ($acfFieldGroup['fields'] as $field) {
+                        if ($field['name'] === 'BMCB_use_PageBuilder') {
+                            $isPageBuilderField = true;
+                        }
+                    }
+
+                    if ($isPageBuilderField) {
+                        $post_types = get_field('BMCB_post_types', 'option');
+                        if (! empty($post_types)) {
+                            foreach ($post_types as $post_type) {
+                                $acfFieldGroup['location'][][] = [
+                                    'param' => 'post_type',
+                                    'operator' => '==',
+                                    'value' => strtolower(trim($post_type['BMCB_post_type'])),
+                                ];
+                            }
+                        }
+                    }
+
+                    acf_add_local_field_group($acfFieldGroup);
+                }
             }
         }
     }
