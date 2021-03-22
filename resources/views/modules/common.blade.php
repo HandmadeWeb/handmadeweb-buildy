@@ -1,4 +1,4 @@
- @php
+@php
 
 $atts = $bladeData->attributes ?? null;
 $template = $bladeData->options->template ?? null;

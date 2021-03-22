@@ -72,8 +72,6 @@ if (!empty($spacing)) {
 }
 @endphp
 
-{{-- @include('widgets.WP_Widget_Categories') --}}
-
 <div
     @isset($moduleID) id="{{ $moduleID }}" @endisset
     @if(!empty($internalLinkEnabled) && $internalLinkEnabled)

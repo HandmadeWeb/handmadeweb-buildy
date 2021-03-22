@@ -1,4 +1,3 @@
-
 @php
   $module_link_url = $bladeData->options->module_link->url ?? null;
   $images = $bladeData->content->gallery->images ?? null;
