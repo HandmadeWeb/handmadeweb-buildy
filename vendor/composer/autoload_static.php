@@ -6,10 +6,6 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
 {
-    public static $files = array (
-        '2dcc1fe700145c8f64875eb0ae323e56' => __DIR__ . '/../..' . '/helpers.php',
-    );
-
     public static $prefixLengthsPsr4 = array (
         'H' => 
         array (
@@ -31,6 +27,7 @@ class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
         'HandmadeWeb\\Buildy\\Frontend\\FrontendDirectives' => __DIR__ . '/../..' . '/src/Frontend/FrontendDirectives.php',
         'HandmadeWeb\\Buildy\\Frontend\\FrontendFilters' => __DIR__ . '/../..' . '/src/Frontend/FrontendFilters.php',
         'HandmadeWeb\\Buildy\\Frontend\\FrontendLoader' => __DIR__ . '/../..' . '/src/Frontend/FrontendLoader.php',
+        'HandmadeWeb\\Buildy\\PluginLoader' => __DIR__ . '/../..' . '/src/PluginLoader.php',
         'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => __DIR__ . '/../..' . '/src/Traits/ContentCollector.php',
         'HandmadeWeb\\Buildy\\Traits\\ContentRenderer' => __DIR__ . '/../..' . '/src/Traits/ContentRenderer.php',
     );

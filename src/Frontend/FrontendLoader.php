@@ -24,7 +24,7 @@ class FrontendLoader
         if (is_child_theme()) {
             $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
 
-            locationExistsOrCreate($childThemeViewsPath) ? View::addLocation($childThemeViewsPath) : null;
+            \locationExistsOrCreate($childThemeViewsPath) ? View::addLocation($childThemeViewsPath) : null;
         }
 
         /*
