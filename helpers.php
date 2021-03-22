@@ -41,6 +41,12 @@ if (! function_exists('isPageBuilderEnabled')) {
 if (! function_exists('buildy')) {
     function buildy()
     {
-        return Buildy::init();
+        global $buildy;
+
+        if (empty($buildy)) {
+            $buildy = Buildy::init();
+        }
+
+        return $buildy;
     }
 }
