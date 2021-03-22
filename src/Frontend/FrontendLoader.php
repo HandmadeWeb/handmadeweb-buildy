@@ -14,6 +14,12 @@ class FrontendLoader
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
         add_filter('handmadeweb-illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
+
+        /*
+         * Legacy function, to allow previous templates to continue working.
+         * $buildy->renderContent() should be replaced with Buildy::renderContent()
+         */
+        View::share('buildy', buildy());
     }
 
     public static function bladeViewPaths($viewPaths)

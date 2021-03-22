@@ -67,9 +67,9 @@ class FrontendFilters
                     continue;
                 }
                 $first_char = substr($name, 0, 1);
-                $marginClasses = ($breakpoint === 'xs' ? '' : "$breakpoint:").'m'.$first_char.'-'.$val;
+                $marginClasses = ($breakpoint === 'xs' ? '' : "{$breakpoint}:")."m{$first_char}-{$val}";
                 if (isset($spacingClasses)) {
-                    $spacingClasses .= " $marginClasses";
+                    $spacingClasses .= " {$marginClasses}";
                 } else {
                     $spacingClasses = $marginClasses;
                 }
@@ -88,9 +88,9 @@ class FrontendFilters
                     continue;
                 }
                 $first_char = substr($name, 0, 1);
-                $paddingClasses = ($breakpoint === 'xs' ? '' : "$breakpoint:").'p'.$first_char.'-'.$val;
+                $paddingClasses = ($breakpoint === 'xs' ? '' : "{$breakpoint}:")."p{$first_char}-{$val}";
                 if (isset($spacingClasses)) {
-                    $spacingClasses .= " $paddingClasses";
+                    $spacingClasses .= " {$paddingClasses}";
                 } else {
                     $spacingClasses = $paddingClasses;
                 }

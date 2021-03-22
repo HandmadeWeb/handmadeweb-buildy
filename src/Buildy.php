@@ -4,11 +4,18 @@ namespace HandmadeWeb\Buildy;
 
 use HandmadeWeb\Buildy\Traits\ContentCollector;
 use HandmadeWeb\Buildy\Traits\ContentRenderer;
+use HandmadeWeb\Buildy\Traits\LegacyContentRenderer;
 
 class Buildy
 {
     use ContentCollector;
     use ContentRenderer;
+    use LegacyContentRenderer;
+
+    public static function init()
+    {
+        return new static;
+    }
 
     /**
      * Undocumented function.
