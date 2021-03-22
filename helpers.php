@@ -1,6 +1,11 @@
 <?php
 
 if (! function_exists('isPageBuilderEnabled')) {
+    /**
+     * Undocumented function.
+     *
+     * @return bool
+     */
     function isPageBuilderEnabled(): bool
     {
         /*

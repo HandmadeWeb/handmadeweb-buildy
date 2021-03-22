@@ -13,18 +13,18 @@ class FrontendLoader
     {
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
-        static::bladeViewPaths();
+        add_filter('handmadeweb-illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
     }
 
-    public static function bladeViewPaths()
+    public static function bladeViewPaths($viewPaths)
     {
+        $additionalViewPaths = [];
         /*
          * If current theme is a child theme, then add the buildy-views folder.
          */
         if (is_child_theme()) {
             $childThemeViewsPath = trailingslashit(get_stylesheet_directory()).'buildy-views/';
-
-            \locationExistsOrCreate($childThemeViewsPath) ? View::addLocation($childThemeViewsPath) : null;
+            locationExistsOrCreate($childThemeViewsPath) ? $additionalViewPaths[] = $childThemeViewsPath : null;
         }
 
         /*
@@ -32,13 +32,15 @@ class FrontendLoader
          */
         if (true) {
             $themeViewsPath = trailingslashit(get_template_directory()).'buildy-views/';
-            locationExistsOrCreate($themeViewsPath) ? View::addLocation($themeViewsPath) : null;
+            locationExistsOrCreate($themeViewsPath) ? $additionalViewPaths[] = $themeViewsPath : null;
         }
 
         /*
          * Add buildy views folder.
          */
-        View::addLocation(trailingslashit(BUILDY_ROOT).'/resources/views/');
+        $additionalViewPaths[] = trailingslashit(BUILDY_ROOT).'/resources/views/';
+
+        return array_merge($additionalViewPaths, $viewPaths);
     }
 
     public static function the_content($content)

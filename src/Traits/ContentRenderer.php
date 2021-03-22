@@ -6,6 +6,12 @@ use HandmadeWeb\Illuminate\Facades\View;
 
 trait ContentRenderer
 {
+    /**
+     * Undocumented function.
+     *
+     * @param [type] $content
+     * @return string
+     */
     public static function renderContent($content): string
     {
         $html = '';
@@ -60,6 +66,12 @@ trait ContentRenderer
         return do_shortcode($html);
     }
 
+    /**
+     * Undocumented function.
+     *
+     * @param [type] $string
+     * @return string
+     */
     public static function seoUrl($string): string
     {
         //Lower case everything

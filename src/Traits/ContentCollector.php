@@ -6,6 +6,12 @@ use HandmadeWeb\Illuminate\Facades\DB;
 
 trait ContentCollector
 {
+    /**
+     * Undocumented function.
+     *
+     * @param [type] $post_id
+     * @return void
+     */
     public static function getContentForId($post_id)
     {
         if ($post_id !== 0) {
