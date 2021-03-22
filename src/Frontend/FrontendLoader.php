@@ -66,13 +66,21 @@ class FrontendLoader
                 return; // Stop shortcode render on backend.
             }
 
-            // Get the current page/post id.
-            $post_id = get_queried_object_id();
+            // Get the current post.
+            $post = get_queried_object();
+
+            $thisPost = (object) [
+                'ID' => $post->ID,
+                'post_content' => json_decode($post->post_content),
+            ];
+
+            Buildy::pushToCache($thisPost);
+            Buildy::preFetchGlobals($thisPost);
 
             /*
              * Render the page/post content via Blade
              */
-            return Buildy::renderContentForId($post_id);
+            return Buildy::renderContentForId($thisPost->ID);
         }
 
         /*

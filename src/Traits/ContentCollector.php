@@ -35,14 +35,14 @@ trait ContentCollector
         return [];
     }
 
-    protected static function pushToCache($post)
+    public static function pushToCache($post)
     {
         if (! empty($post->ID) && ! isset(static::$cache[$post->ID])) {
             static::$cache[$post->ID] = $post;
         }
     }
 
-    protected static function preFetchGlobals($post)
+    public static function preFetchGlobals($post)
     {
         $globals = collect($post->post_content)->where('type', 'global-module');
         if ($globals->count() > 0) {
