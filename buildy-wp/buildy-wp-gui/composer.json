@@ -1,0 +1,21 @@
+{
+    "name": "michaelr0/buildy-wp-gui",
+    "description": "Buildy GUI for WP",
+    "keywords": [
+        "michaelr0",
+        "buildy-wp-gui"
+    ],
+    "homepage": "https://github.com/michaelr0/buildy-wp-gui",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Michael Rook",
+            "email": "michael@rook.net.au",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    }
+}

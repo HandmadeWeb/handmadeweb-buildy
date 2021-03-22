@@ -1,0 +1,133 @@
+// Flex Utilities
+
+$utilities: () !default;
+
+$utilities: map-merge(
+  (
+    "flex": (
+      responsive: true,
+      print: false,
+      property: display,
+      class: flex,
+      values: (
+        null: flex,
+      ),
+    ),
+    "inline-flex": (
+      responsive: true,
+      print: false,
+      property: display,
+      values: (
+        null: inline-flex,
+      ),
+    ),
+    "flex-1": (
+      responsive: true,
+      property: flex,
+      values: (
+        fill: 1 1 auto,
+      ),
+    ),
+    "flex-direction": (
+      responsive: true,
+      property: flex-direction,
+      class: flex,
+      values: (
+        row: row,
+        col: column,
+        row-reverse: row-reverse,
+        column-reverse: column-reverse,
+      ),
+    ),
+    "flex-grow": (
+      responsive: true,
+      property: flex-grow,
+      class: flex,
+      values: (
+        grow-0: 0,
+        grow-1: 1,
+      ),
+    ),
+    "flex-shrink": (
+      responsive: true,
+      property: flex-shrink,
+      class: flex,
+      values: (
+        shrink-0: 0,
+        shrink-1: 1,
+      ),
+    ),
+    "flex-wrap": (
+      responsive: true,
+      property: flex-wrap,
+      class: flex,
+      values: wrap nowrap wrap-reverse,
+    ),
+    "justify-content": (
+      responsive: true,
+      property: justify-content,
+      class: justify,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        evenly: space-evenly,
+      ),
+    ),
+    "align-items": (
+      responsive: true,
+      property: align-items,
+      class: items,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      ),
+    ),
+    "align-content": (
+      responsive: true,
+      property: align-content,
+      class: content,
+      values: (
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        between: space-between,
+        around: space-around,
+        stretch: stretch,
+      ),
+    ),
+    "align-self": (
+      responsive: true,
+      property: align-self,
+      class: self,
+      values: (
+        auto: auto,
+        start: flex-start,
+        end: flex-end,
+        center: center,
+        baseline: baseline,
+        stretch: stretch,
+      ),
+    ),
+    "order": (
+      responsive: true,
+      property: order,
+      values: (
+        first: -1,
+        0: 0,
+        1: 1,
+        2: 2,
+        3: 3,
+        4: 4,
+        5: 5,
+        last: 6,
+      ),
+    ),
+  ),
+  $utilities
+);

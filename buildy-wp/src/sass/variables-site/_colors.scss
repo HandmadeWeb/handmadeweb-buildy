@@ -1,0 +1,22 @@
+/*
+
+Colours from primary to hotel are configured in site options (backend)
+
+From there you can also specify any number of custom colours and reference them by name throughout
+the website var(--color-customname);
+
+The theme options page also generates utility classes for each colour you add. Read more: <insert docs link>
+
+*/
+// These are just aliases for faster typing
+$color__primary: var(--color-primary);
+$color__secondary: var(--color-secondary);
+$color__tertiary: var(--color-tertiary);
+$color__tertiary-hover: var(--color-tertiary);
+$color__quaternary: var(--color-quaternary);
+$color__quinary: var(--color-quinary);
+$color__white: var(--color-white);
+$color__black: var(--color-black);
+
+$color__text-main: var(--color-text-main);
+$color__text-headings: var(--color-text-headings);
