@@ -174,31 +174,32 @@ class BackendLoader
             foreach ($acfFiles as $acfFile) {
                 if ($acfFileContent = file_get_contents($acfFile)) {
                     $acfFieldGroups = json_decode($acfFileContent, true);
-                }
+                    if (! empty($acfFieldGroups)) {
+                        foreach ($acfFieldGroups as $acfFieldGroup) {
+                            $isPageBuilderField = false;
 
-                foreach ($acfFieldGroups ?? [] as $acfFieldGroup) {
-                    $isPageBuilderField = false;
-
-                    foreach ($acfFieldGroup['fields'] as $field) {
-                        if ($field['name'] === 'BMCB_use_PageBuilder') {
-                            $isPageBuilderField = true;
-                        }
-                    }
-
-                    if ($isPageBuilderField) {
-                        $post_types = get_field('BMCB_post_types', 'option');
-                        if (! empty($post_types)) {
-                            foreach ($post_types as $post_type) {
-                                $acfFieldGroup['location'][][] = [
-                                    'param' => 'post_type',
-                                    'operator' => '==',
-                                    'value' => strtolower(trim($post_type['BMCB_post_type'])),
-                                ];
+                            foreach ($acfFieldGroup['fields'] as $field) {
+                                if ($field['name'] === 'BMCB_use_PageBuilder') {
+                                    $isPageBuilderField = true;
+                                }
                             }
+
+                            if ($isPageBuilderField) {
+                                $post_types = get_field('BMCB_post_types', 'option');
+                                if (! empty($post_types)) {
+                                    foreach ($post_types as $post_type) {
+                                        $acfFieldGroup['location'][][] = [
+                                            'param' => 'post_type',
+                                            'operator' => '==',
+                                            'value' => strtolower(trim($post_type['BMCB_post_type'])),
+                                        ];
+                                    }
+                                }
+                            }
+
+                            acf_add_local_field_group($acfFieldGroup);
                         }
                     }
-
-                    acf_add_local_field_group($acfFieldGroup);
                 }
             }
         }
