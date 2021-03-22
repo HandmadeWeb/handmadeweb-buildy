@@ -45,6 +45,12 @@ class FrontendLoader
          */
         $additionalViewPaths['buildy-plugin'] = trailingslashit(BUILDY_ROOT).'resources/views/';
 
+        /*
+         * Unset Blade views from HandmadeWeb Illuminate package.
+         */
+        unset($viewPaths['child-theme-blade']);
+        unset($viewPaths['parent-theme-blade']);
+
         return array_merge($additionalViewPaths, $viewPaths);
     }
 
