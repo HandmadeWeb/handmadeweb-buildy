@@ -17,6 +17,7 @@ class FrontendLoader
 
         /*
          * Legacy function, to allow previous templates to continue working.
+         * $buildy->renderFrontend() should be replaced with Buildy::renderContentForId()
          * $buildy->renderContent() should be replaced with Buildy::renderContent()
          */
         View::share('buildy', buildy());
