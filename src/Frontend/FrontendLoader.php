@@ -42,7 +42,7 @@ class FrontendLoader
         /*
          * Add buildy views folder.
          */
-        $additionalViewPaths['buildy-plugin'] = trailingslashit(BUILDY_ROOT).'resources/views/';
+        $additionalViewPaths['buildy-plugin'] = BUILDY_ROOT.'resources/views/';
 
         /*
          * Unset Blade views from HandmadeWeb Illuminate package.
@@ -101,7 +101,7 @@ class FrontendLoader
          * Enqueue the needed css and js for MVP frontend
          * Will need a button in the settings page to enable/disable this as well.
          */
-        $url = plugins_url().'/handmadeweb-buildy/buildy-wp';
+        $url = BUILDY_URL.'buildy-wp';
 
         if (/*isPageBuilderEnabled() && */! get_field('disable_frontend_enqueue', 'option')) {
             // Temporary IE 11 polyfills --- These don't affect file size for non-ie browsers.

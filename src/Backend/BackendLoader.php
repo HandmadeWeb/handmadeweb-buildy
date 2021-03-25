@@ -20,7 +20,7 @@ class BackendLoader
          * Include the needed CSS/JS files.
          */
         if (isPageBuilderEnabled()) {
-            $url = plugins_url().'/handmadeweb-buildy/buildy-wp';
+            $url = BUILDY_URL.'buildy-wp';
 
             wp_localize_script('hmw-child-frontend-scripts', 'global_vars', [
                 'admin_ajax_url' => admin_url('admin-ajax.php'),
@@ -48,7 +48,7 @@ class BackendLoader
          * Include the needed CSS/JS files.
          */
         if (isPageBuilderEnabled()) {
-            $url = plugins_url().'/handmadeweb-buildy/buildy-wp';
+            $url = BUILDY_URL.'buildy-wp';
 
             echo "<link href='{$url}/buildy-wp-gui/dist/app.css' rel='stylesheet'>";
         }
@@ -168,7 +168,7 @@ class BackendLoader
     public static function acf_add_fields()
     {
         if (function_exists('acf_add_local_field_group')) {
-            $acfFiles = glob(BUILDY_ROOT.'/acf/*.json');
+            $acfFiles = glob(BUILDY_ROOT.'acf/*.json');
 
             foreach ($acfFiles as $acfFile) {
                 if ($acfFileContent = file_get_contents($acfFile)) {
