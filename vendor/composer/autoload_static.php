@@ -30,6 +30,7 @@ class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
         'HandmadeWeb\\Buildy\\PluginLoader' => __DIR__ . '/../..' . '/src/PluginLoader.php',
         'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => __DIR__ . '/../..' . '/src/Traits/ContentCollector.php',
         'HandmadeWeb\\Buildy\\Traits\\ContentRenderer' => __DIR__ . '/../..' . '/src/Traits/ContentRenderer.php',
+        'HandmadeWeb\\Buildy\\Traits\\LegacyContentRenderer' => __DIR__ . '/../..' . '/src/Traits/LegacyContentRenderer.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

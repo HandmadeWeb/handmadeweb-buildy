@@ -15,4 +15,5 @@ return array(
     'HandmadeWeb\\Buildy\\PluginLoader' => $baseDir . '/src/PluginLoader.php',
     'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => $baseDir . '/src/Traits/ContentCollector.php',
     'HandmadeWeb\\Buildy\\Traits\\ContentRenderer' => $baseDir . '/src/Traits/ContentRenderer.php',
+    'HandmadeWeb\\Buildy\\Traits\\LegacyContentRenderer' => $baseDir . '/src/Traits/LegacyContentRenderer.php',
 );
