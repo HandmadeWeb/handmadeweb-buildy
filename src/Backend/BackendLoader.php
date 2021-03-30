@@ -91,7 +91,8 @@ class BackendLoader
                 'site_url' => get_site_url(),
                 'registered_image_sizes' => static::get_all_image_sizes(),
                 'registered_post_types' => get_post_types(['_builtin' => false]),
-                'global_api' => get_rest_url(get_current_blog_id(), 'wp/v2/bmcb-global'),
+                //'global_api' => get_rest_url(get_current_blog_id(), 'wp/v2/bmcb-global'),
+                'global_api' => get_rest_url(get_current_blog_id(), 'bmcb/v3/globals'),
             ]);
 
             // This script contains the Config Array for the Page Builder.
@@ -118,6 +119,11 @@ class BackendLoader
     {
         //The Following registers an api route with multiple parameters.
         add_action('rest_api_init', function () {
+            register_rest_route('bmcb/v3', '/globals', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'get_globals'],
+            ]);
+
             register_rest_route('bmcb/v1', '/module_styles=(?P<module_styles>[a-zA-Z0-9-]+)', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_module_styles'],
@@ -136,6 +142,21 @@ class BackendLoader
         // Must register custom post types first
         static::acf_add_options_pages();
         static::acf_add_fields();
+    }
+
+    public static function get_globals($data)
+    {
+        global $wpdb;
+        $globals = $wpdb->get_results("SELECT `ID`, `post_title` FROM `{$wpdb->prefix}posts` WHERE `post_type` = 'bmcb-global' AND `post_status` = 'publish'");
+
+        return array_map(function ($global) {
+            return [
+                'id' => $global->ID,
+                'title' => [
+                    'rendered' => $global->post_title,
+                ],
+            ];
+        }, $globals);
     }
 
     public static function get_module_styles($request)
@@ -253,7 +274,7 @@ class BackendLoader
                 'show_ui'            => true,
                 'show_in_menu'       => true,
                 'has_archive' => false,
-                'show_in_rest' => true,
+                'show_in_rest' => false,
                 'rewrite' => ['slug' => 'bmcb-globals'],
             ]
         );
