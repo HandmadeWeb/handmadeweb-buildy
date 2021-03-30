@@ -145,7 +145,6 @@ class BackendLoader
 
             $data = get_field("module_styles_{$module_type}", 'option') ?? '';
 
-            // print_r($request);
             return new \WP_REST_Response(
                 [
                     'status' => 200,
