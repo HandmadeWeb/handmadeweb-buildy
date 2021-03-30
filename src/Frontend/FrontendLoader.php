@@ -63,8 +63,8 @@ class FrontendLoader
          * However in this case, we don't want anything from the Wordpress text area to output.
          */
         if (isPageBuilderEnabled()) {
-            if (is_admin()) {
-                return; // Stop shortcode render on backend.
+            if (is_admin() || defined('REST_REQUEST') && REST_REQUEST) {
+                return; // Stop shortcode render on backend Or via REST.
             }
 
             // Get the current post.
