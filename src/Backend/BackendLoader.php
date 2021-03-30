@@ -138,6 +138,24 @@ class BackendLoader
         static::acf_add_fields();
     }
 
+    public static function get_module_styles($request)
+    {
+        if (! is_wp_error($request)) {
+            $module_type = $request['module_styles'];
+
+            $data = get_field("module_styles_{$module_type}", 'option') ?? '';
+
+            // print_r($request);
+            return new \WP_REST_Response(
+                [
+                    'status' => 200,
+                    'response' => 'API hit success',
+                    'body' => $data,
+                ]
+            );
+        }
+    }
+
     /**
      * Get all the registered image sizes along with their dimensions.
      *
