@@ -25,7 +25,6 @@ if (! function_exists('isPageBuilderEnabled')) {
         /*
         * Check to see if PageBuilder is enabled
         */
-
         if (function_exists('get_field') && get_field('BMCB_use_PageBuilder')) {
             if (is_admin()) {
                 wp_enqueue_editor();
