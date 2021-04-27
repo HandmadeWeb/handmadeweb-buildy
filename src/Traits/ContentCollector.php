@@ -14,7 +14,7 @@ trait ContentCollector
      * @param [type] $post_id
      * @return void
      */
-    public static function getContentForId($post_id)
+    public static function getContentForId($post_id): array
     {
         if ($post_id !== 0) {
             if (! empty(static::$cache[$post_id])) {

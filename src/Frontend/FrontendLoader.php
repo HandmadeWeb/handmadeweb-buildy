@@ -3,6 +3,7 @@
 namespace HandmadeWeb\Buildy\Frontend;
 
 use HandmadeWeb\Buildy\Buildy;
+use HandmadeWeb\Buildy\Buildy3;
 use HandmadeWeb\Illuminate\Facades\View;
 
 class FrontendLoader
@@ -74,6 +75,20 @@ class FrontendLoader
                 'ID' => $post->ID,
                 'post_content' => json_decode($post->post_content),
             ];
+
+            if (isset($_GET['buildy3'])) {
+                Buildy3::pushToCache($thisPost);
+                Buildy3::preFetchGlobals($thisPost);
+
+                return do_shortcode(Buildy3::renderContent($thisPost->post_content));
+            }
+
+            if (isset($_GET['buildy'])) {
+                Buildy3::pushToCache($thisPost);
+                Buildy3::preFetchGlobals($thisPost);
+
+                return do_shortcode(Buildy3::renderContentForId($thisPost->ID));
+            }
 
             Buildy::pushToCache($thisPost);
             Buildy::preFetchGlobals($thisPost);
