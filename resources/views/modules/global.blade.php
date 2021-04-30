@@ -67,6 +67,6 @@ if ($spacing) {
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>
-      {!! \HandmadeWeb\Buildy\Buildy::renderContentForId($bladeData->content->id) !!}
+      {!! \HandmadeWeb\Buildy\Buildy3::renderContentForId($bladeData->content->id) !!}
     </div>
 @endif

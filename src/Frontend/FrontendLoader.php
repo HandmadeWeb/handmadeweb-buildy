@@ -3,7 +3,6 @@
 namespace HandmadeWeb\Buildy\Frontend;
 
 use HandmadeWeb\Buildy\Buildy;
-use HandmadeWeb\Buildy\Buildy3;
 use HandmadeWeb\Illuminate\Facades\View;
 
 class FrontendLoader
@@ -15,14 +14,6 @@ class FrontendLoader
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
         add_filter('handmadeweb-illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
-
-        /*
-         * Legacy function, to allow previous templates to continue working.
-         * $buildy->renderFrontend() should be replaced with Buildy::renderContentForId()
-         * $buildy->renderContent() should be replaced with Buildy::renderContent()
-         */
-        buildy();
-        View::share('buildy', buildy());
     }
 
     public static function bladeViewPaths($viewPaths = [])
@@ -76,27 +67,10 @@ class FrontendLoader
                 'post_content' => json_decode($post->post_content),
             ];
 
-            if (isset($_GET['buildy3'])) {
-                Buildy3::pushToCache($thisPost);
-                Buildy3::preFetchGlobals($thisPost);
-
-                return do_shortcode(Buildy3::renderContent($thisPost->post_content));
-            }
-
-            if (isset($_GET['buildy'])) {
-                Buildy3::pushToCache($thisPost);
-                Buildy3::preFetchGlobals($thisPost);
-
-                return do_shortcode(Buildy3::renderContentForId($thisPost->ID));
-            }
-
             Buildy::pushToCache($thisPost);
             Buildy::preFetchGlobals($thisPost);
 
-            /*
-             * Render the page/post content via Blade
-             */
-            return Buildy::renderContentForId($thisPost->ID);
+            return do_shortcode(Buildy::renderContent($thisPost->post_content));
         }
 
         /*

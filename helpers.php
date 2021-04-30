@@ -1,7 +1,5 @@
 <?php
 
-use HandmadeWeb\Buildy\Buildy;
-
 if (! function_exists('isPageBuilderEnabled')) {
     /**
      * Undocumented function.
@@ -34,18 +32,5 @@ if (! function_exists('isPageBuilderEnabled')) {
         }
 
         return false;
-    }
-}
-
-if (! function_exists('buildy')) {
-    function buildy()
-    {
-        global $buildy;
-
-        if (empty($buildy)) {
-            $buildy = Buildy::init();
-        }
-
-        return $buildy;
     }
 }

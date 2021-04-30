@@ -139,7 +139,7 @@ if ((empty($imageID) && !empty($imageURL)) && function_exists('attachment_url_to
                     @endif
                 </div>
             @endif
-
+            
             @if($bodyContent)
                 <div class="bmcb-blurb__description">{!! $bodyContent !!}</div>
             @endif

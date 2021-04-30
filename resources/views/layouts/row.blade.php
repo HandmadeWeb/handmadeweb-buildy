@@ -119,5 +119,7 @@ if (!empty($spacing)) {
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>
-    {!! \HandmadeWeb\Buildy\Buildy::renderContent($bladeData->content) !!}
+    @foreach($bladeData->content as $column)
+      {!! \HandmadeWeb\Buildy\Buildy::renderColumn($column) !!}
+    @endforeach
 </div>
