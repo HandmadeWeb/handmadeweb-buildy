@@ -2,6 +2,9 @@
 
 namespace HandmadeWeb\Buildy\Backend;
 
+use HandmadeWeb\Illuminate\Facades\Cache;
+use HandmadeWeb\Illuminate\Facades\DB;
+
 class BackendLoader
 {
     public static function admin_boot()
@@ -11,6 +14,12 @@ class BackendLoader
         add_action('admin_head', [static::class, 'admin_head']);
         add_action('edit_form_after_editor', [static::class, 'admin_edit_form_after_editor']);
         add_filter('wp_default_editor', [static::class, 'admin_wp_default_editor']);
+        add_action('save_post_bmcb-global', [static::class, 'clear_globals_cache'], 100, 0);
+    }
+
+    public static function clear_globals_cache()
+    {
+        Cache::forget('Buildy_GlobalsCache');
     }
 
     public static function admin_footer()
@@ -146,17 +155,16 @@ class BackendLoader
 
     public static function get_globals($data)
     {
-        global $wpdb;
-        $globals = $wpdb->get_results("SELECT `ID`, `post_title` FROM `{$wpdb->prefix}posts` WHERE `post_type` = 'bmcb-global' AND `post_status` = 'publish'");
+        $globals = Cache::rememberForever('Buildy_GlobalsCache', function () {
+            return DB::table('posts')->where('post_type', 'bmcb-global')->where('post_status', 'publish')->get(['ID', 'post_title']);
+        });
 
-        return array_map(function ($global) {
+        return $globals->map(function ($global) {
             return [
                 'id' => $global->ID,
-                'title' => [
-                    'rendered' => $global->post_title,
-                ],
+                'title' => $global->post_title,
             ];
-        }, $globals);
+        });
     }
 
     public static function get_module_styles($request)
@@ -252,11 +260,12 @@ class BackendLoader
 
         // register options pages.
         acf_add_options_page([
-            'page_title'    => __('Buildy Settings'),
-            'menu_title'    => __('Buildy Settings'),
-            'menu_slug'     => 'bmcb-settings',
-            'capability'    => 'edit_posts',
-            'redirect'      => false,
+            'page_title' => 'Buildy Settings',
+            'menu_title' => 'Buildy Settings',
+            'menu_slug' => 'bmcb-settings',
+            'capability' => 'edit_posts',
+            'redirect' => false,
+            'autoload' => true,
         ]);
     }
 
@@ -266,16 +275,18 @@ class BackendLoader
             'bmcb-global',
             [
                 'labels' => [
-                    'name' => __('Globals'),
-                    'singular_name' => __('Global'),
+                    'name' => 'Globals',
+                    'singular_name' => 'Global',
                 ],
-                'public'             => false,
+                'public' => false,
                 'publicly_queryable' => false,
-                'show_ui'            => true,
-                'show_in_menu'       => true,
+                'show_ui' => true,
+                'show_in_menu' => true,
                 'has_archive' => false,
                 'show_in_rest' => false,
-                'rewrite' => ['slug' => 'bmcb-globals'],
+                'rewrite' => [
+                    'slug' => 'bmcb-globals',
+                ],
             ]
         );
     }
