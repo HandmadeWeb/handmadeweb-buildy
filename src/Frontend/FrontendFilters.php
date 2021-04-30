@@ -101,6 +101,7 @@ class FrontendFilters
         * Append data to $data->generatedAttributes // $bladeData->generatedAttributes on the view.
         */
         $data->generatedAttributes = (object) [
+            'type' => str_replace('-module', '', $data->type),
             'columns' => $columns,
             'spacing' => $spacingClasses,
         ];

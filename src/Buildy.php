@@ -43,7 +43,6 @@ class Buildy
                 if ($data->type === 'section-module') {
                     $html .= static::renderSection($data);
                 } elseif ($data->type === 'global-module') {
-                    //$html .= '[buildy-global '.compact($data).']';
                     $html .= static::renderGlobal($data);
                 }
             }
@@ -61,7 +60,6 @@ class Buildy
 
     public static function renderSection($data): string
     {
-        $type = str_replace('-module', '', $data->type);
         $data = static::apply_filters($data);
 
         $template = $data->options->moduleStyle ?? null;
@@ -78,9 +76,9 @@ class Buildy
 
         $locations = [];
         if (! empty($template)) {
-            $locations[] = "{$location}.{$type}-{$template}";
+            $locations[] = "{$location}.{$data->generatedAttributes->type}-{$template}";
         }
-        $locations[] = "{$location}.{$type}";
+        $locations[] = "{$location}.{$data->generatedAttributes->type}";
 
         return View::first($locations, ['bladeData' => $data]);
     }
@@ -101,17 +99,15 @@ class Buildy
 
     public static function renderModule($data): string
     {
-        $type = str_replace('-module', '', $data->type);
         $data = static::apply_filters($data);
 
-        return view("modules.{$type}", ['bladeData' => $data])->render();
+        return view("modules.{$data->generatedAttributes->type}", ['bladeData' => $data])->render();
     }
 
     protected static function apply_filters($data)
     {
-        $type = str_replace('-module', '', $data->type);
         $data = apply_filters('handmadeweb-buildy_filter_all_data', $data);
-        $data = apply_filters("handmadeweb-buildy_filter_type:{$type}", $data);
+        $data = apply_filters("handmadeweb-buildy_filter_type:{$data->generatedAttributes->type}", $data);
 
         return $data;
     }
