@@ -6,7 +6,7 @@ use HandmadeWeb\Buildy\Backend\BackendLoader;
 use HandmadeWeb\Buildy\Frontend\FrontendDirectives;
 use HandmadeWeb\Buildy\Frontend\FrontendFilters;
 use HandmadeWeb\Buildy\Frontend\FrontendLoader;
-use HandmadeWeb\Illuminate\AbstractLoaderClass;
+use HandmadeWeb\Illuminate\Static\Abstract\AbstractLoaderClass;
 
 class PluginLoader extends AbstractLoaderClass
 {
