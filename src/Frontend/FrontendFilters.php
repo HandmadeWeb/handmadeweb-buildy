@@ -2,6 +2,8 @@
 
 namespace HandmadeWeb\Buildy\Frontend;
 
+use Illuminate\Support\Str;
+
 class FrontendFilters
 {
     /**
@@ -105,6 +107,10 @@ class FrontendFilters
             'columns' => $columns,
             'spacing' => $spacingClasses,
         ];
+
+        if (! empty($data->options->moduleStyle)) {
+            $data->generatedAttributes->template = Str::slug($data->options->moduleStyle);
+        }
 
         return $data;
     }

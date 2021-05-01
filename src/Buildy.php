@@ -3,7 +3,6 @@
 namespace HandmadeWeb\Buildy;
 
 use HandmadeWeb\Buildy\Traits\ContentCollector;
-use HandmadeWeb\Buildy\Traits\ContentRenderer;
 use HandmadeWeb\Illuminate\Facades\Cache;
 use HandmadeWeb\Illuminate\Facades\View;
 use LiteSpeed\Base as LSBase;
@@ -13,7 +12,6 @@ use LiteSpeed\Optimizer as LSOptimizer;
 class Buildy
 {
     use ContentCollector;
-    use ContentRenderer;
 
     public static function renderContentForId($post_id)
     {
@@ -30,16 +28,12 @@ class Buildy
         return static::renderContent(static::getContentForId($post_id));
     }
 
-    public static function renderContent(array $content): string
+    public static function renderContent(array $content)
     {
         $html = '';
 
         if (! empty($content)) {
             foreach ($content as $data) {
-                if ($data->attributes->renderDisabled ?? false && ! empty($_GET['preview'])) {
-                    continue;
-                }
-
                 if ($data->type === 'section-module') {
                     $html .= static::renderSection($data);
                 } elseif ($data->type === 'global-module') {
@@ -51,64 +45,75 @@ class Buildy
         return $html;
     }
 
-    public static function renderGlobal($data): string
+    public static function renderGlobal($data)
     {
         $data = static::apply_filters($data);
 
-        return view('modules.global', ['bladeData' => $data])->render();
+        return static::renderView($data);
     }
 
-    public static function renderSection($data): string
+    public static function renderSection($data)
     {
         $data = static::apply_filters($data);
 
-        $template = $data->options->moduleStyle ?? null;
-
-        if (! empty($template)) {
-            $data = apply_filters("handmadeweb-buildy_filter_template:{$template}", $data);
-        }
-
-        if (! empty($template)) {
-            $template = static::seoUrl($template);
-        }
-
-        $location = 'layouts';
-
-        $locations = [];
-        if (! empty($template)) {
-            $locations[] = "{$location}.{$data->generatedAttributes->type}-{$template}";
-        }
-        $locations[] = "{$location}.{$data->generatedAttributes->type}";
-
-        return View::first($locations, ['bladeData' => $data]);
+        return static::renderView($data);
     }
 
-    public static function renderRow($data): string
+    public static function renderRow($data)
     {
         $data = static::apply_filters($data);
 
-        return view('layouts.row', ['bladeData' => $data])->render();
+        return static::renderView($data);
     }
 
-    public static function renderColumn($data): string
+    public static function renderColumn($data)
     {
         $data = static::apply_filters($data);
 
-        return view('layouts.column', ['bladeData' => $data])->render();
+        return static::renderView($data);
     }
 
-    public static function renderModule($data): string
+    public static function renderModule($data)
     {
         $data = static::apply_filters($data);
 
-        return view("modules.{$data->generatedAttributes->type}", ['bladeData' => $data])->render();
+        return static::renderView($data);
     }
 
     protected static function apply_filters($data)
     {
+        if ($data->attributes->renderDisabled ?? false && ! empty($_GET['preview'])) {
+            return;
+        }
+
         $data = apply_filters('handmadeweb-buildy_filter_all_data', $data);
         $data = apply_filters("handmadeweb-buildy_filter_type:{$data->generatedAttributes->type}", $data);
 
+        if (! empty($data->options->moduleStyle)) {
+            $data = apply_filters("handmadeweb-buildy_filter_template:{$data->options->moduleStyle}", $data);
+        }
+
         return $data;
+    }
+
+    protected static function renderView($data)
+    {
+        if (empty($data)) {
+            return;
+        }
+
+        $location = 'modules';
+
+        if (in_array($data->generatedAttributes->type, ['section', 'row', 'column', 'global'])) {
+            $location = 'layouts';
+        }
+
+        $locations = [];
+        if (! empty($data->generatedAttributes->template)) {
+            $locations[] = "{$location}.{$data->generatedAttributes->type}-{$data->generatedAttributes->template}";
+        }
+        $locations[] = "{$location}.{$data->generatedAttributes->type}";
+
+        return View::first($locations, ['bladeData' => $data]);
     }
 }

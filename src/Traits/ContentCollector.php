@@ -8,12 +8,6 @@ trait ContentCollector
 {
     protected static $cache = [];
 
-    /**
-     * Undocumented function.
-     *
-     * @param [type] $post_id
-     * @return void
-     */
     public static function getContentForId($post_id): array
     {
         if ($post_id !== 0) {
@@ -44,25 +38,27 @@ trait ContentCollector
 
     public static function preFetchGlobals($post)
     {
-        $globals = collect($post->post_content)->where('type', 'global-module');
-        if ($globals->count() > 0) {
-            $globalsToFetch = [];
-            foreach ($globals as $global) {
-                if (! empty($global->content->id) && ! isset(static::$cache[$global->content->id])) {
-                    $globalsToFetch[] = $global->content->id;
-                }
-            }
-
-            if (! empty($globalsToFetch)) {
-                $globals = DB::table('posts')->whereIn('ID', $globalsToFetch)->get(['ID', 'post_content']);
-
+        if (! empty($post->post_content)) {
+            $globals = collect($post->post_content)->where('type', 'global-module');
+            if ($globals->count() > 0) {
+                $globalsToFetch = [];
                 foreach ($globals as $global) {
-                    $global->post_content = json_decode($global->post_content);
-                    static::pushToCache($global);
+                    if (! empty($global->content->id) && ! isset(static::$cache[$global->content->id])) {
+                        $globalsToFetch[] = $global->content->id;
+                    }
+                }
+
+                if (! empty($globalsToFetch)) {
+                    $globals = DB::table('posts')->whereIn('ID', $globalsToFetch)->get(['ID', 'post_content']);
+
+                    foreach ($globals as $global) {
+                        $global->post_content = json_decode($global->post_content);
+                        static::pushToCache($global);
+                    }
                 }
             }
-        }
 
-        return $globals->count();
+            return $globals->count();
+        }
     }
 }
