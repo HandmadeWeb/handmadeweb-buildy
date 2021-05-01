@@ -65,6 +65,10 @@ class BackendLoader
 
     public static function admin_enqueue_scripts()
     {
+        // Load jQuery in the header rather than footer.
+        wp_dequeue_script('jquery');
+        wp_enqueue_script('jquery', '', [], false, false);
+
         /*
          * If Page Builder is marked as enabled for this page/post.
          * Enqueue the needed scripts to allow the Media Library to function in the builder.
@@ -137,12 +141,6 @@ class BackendLoader
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_module_styles'],
             ]);
-        });
-
-        // Load jQuery in the header rather than footer.
-        add_action('wp_enqueue_scripts', function () {
-            wp_dequeue_script('jquery');
-            wp_enqueue_script('jquery', '', [], false, false);
         });
 
         // Must register custom post types first
