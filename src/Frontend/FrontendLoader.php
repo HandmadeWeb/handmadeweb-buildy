@@ -4,6 +4,7 @@ namespace HandmadeWeb\Buildy\Frontend;
 
 use HandmadeWeb\Buildy\Buildy;
 use HandmadeWeb\Illuminate\Facades\View;
+use HandmadeWeb\Illuminate\Static\Filter;
 
 class FrontendLoader
 {
@@ -13,7 +14,7 @@ class FrontendLoader
     {
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
-        add_filter('handmadeweb-illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
+        Filter::add('illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
     }
 
     public static function bladeViewPaths($viewPaths = [])

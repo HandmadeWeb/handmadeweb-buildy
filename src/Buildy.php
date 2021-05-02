@@ -5,6 +5,7 @@ namespace HandmadeWeb\Buildy;
 use HandmadeWeb\Buildy\Traits\ContentCollector;
 use HandmadeWeb\Illuminate\Facades\Cache;
 use HandmadeWeb\Illuminate\Facades\View;
+use HandmadeWeb\Illuminate\Static\Filter;
 use LiteSpeed\Base as LSBase;
 use LiteSpeed\Conf as LSConf;
 use LiteSpeed\Optimizer as LSOptimizer;
@@ -86,11 +87,11 @@ class Buildy
             return;
         }
 
-        $data = apply_filters('handmadeweb-buildy_filter_all_data', $data);
-        $data = apply_filters("handmadeweb-buildy_filter_type:{$data->generatedAttributes->type}", $data);
+        $data = Filter::run('buildy_filter_all_data', $data);
+        $data = Filter::run("buildy_filter_type:{$data->generatedAttributes->type}", $data);
 
         if (! empty($data->options->moduleStyle)) {
-            $data = apply_filters("handmadeweb-buildy_filter_template:{$data->options->moduleStyle}", $data);
+            $data = Filter::run("buildy_filter_template:{$data->options->moduleStyle}", $data);
         }
 
         return $data;

@@ -20,8 +20,8 @@ class FrontendDirectives
      * @var array
      */
     protected static $directives = [
-        'action' => 'do_action',
-        'filter' => 'apply_filters',
+        'wpaction' => 'do_action',
+        'wpfilter' => 'apply_filters',
     ];
 
     public static function boot()

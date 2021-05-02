@@ -2,6 +2,7 @@
 
 namespace HandmadeWeb\Buildy\Frontend;
 
+use HandmadeWeb\Illuminate\Static\Filter;
 use Illuminate\Support\Str;
 
 class FrontendFilters
@@ -20,14 +21,14 @@ class FrontendFilters
      * @var array
      */
     protected static $filters = [
-        'handmadeweb-buildy_filter_all_data' => 'filter_all_data',
-        'handmadeweb-buildy_filter_type:row' => 'filter_rows',
+        'buildy_filter_all_data' => 'filter_all_data',
+        'buildy_filter_type:row' => 'filter_rows',
     ];
 
     public static function boot()
     {
         foreach (static::$filters as $filter_name => $method_name) {
-            add_filter($filter_name, [static::class, $method_name], 10, 1);
+            Filter::add($filter_name, [static::class, $method_name], 10, 1);
         }
     }
 
