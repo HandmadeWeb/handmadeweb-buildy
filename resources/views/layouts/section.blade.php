@@ -40,8 +40,8 @@ if (isset($internalLinkTarget)) {
 $dataAttString = null;
 
 // Add data atts to a string
-if (!empty($bladeData->attributes->data)) {
-  foreach($bladeData->attributes->data ?? [] as $dataAtt) {
+if (!empty($bladeData->attributes->data) && count($bladeData->attributes->data)) {
+  foreach($bladeData->attributes->data as $dataAtt) {
     $dataAttString .= ' data-'.strtolower($dataAtt->name).'='.stripslashes($dataAtt->value).' ';
   }
 }
