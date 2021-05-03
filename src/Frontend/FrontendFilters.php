@@ -111,11 +111,6 @@ class FrontendFilters
             $data->generatedAttributes->template = Str::slug($data->options->moduleStyle);
         }
 
-        return $data;
-    }
-
-    public static function filter_sections($data)
-    {
         $inline_style = null;
 
         if (! empty($data->inline->backgroundColor)) {
@@ -142,6 +137,11 @@ class FrontendFilters
             $data->generatedAttributes->inline_style = $inline_style;
         }
 
+        return $data;
+    }
+
+    public static function filter_sections($data)
+    {
         return $data;
     }
 
