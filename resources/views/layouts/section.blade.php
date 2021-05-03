@@ -59,13 +59,7 @@ if (!empty($bladeData->generatedAttributes->spacing)) {
     @endif
     @isset($internalLinkText) data-internal_link_text="{{ $internalLinkText }}" @endisset
     class="bmcb-section {{ (!empty($bladeData->options->layout_boxed) && $bladeData->options->layout_boxed) ? 'container' : 'container-fluid' }} {{ isset($moduleClasses) ? $moduleClasses : '' }}"
-    style="
-    @if(!empty($bladeData->inline->backgroundColor)) {{ "background-color: {$bladeData->inline->backgroundColor};" }} @endif
-    @if(!empty($bgImage)) {{ "background-image: url($bgImage);" }} @endif
-    @if(!empty($bladeData->inline->backgroundImage->backgroundSize)) {{ "background-size: {$bladeData->inline->backgroundImage->backgroundSize};" }} @endif
-    @if(!empty($bladeData->inline->backgroundImage->BlendMode)) {{ "background-blend-mode: {$bladeData->inline->backgroundImage->BlendMode};" }} @endif
-    @if(!empty($bladeData->inline->backgroundImage->backgroundPosition)) {{ "background-position: {$bladeData->inline->backgroundImage->backgroundPosition};" }} @endif
-    @if(!empty($bladeData->inline->backgroundImage->backgroundRepeat)) {{ "background-repeat: {$bladeData->inline->backgroundImage->backgroundRepeat};" }} @endif"
+    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} {{ !empty($bgImage) ? "background-image: url($bgImage);" : null }}"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>

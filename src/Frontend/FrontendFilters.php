@@ -22,6 +22,7 @@ class FrontendFilters
      */
     protected static $filters = [
         'buildy_filter_all_data' => 'filter_all_data',
+        'buildy_filter_type:section' => 'filter_sections',
         'buildy_filter_type:row' => 'filter_rows',
     ];
 
@@ -56,22 +57,21 @@ class FrontendFilters
         /**
          * Generate the spacing classes (margin/paddings) for each breakpoint size.
          */
-        $margins = collect($data->inline->margin ?? []);
-        $paddings = collect($data->inline->padding ?? []);
         $spacingClasses = '';
 
-        foreach ($margins as $breakpoint => $direction) {
-            $direction = collect($direction ?? []);
+        foreach ($data->inline->margin ?? [] as $breakpoint => $direction) {
             if (! $breakpoint || ! $direction) {
                 continue;
             }
+
             foreach ($direction as $name => $val) {
                 if (! $name || $val !== 0 && ! $val) {
                     continue;
                 }
+
                 $first_char = substr($name, 0, 1);
                 $marginClasses = ($breakpoint === 'xs' ? '' : "{$breakpoint}:")."m{$first_char}-{$val}";
-                if (isset($spacingClasses)) {
+                if (! empty($spacingClasses)) {
                     $spacingClasses .= " {$marginClasses}";
                 } else {
                     $spacingClasses = $marginClasses;
@@ -79,9 +79,7 @@ class FrontendFilters
             }
         }
 
-        foreach ($paddings as $breakpoint => $direction) {
-            $direction = collect($direction);
-
+        foreach ($data->inline->padding ?? [] as $breakpoint => $direction) {
             if (! $breakpoint || ! $direction) {
                 continue;
             }
@@ -92,7 +90,7 @@ class FrontendFilters
                 }
                 $first_char = substr($name, 0, 1);
                 $paddingClasses = ($breakpoint === 'xs' ? '' : "{$breakpoint}:")."p{$first_char}-{$val}";
-                if (isset($spacingClasses)) {
+                if (! empty($spacingClasses)) {
                     $spacingClasses .= " {$paddingClasses}";
                 } else {
                     $spacingClasses = $paddingClasses;
@@ -111,6 +109,37 @@ class FrontendFilters
 
         if (! empty($data->options->moduleStyle)) {
             $data->generatedAttributes->template = Str::slug($data->options->moduleStyle);
+        }
+
+        return $data;
+    }
+
+    public static function filter_sections($data)
+    {
+        $inline_style = null;
+
+        if (! empty($data->inline->backgroundColor)) {
+            $inline_style .= " background-color: {$data->inline->backgroundColor};";
+        }
+
+        if (! empty($data->inline->backgroundImage->backgroundSize)) {
+            $inline_style .= " background-size: {$data->inline->backgroundImage->backgroundSize};";
+        }
+
+        if (! empty($data->inline->backgroundImage->BlendMode)) {
+            $inline_style .= " background-blend-mode: {$data->inline->backgroundImage->BlendMode};";
+        }
+
+        if (! empty($data->inline->backgroundImage->backgroundPosition)) {
+            $inline_style .= " background-position: {$data->inline->backgroundImage->backgroundPosition};";
+        }
+
+        if (! empty($data->inline->backgroundImage->backgroundRepeat)) {
+            $inline_style .= " background-repeat: {$data->inline->backgroundImage->backgroundRepeat};";
+        }
+
+        if (! empty($inline_style)) {
+            $data->generatedAttributes->inline_style = $inline_style;
         }
 
         return $data;
