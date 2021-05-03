@@ -2,5 +2,7 @@
 
 @section('content')
     @component('modules.components.title', ['bladeData'=> $bladeData])@endcomponent
-    {!! $bladeData->content->body ?? null !!}
+    @if(!empty($bladeData->content->body))
+        {!! $bladeData->content->body !!}
+    @endif
 @overwrite

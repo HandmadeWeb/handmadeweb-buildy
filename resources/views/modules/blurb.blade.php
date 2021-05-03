@@ -2,9 +2,6 @@
 
 @php
 
-//Content
-$bodyContent = $bladeData->content->body ?? null;
-
 //  BUTTON
 $module_link_url = $bladeData->options->module_link->url ?? null;
 $module_link_new_tab = $bladeData->options->module_link->new_tab ?? null;
@@ -140,8 +137,8 @@ if ((empty($imageID) && !empty($imageURL)) && function_exists('attachment_url_to
                 </div>
             @endif
             
-            @if($bodyContent)
-                <div class="bmcb-blurb__description">{!! $bodyContent !!}</div>
+            @if($bladeData->content->body ?? null)
+                <div class="bmcb-blurb__description">{!! $bladeData->content->body !!}</div>
             @endif
             @if($buttonOneEnabled || $buttonTwoEnabled)
                 <div class="bmcb-blurb__button-wrapper @if($buttonOneEnabled && $buttonTwoEnabled)button__group @endif">

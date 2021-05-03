@@ -1,5 +1,4 @@
 @php
-  $moduleType = explode('-', $bladeData->type);
   $title = $bladeData->content->title->value ?? null;
   $default_level = $default ?? 'h3';
   $heading_level = $bladeData->content->title->level ?? $default_level;
@@ -7,8 +6,8 @@
   $title_id = $bladeData->content->title->id ?? null;
   $title_classes = $bladeData->content->title->class ?? "";
 
-  if (isset($moduleType[0])) {
-    $title_classes .= " bmcb-{$moduleType[0]}__title";
+  if (isset($bladeData->generatedAttributes->type)) {
+    $title_classes .= " bmcb-{$bladeData->generatedAttributes->type}__title";
   }
 
   if (!empty($headingColorClass)) {
@@ -27,7 +26,7 @@
   <{{ $heading_level }}
   @if(!empty($title_id)) id='{{ $title_id }}' @endif
   @if(!empty($title_classes)) class='{{ $title_classes }}' @endif
-  @if(!empty($styleAtts)) style='$styleAtts' @endif>
+  @if(!empty($styleAtts)) style='{{ $styleAtts }}' @endif>
     {!! $title !!}
   </{{ $heading_level }}>
 @endif

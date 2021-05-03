@@ -1,16 +1,11 @@
 @php
 
-$atts = $bladeData->attributes ?? null;
-
 $moduleClasses = "";
 $moduleID = "";
 
-$internalLinkEnabled = false;
-
-if (!empty($atts)) {
+if (!empty($bladeData->attributes)) {
   $moduleID = $bladeData->attributes->id ?? null;
   $moduleClasses = $bladeData->attributes->class ?? null;
-  $internalLinkEnabled = $bladeData->attributes->in_page_link_enabled ?? null;
   $internalLinkText = $bladeData->attributes->in_page_link_text ?? null;
   $dataAtts = $bladeData->attributes->data ?? null;
 }
@@ -74,7 +69,7 @@ if (!empty($spacing)) {
 
 <div
     @isset($moduleID) id="{{ $moduleID }}" @endisset
-    @if(!empty($internalLinkEnabled) && $internalLinkEnabled)
+    @if($bladeData->attributes->in_page_link_enabled ?? false)
         data-internal_link_enabled="true"
     @endif
     @isset($internalLinkText) data-internal_link_text="{{ $internalLinkText }}" @endisset
