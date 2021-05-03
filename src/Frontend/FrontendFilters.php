@@ -13,7 +13,7 @@ class FrontendFilters
      * The $filters array expects the following format:
      * 'filter_name' => 'method_name',
      *
-     * Where filter_name will be used by add_filter and apply_filter function calls.
+     * Where filter_name will be used by Filter::add() and Filter::run() function calls.
      * And method_name is the public static function that should be called for that filter.
      *
      * $data will always be passed to these filters.
