@@ -22,8 +22,10 @@ class FrontendFilters
      */
     protected static $filters = [
         'buildy_filter_all_data' => 'filter_all_data',
-        'buildy_filter_type:section' => 'filter_sections',
-        'buildy_filter_type:row' => 'filter_rows',
+        //'buildy_filter_type:section' => 'filter_sections',
+        //'buildy_filter_type:row' => 'filter_rows',
+        //'buildy_filter_type:column' => 'filter_columns',
+        //'buildy_filter_type:global' => 'filter_globals',
     ];
 
     public static function boot()
@@ -140,14 +142,27 @@ class FrontendFilters
         return $data;
     }
 
-    public static function filter_sections($data)
-    {
-        return $data;
-    }
+    // public static function filter_sections($data)
+    // {
+    //     // Example Filter.
+    //     return $data;
+    // }
 
-    public static function filter_rows($data)
-    {
-        // Example Filter.
-        return $data;
-    }
+    // public static function filter_rows($data)
+    // {
+    //     // Example Filter.
+    //     return $data;
+    // }
+
+    // public static function filter_columns($data)
+    // {
+    //     // Example Filter.
+    //     return $data;
+    // }
+
+    // public static function filter_globals($data)
+    // {
+    //     // Example Filter.
+    //     return $data;
+    // }
 }
