@@ -48,37 +48,27 @@ class Buildy
 
     public static function renderGlobal($data)
     {
-        $data = static::apply_filters($data);
-
-        return static::renderView($data);
+        return static::renderView(static::apply_filters($data));
     }
 
     public static function renderSection($data)
     {
-        $data = static::apply_filters($data);
-
-        return static::renderView($data);
+        return static::renderView(static::apply_filters($data));
     }
 
     public static function renderRow($data)
     {
-        $data = static::apply_filters($data);
-
-        return static::renderView($data);
+        return static::renderView(static::apply_filters($data));
     }
 
     public static function renderColumn($data)
     {
-        $data = static::apply_filters($data);
-
-        return static::renderView($data);
+        return static::renderView(static::apply_filters($data));
     }
 
     public static function renderModule($data)
     {
-        $data = static::apply_filters($data);
-
-        return static::renderView($data);
+        return static::renderView(static::apply_filters($data));
     }
 
     protected static function apply_filters($data)
@@ -104,7 +94,6 @@ class Buildy
         }
 
         $location = 'modules';
-
         if (in_array($data->generatedAttributes->type, ['section', 'row', 'column', 'global'])) {
             $location = 'layouts';
         }
