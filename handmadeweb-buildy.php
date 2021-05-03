@@ -15,7 +15,7 @@ defined('ABSPATH') || die();
 define('BUILDY_ROOT', trailingslashit(__DIR__));
 define('BUILDY_URL', trailingslashit(plugin_dir_url(__FILE__)));
 
-require_once __DIR__.'/vendor/autoload.php';
-require_once __DIR__.'/helpers.php';
+require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/helpers.php';
 
 add_action('plugins_loaded', [PluginLoader::class, 'boot'], 10);
