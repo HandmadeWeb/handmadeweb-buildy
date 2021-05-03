@@ -104,6 +104,9 @@ class Buildy
         }
         $locations[] = "{$location}.{$data->generatedAttributes->type}";
 
+        // Fallback if no view exists.
+        $locations[] = 'moduleNotFound';
+
         return View::first($locations, ['bladeData' => $data]);
     }
 }
