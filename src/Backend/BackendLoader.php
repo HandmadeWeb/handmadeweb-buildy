@@ -263,7 +263,7 @@ class BackendLoader
             'menu_slug' => 'bmcb-settings',
             'capability' => 'edit_posts',
             'redirect' => false,
-            'autoload' => true,
+            'autoload' => false,
         ]);
     }
 

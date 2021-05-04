@@ -71,7 +71,7 @@ class FrontendLoader
             Buildy::pushToCache($thisPost);
             Buildy::preFetchGlobals($thisPost);
 
-            return do_shortcode(Buildy::renderContent($thisPost->post_content));
+            return apply_shortcode(Buildy::renderContent($thisPost->post_content));
         }
 
         /*
