@@ -107,6 +107,6 @@ class Buildy
         // Fallback if no view exists.
         $locations[] = 'moduleNotFound';
 
-        return View::first($locations, ['bladeData' => $data]);
+        return View::first($locations, ['bladeData' => $data])->render();
     }
 }
