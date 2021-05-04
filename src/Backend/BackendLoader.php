@@ -29,8 +29,6 @@ class BackendLoader
          * Include the needed CSS/JS files.
          */
         if (isPageBuilderEnabled()) {
-            $url = BUILDY_URL.'buildy-wp';
-
             wp_localize_script('hmw-child-frontend-scripts', 'global_vars', [
                 'admin_ajax_url' => admin_url('admin-ajax.php'),
             ]);
@@ -45,8 +43,8 @@ class BackendLoader
                 get_rest_url()
             );
 
-            echo "<script src='{$url}/buildy-wp-gui/dist/chunk-vendors.js'></script>";
-            echo "<script src='{$url}/buildy-wp-gui/dist/app.js'></script>";
+            echo '<script src="'.BUILDY_URL.'/buildy-wp-gui/dist/chunk-vendors.js"></script>';
+            echo '<script src="'.BUILDY_URL.'/buildy-wp-gui/dist/app.js"></script>';
         }
     }
 
@@ -59,7 +57,7 @@ class BackendLoader
         if (isPageBuilderEnabled()) {
             $url = BUILDY_URL.'buildy-wp';
 
-            echo "<link href='{$url}/buildy-wp-gui/dist/app.css' rel='stylesheet'>";
+            echo '<link href="'.BUILDY_URL.'/buildy-wp-gui/dist/app.css" rel="stylesheet">';
         }
     }
 
