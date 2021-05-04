@@ -86,18 +86,17 @@ class FrontendLoader
         wp_dequeue_script('jquery');
         wp_enqueue_script('jquery', '', [], false, false);
 
-        /**
+        /*
          * If Page Builder is marked as enabled for this page/post.
          * Enqueue the needed css and js for MVP frontend
          * Will need a button in the settings page to enable/disable this as well.
          */
-        $url = BUILDY_URL.'buildy-wp';
 
         if (/*isPageBuilderEnabled() && */! get_field('disable_frontend_enqueue', 'option')) {
             // Temporary IE 11 polyfills --- These don't affect file size for non-ie browsers.
             wp_enqueue_script('ie-pollyfil', 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CCustomEvent', null, null, false);
-            wp_enqueue_script('buildy-js', "{$url}/public/frontend-bundle.js", null, '1.0.0', true);
-            wp_enqueue_style('buildy-css', "{$url}/public/frontend.css", null, '1.0.0', '');
+            wp_enqueue_script('buildy-js', BUILDY_URL.'public/frontend-bundle.js', null, '1.0.0', true);
+            wp_enqueue_style('buildy-css', BUILDY_URL.'public/frontend.css', null, '1.0.0', '');
         }
     }
 }
