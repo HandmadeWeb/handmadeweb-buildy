@@ -14,12 +14,13 @@ class FrontendLoader
         add_action('wp_enqueue_scripts', [static::class, 'wp_enqueue_scripts']);
         add_filter('the_content', [static::class, 'the_content']);
 
-        Filter::add('illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 10);
+        Filter::add('illuminate_blade_view_paths', [static::class, 'bladeViewPaths'], 1);
     }
 
     public static function bladeViewPaths($viewPaths = [])
     {
         $additionalViewPaths = [];
+
         /*
          * If current theme is a child theme, then add the buildy-views folder.
          */
@@ -37,13 +38,7 @@ class FrontendLoader
          */
         $additionalViewPaths['buildy-plugin'] = BUILDY_ROOT.'resources/views/';
 
-        /*
-         * Unset Blade views from HandmadeWeb Illuminate package.
-         */
-        unset($viewPaths['child-theme-blade']);
-        unset($viewPaths['parent-theme-blade']);
-
-        return array_merge($additionalViewPaths, $viewPaths);
+        return array_merge($viewPaths, $additionalViewPaths);
     }
 
     public static function the_content($content)
