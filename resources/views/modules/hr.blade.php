@@ -1,11 +1,17 @@
 @extends('modules.common')
 
+@php
+    $moduleClasses = $bladeData->attributes->class ?? null;
+    $color = $bladeData->inline->backgroundColor ?? null;
+    $height = $bladeData->inline->height ?? null;
+@endphp
+
 @section('content')
     <hr style="
-    @if(!empty($bladeData->inline->backgroundColor))
-        background-color: {{ $bladeData->inline->backgroundColor }}
+    @if(!empty($color))
+        background-color: {{ $color }}
     @endif
-    @if(!empty($bladeData->inline->height))
-        height: {{ $bladeData->inline->height }}
-    @endif" class="bmcb-hr {{ !empty($bladeData->attributes->class) ? $bladeData->attributes->class : '' }}" />
+    @if(!empty($height))
+        height: {{ $height }}
+    @endif" class="bmcb-hr {{ !empty(($moduleClasses)) ? $moduleClasses : '' }}" />
 @overwrite

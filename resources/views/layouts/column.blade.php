@@ -62,12 +62,15 @@ if (!empty($spacing)) {
 
 <div @isset($moduleID) id="{{ $moduleID }}" @endisset
     class="bmcb-column col {{ $bladeData->generatedAttributes->columns }} {{ !empty($moduleClasses) ? $moduleClasses : null }}"
-    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} 
-    {{ !empty($bgImage) ?"background-image: url($bgImage);" : null }}"
+    style="
+    @if(!empty($bgColor)) {{ "background-color: $bgColor;" }} @endif
+    @if(!empty($bgImage)) {{ "background-image: url($bgImage);" }} @endif
+    @if(!empty($bgSize)) {{ "background-size: $bgSize;" }} @endif
+    @if(!empty($bgBlendMode)) {{ "background-blend-mode: $bgBlendMode;" }} @endif
+    @if(!empty($bgPosition)) {{ "background-position: $bgPosition;" }} @endif
+    @if(!empty($bgRepeat)) {{ "background-repeat: $bgRepeat;" }} @endif"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
-    @endif>
-    @foreach($bladeData->content as $module)
+    @endif>@foreach($bladeData->content as $module)
       {!! \HandmadeWeb\Buildy\Buildy::renderModule($module) !!}
-    @endforeach
-    </div>
+    @endforeach</div>

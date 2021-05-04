@@ -1,16 +1,25 @@
 @php
 
+$atts = $bladeData->attributes ?? null;
+
 $moduleClasses = "";
 $moduleID = "";
 
-if (!empty($bladeData->attributes)) {
+$internalLinkEnabled = false;
+
+if (!empty($atts)) {
   $moduleID = $bladeData->attributes->id ?? null;
   $moduleClasses = $bladeData->attributes->class ?? null;
+  $internalLinkEnabled = $bladeData->attributes->in_page_link_enabled ?? null;
   $internalLinkText = $bladeData->attributes->in_page_link_text ?? null;
+  $dataAtts = $bladeData->attributes->data ?? null;
 }
 
-if (!empty($bladeData->options)) {
+$options = $bladeData->options ?? null;
+
+if (!empty($options)) {
   $moduleStyle = $bladeData->options->moduleStyle ?? null ?? null;
+  $boxed = (!empty($bladeData->options->layout_boxed) && $bladeData->options->layout_boxed) ? 'container' : 'container-fluid';
 }
 
 if (!empty($moduleStyle) && $moduleStyle !== 'none') {
@@ -18,7 +27,15 @@ if (!empty($moduleStyle) && $moduleStyle !== 'none') {
   $moduleClasses .= " module-style__$moduleStyle";
 }
 
-if (!empty($bladeData->inline)) {
+$inline = $bladeData->inline ?? null;
+
+if (!empty($inline)) {
+  $bgSize = $bladeData->inline->backgroundImage->backgroundSize ?? "";
+  $bgPosition = $bladeData->inline->backgroundImage->backgroundPosition ?? "";
+  $bgRepeat = $bladeData->inline->backgroundImage->backgroundRepeat ?? null;
+  $bgColor = $bladeData->inline->backgroundColor ?? "";
+  $bgImageSize = $bladeData->inline->backgroundImage->imageSize ?? "full";
+  $bgBlendMode = $bladeData->inline->backgroundImage->BlendMode ?? null;
   $bgImageURL = $bladeData->inline->backgroundImage->url ?? null;
   $bgImageID = $bladeData->inline->backgroundImage->imageID ?? null;
 }
@@ -28,7 +45,7 @@ if ((empty($bgImageID) && !empty($bgImageURL)) && function_exists('attachment_ur
 }
 
 if (!empty($bgImageID)) {
-  $bgImageURL = wp_get_attachment_image_url( $bgImageID, $bladeData->inline->backgroundImage->imageSize ?? 'full');
+  $bgImageURL = wp_get_attachment_image_url( $bgImageID, $bgImageSize);
   $bgImage = $bgImageURL;
 }
 
@@ -37,39 +54,50 @@ if (isset($internalLinkTarget)) {
   $moduleID = $internalLinkTarget;
 }
 
+$spacing = $bladeData->generatedAttributes->spacing ?? null;
 $dataAttString = null;
 
 // Add data atts to a string
-if (!empty($bladeData->attributes->data) && count($bladeData->attributes->data)) {
-  foreach($bladeData->attributes->data as $dataAtt) {
-    $dataAttString .= ' data-'.strtolower($dataAtt->name).'='.stripslashes($dataAtt->value).' ';
+if (!empty($dataAtts)) {
+  foreach($dataAtts as $dataAtt) {
+    $name = strtolower($dataAtt->name);
+    $value = stripslashes($dataAtt->value);
+    $dataAttString .= " data-{$name}='{$value}' ";
   }
 }
 
 /* Add responsive margin/padding classes if they're set */
-if (!empty($bladeData->generatedAttributes->spacing)) {
-    !empty($moduleClasses) ? $moduleClasses .= " {$bladeData->generatedAttributes->spacing}" : $moduleClasses = $bladeData->generatedAttributes->spacing;
+if (!empty($spacing)) {
+    !empty($moduleClasses) ? $moduleClasses .= " $spacing" : $moduleClasses = $spacing;
 }
 @endphp
 
+{{-- @include('widgets.WP_Widget_Categories') --}}
+
 <div
     @isset($moduleID) id="{{ $moduleID }}" @endisset
-    @if($bladeData->attributes->in_page_link_enabled ?? false)
+    @if(!empty($internalLinkEnabled) && $internalLinkEnabled)
         data-internal_link_enabled="true"
     @endif
     @isset($internalLinkText) data-internal_link_text="{{ $internalLinkText }}" @endisset
-    class="bmcb-section {{ (!empty($bladeData->options->layout_boxed) && $bladeData->options->layout_boxed) ? 'container' : 'container-fluid' }} {{ isset($moduleClasses) ? $moduleClasses : '' }}"
-    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} {{ !empty($bgImage) ? "background-image: url($bgImage);" : null }}"
+    class="bmcb-section {{ $boxed ? $boxed : '' }} {{ isset($moduleClasses) ? $moduleClasses : '' }}"
+    style="
+    @if(!empty($bgColor)) {{ "background-color: $bgColor;" }} @endif
+    @if(!empty($bgImage)) {{ "background-image: url($bgImage);" }} @endif
+    @if(!empty($bgSize)) {{ "background-size: $bgSize;" }} @endif
+    @if(!empty($bgBlendMode)) {{ "background-blend-mode: $bgBlendMode;" }} @endif
+    @if(!empty($bgPosition)) {{ "background-position: $bgPosition;" }} @endif
+    @if(!empty($bgRepeat)) {{ "background-repeat: $bgRepeat;" }} @endif"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>
-    @if ($bladeData->options->inner_container ?? false)
+    @if (!empty($options) ? $options->inner_container ?? false : false)
         <div class="container">
     @endif
-    @foreach($bladeData->content as $row)
-      {!! \HandmadeWeb\Buildy\Buildy::renderRow($row) !!}
-    @endforeach
-    @if ($bladeData->options->inner_container ?? false )
+        @foreach($bladeData->content as $row)
+          {!! \HandmadeWeb\Buildy\Buildy::renderRow($row) !!}
+        @endforeach
+    @if (!empty($options) ? $options->inner_container ?? false : false)
         </div>
     @endif
 </div>
