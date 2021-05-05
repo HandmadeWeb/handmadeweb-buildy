@@ -133,11 +133,13 @@ class BackendLoader
             register_rest_route('bmcb/v3', '/globals', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_globals'],
+                'permission_callback' => '__return_true'
             ]);
 
             register_rest_route('bmcb/v1', '/module_styles=(?P<module_styles>[a-zA-Z0-9-]+)', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_module_styles'],
+                'permission_callback' => '__return_true'
             ]);
         });
 
