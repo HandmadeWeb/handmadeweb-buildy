@@ -103,7 +103,7 @@ class BackendLoader
                 'registered_image_sizes' => static::get_all_image_sizes(),
                 'registered_post_types' => get_post_types(['_builtin' => false]),
                 //'global_api' => get_rest_url(get_current_blog_id(), 'wp/v2/bmcb-global'),
-                'global_api' => get_rest_url(get_current_blog_id(), 'bmcb/v3/globals'),
+                'global_api' => get_rest_url(get_current_blog_id(), 'bmcb/v3/globals?doing_wp_cron'),
             ]);
 
             // This script contains the Config Array for the Page Builder.
