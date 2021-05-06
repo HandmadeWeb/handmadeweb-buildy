@@ -5,7 +5,7 @@ namespace HandmadeWeb\Buildy;
 use HandmadeWeb\Buildy\Traits\ContentCollector;
 use HandmadeWeb\Illuminate\Facades\Cache;
 use HandmadeWeb\Illuminate\Facades\View;
-use HandmadeWeb\Illuminate\Static\Filter;
+use HandmadeWeb\Illuminate\Filter;
 use LiteSpeed\Base as LSBase;
 use LiteSpeed\Conf as LSConf;
 use LiteSpeed\Optimizer as LSOptimizer;

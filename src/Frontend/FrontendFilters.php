@@ -2,7 +2,7 @@
 
 namespace HandmadeWeb\Buildy\Frontend;
 
-use HandmadeWeb\Illuminate\Static\Filter;
+use HandmadeWeb\Illuminate\Filter;
 use Illuminate\Support\Str;
 
 class FrontendFilters
