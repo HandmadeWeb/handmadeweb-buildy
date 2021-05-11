@@ -22,7 +22,7 @@ class FrontendFilters
      */
     protected static $filters = [
         'buildy_filter_all_data' => 'filter_all_data',
-        //'buildy_filter_type:section' => 'filter_sections',
+        'buildy_filter_type:section' => 'filter_sections',
         //'buildy_filter_type:row' => 'filter_rows',
         //'buildy_filter_type:column' => 'filter_columns',
         //'buildy_filter_type:global' => 'filter_globals',
@@ -104,15 +104,36 @@ class FrontendFilters
         * Append data to $data->generatedAttributes // $bladeData->generatedAttributes on the view.
         */
         $data->generatedAttributes = (object) [
+            'id' => $data->attributes->id ?? null,
+            'classes' => '',
             'type' => str_replace('-module', '', $data->type),
             'columns' => $columns,
             'spacing' => $spacingClasses,
         ];
 
+        // Classes
+        if (! empty($data->attributes->class)) {
+            $data->generatedAttributes->classes = $data->attributes->class;
+        }
+
+        if (! empty($data->options->moduleStyle) && $data->options->moduleStyle !== 'none') {
+            $data->generatedAttributes->classes .= ' module-style__'.strtolower(preg_replace("/\s+/", '-', $data->options->moduleStyle));
+        }
+        /* Add responsive margin/padding classes if they're set */
+        if (! empty($data->generatedAttributes->spacing)) {
+            $data->generatedAttributes->classes .= " {$data->generatedAttributes->spacing}";
+        }
+        // /Classes
+
+        if (! empty($data->attributes->in_page_link_text)) {
+            $data->generatedAttributes->id = preg_replace("/\W|_/", '', $data->attributes->in_page_link_text);
+        }
+
         if (! empty($data->options->moduleStyle)) {
             $data->generatedAttributes->template = Str::slug($data->options->moduleStyle);
         }
 
+        // Inline Style
         $inline_style = null;
 
         if (! empty($data->inline->backgroundColor)) {
@@ -135,18 +156,56 @@ class FrontendFilters
             $inline_style .= " background-repeat: {$data->inline->backgroundImage->backgroundRepeat};";
         }
 
+        // Inline Image
+        if (! empty($data->inline)) {
+            $bgImageURL = $data->inline->backgroundImage->url ?? null;
+            $bgImageID = $data->inline->backgroundImage->imageID ?? null;
+        }
+
+        if (! empty($data->inline->backgroundImage->imageID)) {
+            $bgImageID = $data->inline->backgroundImage->imageID;
+        } elseif (! empty($data->inline->backgroundImage->url) && function_exists('attachment_url_to_postid')) {
+            $bgImageID = attachment_url_to_postid($bgImageURL);
+        }
+
+        if (! empty($bgImageID)) {
+            $bgImage = wp_get_attachment_image_url($bgImageID, $data->inline->backgroundImage->imageSize ?? 'full');
+        }
+
+        if (! empty($bgImage)) {
+            $inline_style .= " background-image: url($bgImage);";
+        }
+        // /Inline Image
+
         if (! empty($inline_style)) {
             $data->generatedAttributes->inline_style = $inline_style;
         }
+        // /Inline Style
+
+        // Data Attributes
+        if (! empty($data->attributes->data) && is_iterable($data->attributes->data)) {
+            $data->generatedAttributes->data_attributes = '';
+
+            foreach ($data->attributes->data as $dataAtt) {
+                $data->generatedAttributes->data_attributes .= ' data-'.strtolower($dataAtt->name).'='.stripslashes($dataAtt->value).' ';
+            }
+            $data->generatedAttributes->data_attributes = trim($data->generatedAttributes->data_attributes);
+        }
+        // /Data Attributes
 
         return $data;
     }
 
-    // public static function filter_sections($data)
-    // {
-    //     // Example Filter.
-    //     return $data;
-    // }
+    public static function filter_sections($data)
+    {
+        if (empty($data->generatedAttributes->classes)) {
+            $data->generatedAttributes->classes = '';
+        }
+
+        $data->generatedAttributes->classes .= ($data->options->layout_boxed ?? null) ? ' container' : ' container-fluid';
+
+        return $data;
+    }
 
     // public static function filter_rows($data)
     // {
