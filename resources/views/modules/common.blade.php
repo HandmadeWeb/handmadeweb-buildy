@@ -127,7 +127,7 @@ if (isset($customClasses)) {
     {{-- Classes --}}
     class="bmcb-module {{ isset($moduleClasses) ? $moduleClasses : '' }}
     @yield('class')"
-    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} {{ !empty($bgImage) ?"background-image: url($bgImage);" : null }}"
+    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} {{ !empty($bgImage) ? "background-image: url($bgImage);" : null }}"
     @if($moduleType === 'slider' || $moduleType === 'accordion' || $moduleType === 'tab')
       role="listbox"
     @endif

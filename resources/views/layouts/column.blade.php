@@ -63,7 +63,7 @@ if (!empty($spacing)) {
 <div @isset($moduleID) id="{{ $moduleID }}" @endisset
     class="bmcb-column col {{ $bladeData->generatedAttributes->columns }} {{ !empty($moduleClasses) ? $moduleClasses : null }}"
     style="{{ $bladeData->generatedAttributes->inline_style ?? null }} 
-    {{ !empty($bgImage) ?"background-image: url($bgImage);" : null }}"
+    {{ !empty($bgImage) ? "background-image: url($bgImage);" : null }}"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>@foreach($bladeData->content as $module)
