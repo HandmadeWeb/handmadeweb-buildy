@@ -108,14 +108,7 @@ if (!empty($spacing)) {
       data-internal_link_enabled="true" @endif
     @isset($internalLinkText) data-internal_link_text="{{ $internalLinkText }}" @endisset
     class="bmcb-row row {{ isset($moduleClasses) ? $moduleClasses : '' }}"
-    style="
-    @if(!empty($cssGridGap)) {{ "--col-gap: $cssGridGap;" }} @endif
-    @if(!empty($bgColor)) {{ "background-color: $bgColor;" }} @endif
-    @if(!empty($bgImage)) {{ "background-image: url($bgImage);" }} @endif
-    @if(!empty($bgSize)) {{ "background-size: $bgSize;" }} @endif
-    @if(!empty($bgBlendMode)) {{ "background-blend-mode: $bgBlendMode;" }} @endif
-    @if(!empty($bgPosition)) {{ "background-position: $bgPosition;" }} @endif
-    @if(!empty($bgRepeat)) {{ "background-repeat: $bgRepeat;" }} @endif"
+    style="{{ $bladeData->generatedAttributes->inline_style ?? null }} {{ !empty($bladeData->inline->cssGrid->gap) ? "--col-gap: {$bladeData->inline->cssGrid->gap};" : null }} {{ !empty($bgImage) ? "background-image: url($bgImage);" : null }}"
     @if(!empty($dataAttString))
       {!! $dataAttString !!}
     @endif>
