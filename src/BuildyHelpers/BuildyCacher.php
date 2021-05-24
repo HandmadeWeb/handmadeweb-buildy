@@ -1,33 +1,12 @@
 <?php
 
-namespace HandmadeWeb\Buildy\Traits;
+namespace HandmadeWeb\Buildy\BuildyHelpers;
 
 use HandmadeWeb\Illuminate\Facades\DB;
 
-trait ContentCollector
+trait BuildyCacher
 {
     protected static $cache = [];
-
-    public static function getContentForId($post_id): array
-    {
-        if ($post_id !== 0) {
-            if (! empty(static::$cache[$post_id])) {
-                $post = static::$cache[$post_id];
-            } else {
-                $post = DB::table('posts')->where('ID', $post_id)->first(['ID', 'post_content']);
-                $post->post_content = json_decode($post->post_content);
-            }
-
-            if (! empty($post->post_content)) {
-                static::pushToCache($post);
-                static::preFetchGlobals($post);
-
-                return static::$cache[$post->ID]->post_content;
-            }
-        }
-
-        return [];
-    }
 
     public static function pushToCache($post)
     {
@@ -49,7 +28,7 @@ trait ContentCollector
                 }
 
                 if (! empty($globalsToFetch)) {
-                    $globals = DB::table('posts')->whereIn('ID', $globalsToFetch)->get(['ID', 'post_content']);
+                    $globals = DB::table('posts')->whereIn('ID', $globalsToFetch)->where('post_type', 'bmcb-global')->get(['ID', 'post_content']);
 
                     foreach ($globals as $global) {
                         $global->post_content = json_decode($global->post_content);

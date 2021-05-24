@@ -14,7 +14,7 @@
         <div class="container">
     @endif
         @foreach($bladeData->content as $row)
-            @buildyRenderRow($row)
+            {!! $buildy->renderRow($row) !!}
         @endforeach
     @if ($bladeData->options->inner_container ?? false )
         </div>

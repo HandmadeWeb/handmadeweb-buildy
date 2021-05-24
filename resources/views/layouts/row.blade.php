@@ -26,6 +26,6 @@
     {{ $bladeData->generatedAttributes->data_attributes ?? null }}
 >
     @foreach($bladeData->content as $column)
-        @buildyRenderColumn($column)
+        {!! $buildy->renderColumn($column) !!}
     @endforeach
 </div>

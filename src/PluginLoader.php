@@ -6,6 +6,7 @@ use HandmadeWeb\Buildy\Backend\BackendLoader;
 use HandmadeWeb\Buildy\Frontend\FrontendDirectives;
 use HandmadeWeb\Buildy\Frontend\FrontendFilters;
 use HandmadeWeb\Buildy\Frontend\FrontendLoader;
+use HandmadeWeb\Buildy\Frontend\FrontendShortcodes;
 use HandmadeWeb\Illuminate\AbstractLoaderClass;
 
 class PluginLoader extends AbstractLoaderClass
@@ -24,5 +25,6 @@ class PluginLoader extends AbstractLoaderClass
         add_action('init', [FrontendLoader::class, 'boot'], 100);
         add_action('init', [FrontendFilters::class, 'boot'], 1);
         add_action('init', [FrontendDirectives::class, 'boot'], 10);
+        add_action('init', [FrontendShortcodes::class, 'boot'], 10);
     }
 }

@@ -36,6 +36,6 @@
 
       {{ $bladeData->generatedAttributes->data_attributes ?? null }}
   >
-    @buildyRenderContentForId($bladeData->content->id)
+        {!! $buildy->fromGlobalId($bladeData->content->id)->render() !!}
   </div>
 @endif
