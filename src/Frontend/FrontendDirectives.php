@@ -20,6 +20,10 @@ class FrontendDirectives
      * @var array
      */
     protected static $directives = [
+        'buildyRenderRow' => 'buildy_render_row',
+        'buildyRenderColumn' => 'buildy_render_column',
+        'buildyRenderModule' => 'buildy_render_module',
+        'buildyRenderContentForId' => 'buildy_render_content_for_id',
         // 'wpaction' => 'do_action',
         // 'wpfilter' => 'apply_filters',
     ];
@@ -29,5 +33,25 @@ class FrontendDirectives
         foreach (static::$directives as $directive_name => $method_name) {
             BladeCompiler::directive($directive_name, [static::class, $method_name]);
         }
+    }
+
+    public static function buildy_render_row($expression)
+    {
+        return "<?php echo \HandmadeWeb\Buildy\Buildy::renderRow($expression); ?>";
+    }
+
+    public static function buildy_render_column($expression)
+    {
+        return "<?php echo \HandmadeWeb\Buildy\Buildy::renderColumn($expression); ?>";
+    }
+
+    public static function buildy_render_module($expression)
+    {
+        return "<?php echo \HandmadeWeb\Buildy\Buildy::renderModule($expression); ?>";
+    }
+
+    public static function buildy_render_content_for_id($expression)
+    {
+        return "<?php echo \HandmadeWeb\Buildy\Buildy::renderContentForId($expression); ?>";
     }
 }

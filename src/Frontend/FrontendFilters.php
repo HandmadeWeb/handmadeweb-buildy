@@ -23,7 +23,7 @@ class FrontendFilters
     protected static $filters = [
         'buildy_filter_all_data' => 'filter_all_data',
         'buildy_filter_type:section' => 'filter_sections',
-        //'buildy_filter_type:row' => 'filter_rows',
+        'buildy_filter_type:row' => 'filter_rows',
         //'buildy_filter_type:column' => 'filter_columns',
         //'buildy_filter_type:global' => 'filter_globals',
     ];
@@ -198,20 +198,39 @@ class FrontendFilters
 
     public static function filter_sections($data)
     {
-        if (empty($data->generatedAttributes->classes)) {
-            $data->generatedAttributes->classes = '';
-        }
-
         $data->generatedAttributes->classes .= ($data->options->layout_boxed ?? null) ? ' container' : ' container-fluid';
 
         return $data;
     }
 
-    // public static function filter_rows($data)
-    // {
-    //     // Example Filter.
-    //     return $data;
-    // }
+    public static function filter_rows($data)
+    {
+        if ($data->inline->cssGrid->enabled ?? false) {
+            $gridPrefix = 'grid';
+
+            $data->generatedAttributes->classes .= " {$gridPrefix}";
+
+            // This will become e.g grid-4-8
+            $colClass = $gridPrefix;
+
+            foreach ($data->content as $column) {
+                if (! empty($column->options->columns->xl)) {
+                    $colClass .= '-'.$column->options->columns->xl;
+                }
+            }
+
+            $data->generatedAttributes->classes .= " {$colClass}";
+        }
+
+        if (! empty($data->inline->textAlign->xs)) {
+            $data->generatedAttributes->classes .= " text-{$data->inline->textAlign->xs}";
+        }
+        if (! empty($data->inline->textAlign->xl)) {
+            $data->generatedAttributes->classes .= " xl:text-{$data->inline->textAlign->xl}";
+        }
+
+        return $data;
+    }
 
     // public static function filter_columns($data)
     // {
