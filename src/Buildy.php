@@ -26,20 +26,4 @@ class Buildy
 
         return $this;
     }
-
-    // public function __construct()
-    // {
-
-    //     // if (! $isGlobal) {
-    //     //     return Cache::rememberForever("Buildy_BladeCache-ID:{$post_id}", function () use ($post_id) {
-    //     //         $content = static::renderContent(static::getContentForId($post_id));
-
-    //     //         if (class_exists(LSConf::class) && LSConf::val(LSBase::O_OPTM_HTML_MIN)) {
-    //     //             $content = LSOptimizer::get_instance()->html_min($content);
-    //     //         }
-
-    //     //         return $content;
-    //     //     });
-    //     // }
-    // }
 }

@@ -58,15 +58,15 @@ class FrontendLoader
             // Get the current post.
             $post = get_queried_object();
 
-            // $thisPost = (object) [
-            //     'ID' => $post->ID,
-            //     'post_content' => json_decode($post->post_content),
-            // ];
+            $thisPost = (object) [
+                'ID' => $post->ID,
+                'post_content' => json_decode($post->post_content),
+            ];
 
-            // Buildy::pushToCache($thisPost);
-            // Buildy::preFetchGlobals($thisPost);
+            Buildy::pushToCache($thisPost);
+            Buildy::preFetchGlobals($thisPost);
 
-            return Buildy::fromId($post->ID)->render();
+            return Buildy::fromContent($thisPost->post_content)->render();
         }
 
         /*
