@@ -8,6 +8,7 @@ use HandmadeWeb\Illuminate\Filter;
 trait BuildyRenderer
 {
     protected $withFilters = true;
+    protected $withShortcodes = false;
 
     public function __toString()
     {
@@ -26,6 +27,10 @@ trait BuildyRenderer
                     $html .= $this->renderGlobal($data);
                 }
             }
+        }
+
+        if ($this->withShortcodes) {
+            return apply_shortcodes($html);
         }
 
         return $html;
@@ -85,6 +90,13 @@ trait BuildyRenderer
     public function withFilters(bool $withFilters = true)
     {
         $this->withFilters = $withFilters;
+
+        return $this;
+    }
+
+    public function withShortcodes(bool $withShortcodes = true)
+    {
+        $this->withShortcodes = $withShortcodes;
 
         return $this;
     }
