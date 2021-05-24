@@ -17,6 +17,15 @@ trait BuildyRenderer
 
     public function render()
     {
+        if (empty($this->content) && ! empty($this->post_id)) {
+            $this->content = $this->getContentForId($this->post_id, $this->isGlobal);
+        }
+
+        return $this->renderBlade();
+    }
+
+    protected function renderBlade()
+    {
         $html = '';
 
         if (! empty($this->content)) {

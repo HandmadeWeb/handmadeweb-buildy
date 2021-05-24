@@ -11,14 +11,16 @@ trait BuildyContentCollector
 
     public static function fromId(int $post_id)
     {
-        return (new static(
-                static::getContentForId($post_id, false)
-            ))->setAsGlobal(false);
+        return (new static)
+            ->setId($post_id)
+            ->setAsGlobal(false);
     }
 
     public static function fromContent(array $content)
     {
-        return (new static($content))->setAsGlobal(false);
+        return (new static)
+            ->setContent($content)
+            ->setAsGlobal(false);
     }
 
     protected static function getContentForId(int $post_id, bool $isGlobal = false)

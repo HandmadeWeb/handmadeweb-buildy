@@ -15,13 +15,15 @@ trait BuildyGlobalContentCollector
 
     public static function fromGlobalId(int $post_id)
     {
-        return (new static(
-                static::getContentForId($post_id, true)
-            ))->setAsGlobal(true);
+        return (new static)
+            ->setId($post_id)
+            ->setAsGlobal(true);
     }
 
     public static function fromGlobalContent(array $content)
     {
-        return (new static($content))->setAsGlobal(true);
+        return (new static)
+            ->setContent($content)
+            ->setAsGlobal(true);
     }
 }
