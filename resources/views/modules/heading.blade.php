@@ -1,10 +1,3 @@
-{{--
-/**
- * @version 1.0.0
- * @since   1.0.0
- */
- --}}
-{{-- @section('class', 'spud') --}}
 @extends('modules.common')
 
 @section('content')

@@ -1,5 +1,4 @@
 @php
-    $bgImageSize = $bladeData->inline->backgroundImage->imageSize ?? "full";
     $bgImageURL = $bladeData->inline->backgroundImage->url ?? null;
     $bgImageID = $bladeData->inline->backgroundImage->imageID ?? null;
     
@@ -8,7 +7,7 @@
     }
 
     if (!empty($bgImageID)) {
-        $bgImageURL = wp_get_attachment_image_url( $bgImageID, $bgImageSize);
+        $bgImageURL = wp_get_attachment_image_url( $bgImageID, $bladeData->inline->backgroundImage->imageSize ?? "full");
         $bgImage = $bgImageURL;
     }
 

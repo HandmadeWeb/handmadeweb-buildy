@@ -1,3 +1,4 @@
+@extends('modules.common', ["customClasses" => "{$is_slider}"])
 
 @php
   $module_link_url = $bladeData->options->module_link->url ?? null;
@@ -46,8 +47,6 @@
   }
   
 @endphp
-
-@extends('modules.common', ["customClasses" => "{$is_slider}"])
 
 @section('content')
     @if(!empty($module_link_url))

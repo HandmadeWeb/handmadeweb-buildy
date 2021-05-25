@@ -1,4 +1,4 @@
- @php
+@php
 
 $atts = $bladeData->attributes ?? null;
 $template = $bladeData->options->template ?? null;
@@ -107,7 +107,7 @@ if (isset($customClasses)) {
   $moduleClasses .= " " . trim($customClasses);
 }
 
- @endphp
+@endphp
 <div
     {{-- If ID is set --}}
     @isset($moduleID) id="{{ $moduleID }}" @endisset
