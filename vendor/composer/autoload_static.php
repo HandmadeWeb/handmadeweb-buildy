@@ -24,11 +24,15 @@ class ComposerStaticInit1aeeda6d757bda6f816500a0cc82ab00
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'HandmadeWeb\\Buildy\\Backend\\BackendLoader' => __DIR__ . '/../..' . '/src/Backend/BackendLoader.php',
         'HandmadeWeb\\Buildy\\Buildy' => __DIR__ . '/../..' . '/src/Buildy.php',
+        'HandmadeWeb\\Buildy\\BuildyHelpers\\BuildyCacher' => __DIR__ . '/../..' . '/src/BuildyHelpers/BuildyCacher.php',
+        'HandmadeWeb\\Buildy\\BuildyHelpers\\BuildyContentCollector' => __DIR__ . '/../..' . '/src/BuildyHelpers/BuildyContentCollector.php',
+        'HandmadeWeb\\Buildy\\BuildyHelpers\\BuildyGlobalContentCollector' => __DIR__ . '/../..' . '/src/BuildyHelpers/BuildyGlobalContentCollector.php',
+        'HandmadeWeb\\Buildy\\BuildyHelpers\\BuildyRenderer' => __DIR__ . '/../..' . '/src/BuildyHelpers/BuildyRenderer.php',
         'HandmadeWeb\\Buildy\\Frontend\\FrontendDirectives' => __DIR__ . '/../..' . '/src/Frontend/FrontendDirectives.php',
         'HandmadeWeb\\Buildy\\Frontend\\FrontendFilters' => __DIR__ . '/../..' . '/src/Frontend/FrontendFilters.php',
         'HandmadeWeb\\Buildy\\Frontend\\FrontendLoader' => __DIR__ . '/../..' . '/src/Frontend/FrontendLoader.php',
+        'HandmadeWeb\\Buildy\\Frontend\\FrontendShortcodes' => __DIR__ . '/../..' . '/src/Frontend/FrontendShortcodes.php',
         'HandmadeWeb\\Buildy\\PluginLoader' => __DIR__ . '/../..' . '/src/PluginLoader.php',
-        'HandmadeWeb\\Buildy\\Traits\\ContentCollector' => __DIR__ . '/../..' . '/src/Traits/ContentCollector.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
