@@ -1,12 +1,16 @@
 <?php
-/*
-Plugin Name: Handmade Web - Buildy
-Plugin URI: http://
-Description: Buildy
-Author: Handmade Web
-Version: 3.0.0
-Author URI: http://
-*/
+
+/**
+ * Plugin Name: Handmade Web - Buildy
+ * Plugin URI: https://github.com/HandmadeWeb/HandmadeWeb-Buildy
+ * Description: Buildy
+ * Author: Handmade Web
+ * Version: 3.0.0
+ * Author URI: https://www.handmadeweb.com.au/
+ * GitHub Plugin URI: https://github.com/HandmadeWeb/HandmadeWeb-Buildy
+ * Requires at least: 5.0
+ * Requires PHP: 7.3
+ */
 
 use HandmadeWeb\Buildy\PluginLoader;
 
