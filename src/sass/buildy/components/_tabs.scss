@@ -1,0 +1,46 @@
+/* Tabs */
+.bmcb-tab {
+  --col-gap: 1rem;
+
+  .tabs-menu-tabs {
+    margin: 0;
+    display: flex;
+    gap: var(--col-gap);
+    .tabs-menu-item {
+      background: $color__quaternary;
+
+      &.is-active {
+        background-color: #e7e7e7;
+        a {
+          color: $color__text-main;
+        }
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+      &:hover {
+        background-color: #e7e7e7;
+        a {
+          color: $color__text-main;
+        }
+      }
+      a {
+        display: block;
+        color: $color__white;
+        padding: 2rem;
+        outline: none !important;
+      }
+    }
+  }
+  /* Tab Content */
+  .tabs-content {
+    .tab-body {
+      display: none;
+      background-color: #e7e7e7;
+      &.is-active {
+        display: block;
+        padding: 20px;
+      }
+    }
+  }
+}

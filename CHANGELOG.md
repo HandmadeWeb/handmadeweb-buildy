@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.2
+
+- Fix youtube video params
+- Fix heading_level in components > title being empty in some cases, breaking the layout
+- Fix slider options not correctly attaching to data-atts
+- Fix slider styles for image to stretch whole slide by default
+- Fix tab styles & functionality
+
+## 3.0.1
+
+- Add counter module
+- Adjust some default styles for blurb buttons, accordions, counters
+
 ## 3.0.0
 
 - Major PHP refactor of 2.6.70

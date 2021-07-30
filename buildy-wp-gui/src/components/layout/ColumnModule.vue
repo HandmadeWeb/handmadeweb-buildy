@@ -145,6 +145,7 @@ import { mapGetters } from "vuex";
 import {
   BookIcon,
   MenuIcon,
+  ClockIcon,
   MinusIcon,
   MapIcon,
   PlusCircleIcon,
@@ -175,6 +176,7 @@ export default {
     draggable,
     BookIcon,
     MenuIcon,
+    ClockIcon,
     MinusIcon,
     MapIcon,
     PlusCircleIcon,

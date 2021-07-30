@@ -77,6 +77,8 @@ if (sliders.length) {
         })
       }
 
+      console.log({ dataAtts });
+
       if ((dataAtts?.paginationdots === "false") ? false : true) {
         slider.addPagination();
       }

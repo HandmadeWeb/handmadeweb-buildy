@@ -868,6 +868,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@handmadeweb/number-rollup@^1.1.0":
+  version "1.2.1"
+  resolved "https://npm.pkg.github.com/download/@handmadeweb/number-rollup/1.2.1/20728278a2db79022f94d20a0a59ab0ad4e5f27d0ac4afd38e57080aa73cc8dd#2a12a18bc2ef8b75343d3cc1d148dc6afc6cbe7a"
+  integrity sha512-VqIpIIp9Cu6JE++6CEQr12My/V2eLz8pyHWRc+CPOzYKDx458s1tQbVpG6TSB7A4QUG6V1lu3om2yC4FkzkYGA==
+
 "@nicolo-ribaudo/chokidar-2@2.1.8-no-fsevents":
   version "2.1.8-no-fsevents"
   resolved "https://registry.yarnpkg.com/@nicolo-ribaudo/chokidar-2/-/chokidar-2-2.1.8-no-fsevents.tgz#da7c3996b8e6e19ebd14d82eaced2313e7769f9b"

@@ -2,16 +2,14 @@
 
 @section('content')
   @component('modules.components.title', ['bladeData'=> $bladeData])@endcomponent
-
   <div class="bmcb-slider__slides"
-    @if (isset($bladeData->options->slider) && is_array($bladeData->options->slider))
+    @if (isset($bladeData->options->slider))
       @foreach($bladeData->options->slider as $key=>$val)
         @if($val !== '')
           data-{{ $key }}="{{ $val ? $val : 'false' }}"
         @endif
       @endforeach
     @endif
-
   >
     @foreach($bladeData->content->slider->items ?? [] as $index=>$item)
       @php
@@ -29,7 +27,7 @@
       </div>
     @endforeach
   </div>
-  @if(!empty($bladeData->options->slider->arrow_nav))
+  @if($bladeData->options->slider->arrow_nav ?? true)
     <div class="bmcb-slider__navigation-arrows">
       <div class="bmcb-slider__arrow-prev">
         <i class="fa fa-chevron-left"></i>

@@ -1,8 +1,7 @@
 @php
   $moduleType = explode('-', $bladeData->type);
   $title = $bladeData->content->title->value ?? null;
-  $default_level = $default ?? 'h3';
-  $heading_level = $bladeData->content->title->level ?? $default_level;
+  $heading_level = !empty($bladeData->content->title->level) ? $bladeData->content->title->level : 'h3';
   $color = $bladeData->content->title->color ?? null;
   $title_id = $bladeData->content->title->id ?? null;
   $title_classes = $bladeData->content->title->class ?? "";

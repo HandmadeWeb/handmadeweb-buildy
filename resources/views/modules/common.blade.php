@@ -23,6 +23,13 @@ if (isset($moduleStyle) && $moduleStyle !== 'none') {
   $moduleClasses .= " module-style__$moduleStyle";
 }
 
+if (isset($customAtts)) {
+  if (!isset($dataAtts)) {
+    $dataAtts = $customAtts;
+ }  
+ $dataAtts = array_merge($dataAtts, $customAtts);
+}
+
 $dataAttString = null;
 
 // Add data atts to a string

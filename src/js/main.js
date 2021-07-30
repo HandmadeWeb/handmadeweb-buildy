@@ -1,4 +1,6 @@
 import accordions from './components/accordion'
+import counters from './components/counters'
+import { Tabs } from './components/tabs'
 import { initSliders } from './components/slider'
 import youtubeVideos from './components/youtube'
 import baguetteBox from 'baguettebox.js';
@@ -43,3 +45,17 @@ initSliders();
 
 // Enable YoutubeVideos
 youtubeVideos();
+
+// Enable Counters 
+counters();
+
+
+// Init default tabs
+let tabs = document.querySelectorAll('.bmcb-tab');
+tabs.forEach(tab => {
+  new Tabs({
+    el: tab,
+    tabNavigationLinks: '.tabs-menu-tabs',
+    tabContentContainers: '.tabs-content'
+  })
+})

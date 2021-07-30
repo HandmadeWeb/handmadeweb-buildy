@@ -26,6 +26,8 @@
   }
   &__slide-image {
     display: block;
+    width: 100%;
+    object-fit: cover;
   }
   &__navigation-arrows {
     .bmcb-slider__arrow-prev,
