@@ -24,7 +24,7 @@ class FrontendFilters
         'buildy_filter_all_data' => 'filter_all_data',
         'buildy_filter_type:section' => 'filter_sections',
         'buildy_filter_type:row' => 'filter_rows',
-        //'buildy_filter_type:column' => 'filter_columns',
+        'buildy_filter_type:column' => 'filter_columns',
         //'buildy_filter_type:global' => 'filter_globals',
     ];
 
@@ -37,25 +37,6 @@ class FrontendFilters
 
     public static function filter_all_data($data)
     {
-        /**
-         * Generate the Bootstrap col-X-X classes for the current loop.
-         */
-        $columns = '';
-        if (! empty($data->options->columns)) {
-            foreach ($data->options->columns as $key => $val) {
-                if (! empty($val)) {
-                    // Legacy -- XS no longer exists and is defaulted to just col-val
-                    if ($key == 'xs') {
-                        // This is for backwards compatibility
-                        $columns .= "col-{$val} ";
-                    } else {
-                        $columns .= "col-{$key}-{$val} ";
-                    }
-                }
-            }
-            $columns = rtrim($columns, ' ');
-        }
-
         /**
          * Generate the spacing classes (margin/paddings) for each breakpoint size.
          */
@@ -107,7 +88,6 @@ class FrontendFilters
             'id' => $data->attributes->id ?? null,
             'classes' => '',
             'type' => str_replace('-module', '', $data->type),
-            'columns' => $columns,
             'spacing' => $spacingClasses,
         ];
 
@@ -232,11 +212,30 @@ class FrontendFilters
         return $data;
     }
 
-    // public static function filter_columns($data)
-    // {
-    //     // Example Filter.
-    //     return $data;
-    // }
+    public static function filter_columns($data)
+    {
+        /**
+         * Generate the Bootstrap col-X-X classes for the current loop.
+         */
+        $columns = '';
+        if (! empty($data->options->columns)) {
+            foreach ($data->options->columns as $key => $val) {
+                if (! empty($val)) {
+                    // Legacy -- XS no longer exists and is defaulted to just col-val
+                    if ($key == 'xs') {
+                        // This is for backwards compatibility
+                        $columns .= "col-{$val} ";
+                    } else {
+                        $columns .= "col-{$key}-{$val} ";
+                    }
+                }
+            }
+        }
+
+        $data->generatedAttributes->classes = $columns.$data->generatedAttributes->classes;
+
+        return $data;
+    }
 
     // public static function filter_globals($data)
     // {
