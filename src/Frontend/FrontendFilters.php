@@ -232,6 +232,7 @@ class FrontendFilters
             }
         }
 
+        $data->generatedAttributes->columns = $columns;
         $data->generatedAttributes->classes = $columns.$data->generatedAttributes->classes;
 
         return $data;
