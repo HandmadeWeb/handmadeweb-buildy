@@ -33,6 +33,12 @@
 
           <!-- Accordion Modules Need Different Paths -->
           <custom-fields v-if="component.type !== 'accordion-module'" />
+
+          <!-- Admin label moved to content tab -->
+          <attribute-editor
+            label="Admin Label"
+            path="options.admin_label"
+          ></attribute-editor>
         </vue-tab>
         <vue-tab class="design-tab" name="Design">
           <!-- Design Options -->
@@ -57,10 +63,6 @@
             :key="'background-image-' + component.id"
             label="Background Image:"
           ></image-uploader>
-          <attribute-editor
-            label="Admin Label"
-            path="options.admin_label"
-          ></attribute-editor>
 
           <!-- Add things to design tab -->
           <slot name="design"></slot>
