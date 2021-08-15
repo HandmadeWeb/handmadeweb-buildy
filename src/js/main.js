@@ -53,7 +53,7 @@ counters();
 // Init default tabs
 let tabs = document.querySelectorAll('.bmcb-tab');
 tabs.forEach(tab => {
-  new Tabs({
+  tab['tabs'] = new Tabs({
     el: tab,
     tabNavigationLinks: '.tabs-menu-tabs',
     tabContentContainers: '.tabs-content'
