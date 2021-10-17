@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.0.3
+## 3.0.3 - 3.0.4
 
 - Add ability to use vimeo as a video URL
 - Fix php errors in gallery module
