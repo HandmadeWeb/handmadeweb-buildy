@@ -63,8 +63,9 @@
     "yarn": "^1.22.10"
   },
   "dependencies": {
-    "baguettebox.js": "^1.11.1",
+    "@babel/eslint-parser": "^7.15.7",
     "@handmadeweb/number-rollup": "^1.1.0",
+    "baguettebox.js": "^1.11.1",
     "macy": "^2.5.1",
     "siema": "^1.5.1"
   }

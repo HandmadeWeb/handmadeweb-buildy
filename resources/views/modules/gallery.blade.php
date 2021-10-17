@@ -9,9 +9,9 @@
   $is_slider = !empty($bladeData->content->gallery->isSlider) ? "bmcb-slider" : false;
   $slider_options = $bladeData->options->slider ?? null;
   
-  $is_masonry = $bladeData->content->gallery->isMasonry ?: false;
-  $masonry_marginX = $bladeData->options->masonry->marginX ?: false;
-  $masonry_marginY = $bladeData->options->masonry->marginY ?: false;
+  $is_masonry = $bladeData->content->gallery->isMasonry ?? false;
+  $masonry_marginX = $bladeData->options->masonry->marginX ?? false;
+  $masonry_marginY = $bladeData->options->masonry->marginY ?? false;
 
   $gallery_items_class = "";  
 
@@ -21,7 +21,7 @@
 
   // Default = 3
   $cols = 3;
-  $grid_cols = trim($bladeData->content->gallery->columnCount) ?? $cols;
+  $grid_cols = isset($bladeData->content->gallery->columnCount) ? trim($bladeData->content->gallery->columnCount) : $cols;
 
 
   if (!empty($grid_cols)) : 

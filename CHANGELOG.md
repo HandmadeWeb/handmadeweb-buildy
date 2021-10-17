@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.0.3
+
+- Add ability to use vimeo as a video URL
+- Fix php errors in gallery module
+- Fix sliders not working when an image is not set
+- Add taxonomy option to post grid
+- Add element wrapper around counter so prefix/suffix can be added
+
 ## 3.0.2
 
 - Fix youtube video params
