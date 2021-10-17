@@ -8,8 +8,10 @@
  * Version: 3.0.3
  * Author URI: https://www.handmadeweb.com.au/
  * GitHub Plugin URI: https://github.com/handmadeweb/handmadeweb-buildy
+ * Primary Branch: main
  * Requires at least: 5.0
- * Requires PHP: 7.3.
+ * Requires PHP: 7.3
+ * Go: Enjoy.
  */
 
 use HandmadeWeb\Buildy\PluginLoader;
