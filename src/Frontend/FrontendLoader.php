@@ -91,7 +91,8 @@ class FrontendLoader
             // Temporary IE 11 polyfills --- These don't affect file size for non-ie browsers.
             wp_enqueue_script('ie-pollyfil', 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CCustomEvent', null, null, false);
             wp_enqueue_script('buildy-js', BUILDY_URL.'public/frontend-bundle.js', null, '1.0.0', true);
-            wp_enqueue_style('buildy-css', BUILDY_URL.'public/frontend.css', null, '1.0.0', '');
+            wp_enqueue_style('buildy-components', BUILDY_URL.'public/frontend.css', null, '1.0.0', '');
+            wp_enqueue_style('buildy-layout', BUILDY_URL.'public/buildy-layout.css', null, '1.0.0', '');
         }
     }
 }

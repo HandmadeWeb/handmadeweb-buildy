@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.0.5
+
+-- Break components and layout css into separate files (so one can be dequeued without the other if needed)
+
 ## 3.0.3 - 3.0.4
 
 - Add ability to use vimeo as a video URL
