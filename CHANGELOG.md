@@ -1,8 +1,9 @@
 # Changelog
 
-## 3.0.5
+## 3.0.5 - 3.0.6
 
 -- Break components and layout css into separate files (so one can be dequeued without the other if needed)
+-- Fix title of global modules
 
 ## 3.0.3 - 3.0.4
 

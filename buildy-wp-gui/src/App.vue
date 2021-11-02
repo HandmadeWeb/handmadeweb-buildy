@@ -24,7 +24,6 @@ export default {
   computed: {
     pageBuilderOutput() {
       let output = [];
-      console.log("computed", this.pageBuilder);
       if (this.pageBuilder.length) {
         output = JSON.stringify(this.pageBuilder);
       }

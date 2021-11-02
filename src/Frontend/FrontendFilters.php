@@ -185,6 +185,9 @@ class FrontendFilters
 
     public static function filter_rows($data)
     {
+      // Inline Style
+      $inline_style = $data->generatedAttributes->inline_style ?? "";
+
         if ($data->inline->cssGrid->enabled ?? false) {
             $gridPrefix = 'grid';
 
@@ -202,11 +205,19 @@ class FrontendFilters
             $data->generatedAttributes->classes .= " {$colClass}";
         }
 
+         if (isset($data->inline->cssGrid->colCount)) {
+            $inline_style .= " --b-columns: {$data->inline->cssGrid->colCount};";
+        }
+
         if (! empty($data->inline->textAlign->xs)) {
             $data->generatedAttributes->classes .= " text-{$data->inline->textAlign->xs}";
         }
         if (! empty($data->inline->textAlign->xl)) {
             $data->generatedAttributes->classes .= " xl:text-{$data->inline->textAlign->xl}";
+        }
+
+        if (! empty($inline_style)) {
+            $data->generatedAttributes->inline_style = $inline_style;
         }
 
         return $data;

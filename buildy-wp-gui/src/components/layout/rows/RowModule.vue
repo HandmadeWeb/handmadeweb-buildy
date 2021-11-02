@@ -6,6 +6,7 @@
       settingsOpen ? 'highlight-row' : '',
       renderDisabled ? 'border-8 border-b-0 border-gray-500' : '',
     ]"
+    :style="colCount"
   >
     <module-settings-bar
       :parent_array="parent_array"
@@ -26,6 +27,11 @@
           Grid will use the same column count &amp; style
         </legend>
         <toggle-switch label="Enable css grid?" path="inline.cssGrid.enabled" />
+        <attribute-editor
+          placeholder="Column Count"
+          label="Column Count"
+          path="inline.cssGrid.colCount"
+        />
         <attribute-editor
           placeholder="Choose the distance between columns (1-10)"
           label="Gap"
@@ -75,6 +81,10 @@ export default {
   },
   computed: {
     ...mapGetters(["dragDisabled"]),
+    colCount() {
+      const count = this.component?.inline?.cssGrid?.colCount || false;
+      return count ? { "--b-columns": count } : {};
+    },
     columns() {
       return this.component.content.length;
     },
