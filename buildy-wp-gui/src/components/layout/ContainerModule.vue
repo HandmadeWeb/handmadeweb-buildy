@@ -71,7 +71,7 @@
               >
                 <span
                   class="px-2 py-1 flex-b inline-block mr-2 bg-gray-200 rounded border border-grey flex-no-shrink flex items-center justify-center"
-                  >{{ globalModule.title.rendered }}
+                  >{{ globalModule.title }}
                 </span>
               </label>
             </div>

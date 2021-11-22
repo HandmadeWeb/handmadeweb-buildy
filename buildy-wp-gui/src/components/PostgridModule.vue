@@ -43,6 +43,14 @@
         label="Exclude Categories"
       ></attribute-editor>
     </div>
+    <div>
+      <attribute-editor
+        class="px-2 flex-grow"
+        path="content.post.taxonomy"
+        placeholder="default post"
+        label="Taxonomy"
+      ></attribute-editor>
+    </div>
     <div class="flex -mx-2 items-center">
       <attribute-editor
         class="px-2 flex-grow"

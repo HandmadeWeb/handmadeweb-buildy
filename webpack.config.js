@@ -8,6 +8,7 @@ module.exports = {
   context: __dirname,
   entry: {
     frontend: ['./src/js/main.js', './src/sass/style.scss'],
+    'buildy-layout': ['./src/sass/buildy/buildy-layout.scss'],
   },
   output: {
     path: path.resolve(__dirname, 'public'),

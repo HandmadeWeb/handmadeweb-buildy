@@ -5,7 +5,7 @@ let initSliders = e => e
 
 if (sliders.length) {
 
-  initSliders = () => {
+  initSliders = (options = {}) => {
 
     sliders.forEach(el => {
       let currentIndex;
@@ -29,7 +29,7 @@ if (sliders.length) {
         onInit: function () {
           currentIndex = this.currentSlide
         },
-        onChange: function () {
+        onChange: function (el) {
 
           let pagination = this.selector.parentNode.querySelector('.bmcb-slider__navigation-dots');
 

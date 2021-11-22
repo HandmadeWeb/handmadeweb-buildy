@@ -11,9 +11,6 @@
     color: var(--color-white);
     left: 0;
     bottom: 0;
-    @include media-breakpoint-up(lg) {
-      position: absolute;
-    }
   }
   &__slide-title {
     font-size: 2em;
@@ -28,6 +25,11 @@
     display: block;
     width: 100%;
     object-fit: cover;
+    .bmcb-slider__slide-content {
+      @include media-breakpoint-up(lg) {
+        position: absolute;
+      }
+    }
   }
   &__navigation-arrows {
     .bmcb-slider__arrow-prev,

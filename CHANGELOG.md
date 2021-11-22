@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.0.5 - 3.0.6
+
+-- Break components and layout css into separate files (so one can be dequeued without the other if needed)
+-- Fix title of global modules
+
+## 3.0.3 - 3.0.4
+
+- Add ability to use vimeo as a video URL
+- Fix php errors in gallery module
+- Fix sliders not working when an image is not set
+- Add taxonomy option to post grid
+- Add element wrapper around counter so prefix/suffix can be added
+
 ## 3.0.2
 
 - Fix youtube video params

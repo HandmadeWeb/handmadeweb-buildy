@@ -29,6 +29,8 @@
 
 @section('content')
     @component('modules.components.title', ['bladeData'=> $bladeData])@endcomponent
-    {{ $timer->start }}
+    <div class="counter-element">
+      {{ $timer->start }}
+    </div>
 @overwrite
 
