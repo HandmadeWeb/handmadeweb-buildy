@@ -1,65 +1,83 @@
 [
-    {
-        "key": "group_5d81b07219727",
-        "title": "Buildy Settings",
-        "fields": [
-            {
-                "key": "field_5d81b912abb03",
-                "label": "Post Types",
-                "name": "BMCB_post_types",
-                "type": "repeater",
-                "instructions": "Enable buildy functionality on these post types (Pages and Globals are automatically included)",
-                "required": 0,
-                "conditional_logic": 0,
-                "wrapper": {
-                    "width": "",
-                    "class": "",
-                    "id": ""
-                },
-                "collapsed": "",
-                "min": 0,
-                "max": 0,
-                "layout": "table",
-                "button_label": "",
-                "sub_fields": [
-                    {
-                        "key": "field_5d81b924abb04",
-                        "label": "Post Type",
-                        "name": "BMCB_post_type",
-                        "type": "text",
-                        "instructions": "",
-                        "required": 1,
-                        "conditional_logic": 0,
-                        "wrapper": {
-                            "width": "",
-                            "class": "",
-                            "id": ""
-                        },
-                        "default_value": "",
-                        "placeholder": "",
-                        "prepend": "",
-                        "append": "",
-                        "maxlength": ""
-                    }
-                ]
-            }
-        ],
-        "location": [
-            [
-                {
-                    "param": "options_page",
-                    "operator": "==",
-                    "value": "bmcb-settings"
-                }
-            ]
-        ],
-        "menu_order": 0,
-        "position": "normal",
-        "style": "seamless",
-        "label_placement": "top",
-        "instruction_placement": "label",
-        "hide_on_screen": "",
-        "active": true,
-        "description": ""
-    }
+  {
+    "key": "group_5d81b07219727",
+    "title": "Buildy Settings",
+    "fields": [
+      {
+        "key": "field_5d81b912abb03",
+        "label": "Post Types",
+        "name": "BMCB_post_types",
+        "type": "repeater",
+        "instructions": "Enable buildy functionality on these post types (Pages and Globals are automatically included)",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "collapsed": "",
+        "min": 0,
+        "max": 0,
+        "layout": "table",
+        "button_label": "",
+        "sub_fields": [
+          {
+            "key": "field_5d81b924abb04",
+            "label": "Post Type",
+            "name": "BMCB_post_type",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+          }
+        ]
+      },
+      {
+        "key": "field_asderte4e24124",
+        "label": "Overwrite Mode",
+        "name": "overwrite_mode",
+        "type": "true_false",
+        "instructions": "This will allow settings inside the builder to tunnel their way through, good for when an update has changed settings from a single option to an object (e.g something is now responsive with sm, md, lg) without this enabled it won't be able to set the new object.",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "0",
+        "ui": "1",
+        "ui_on_text": "",
+        "ui_off_text": ""
+      }
+    ],
+    "location": [
+      [
+        {
+          "param": "options_page",
+          "operator": "==",
+          "value": "bmcb-settings"
+        }
+      ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": ""
+  }
 ]

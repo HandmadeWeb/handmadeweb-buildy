@@ -5,7 +5,7 @@
  * Plugin URI: https://github.com/handmadeweb/handmadeweb-buildy
  * Description: Buildy
  * Author: Handmade Web
- * Version: 3.0.6
+ * Version: 3.0.7
  * Author URI: https://www.handmadeweb.com.au/
  * GitHub Plugin URI: https://github.com/handmadeweb/handmadeweb-buildy
  * Primary Branch: main

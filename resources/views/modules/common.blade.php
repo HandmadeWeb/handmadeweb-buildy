@@ -36,8 +36,8 @@ $dataAttString = null;
 if (isset($dataAtts)) {
   foreach($dataAtts as $dataAtt) {
     $name = strtolower($dataAtt->name);
-    $value = stripslashes($dataAtt->value);
-    $dataAttString .= " data-{$name}='{$value}' ";
+    $value =$dataAtt->value;
+    $dataAttString .= " data-{$name}={$value} ";
   }
 }
 

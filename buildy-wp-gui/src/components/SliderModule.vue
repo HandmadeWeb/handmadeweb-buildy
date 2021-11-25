@@ -4,6 +4,7 @@
     <accordion path="content.slider.items" isSlider />
     <fieldset slot="options" class="field-group slider-custom-options mt-6">
       <legend class="uppercase text-sm px-4">Slider options</legend>
+      <breakpoint-switcher path="sliderSettings" @change="swapBreakpoint" />
       <attribute-editor
         label="Interval"
         placeholder="Time between slide changes - Default: 5000"
@@ -22,7 +23,8 @@
       <attribute-editor
         label="Per Page"
         placeholder="Default: 1"
-        path="options.slider.perPage"
+        :key="`options.slider.perPage.${breakpoint}`"
+        :path="`options.slider.perPage.${breakpoint}`"
       />
       <attribute-editor
         label="Start Index"
@@ -98,7 +100,14 @@ export default {
   data: function () {
     return {
       icon: "SlidersIcon",
+      breakpoint: "xl",
     };
+  },
+  methods: {
+    swapBreakpoint(breakpoint) {
+      breakpoint ? (this.breakpoint = breakpoint) : (this.breakpoint = "xl");
+      console.log(this.component);
+    },
   },
   props: {
     component: Object,

@@ -2,11 +2,16 @@
 
 @section('content')
   @component('modules.components.title', ['bladeData'=> $bladeData])@endcomponent
+ 
   <div class="bmcb-slider__slides"
     @if (isset($bladeData->options->slider))
       @foreach($bladeData->options->slider as $key=>$val)
-        @if($val !== '')
-          data-{{ $key }}="{{ $val ? $val : 'false' }}"
+        @if ($key == 'perPage')
+          data-{{ $key }}="{{ $val ? json_encode($val) : 'false' }}"
+        @else
+          @if($val !== '')
+            data-{{ $key }}="{{ $val ? $val : 'false' }}"
+          @endif
         @endif
       @endforeach
     @endif

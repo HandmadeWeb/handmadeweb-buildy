@@ -92,6 +92,10 @@ class BackendLoader
              * Create config array for the Page Builder.
              */
 
+             if (function_exists("get_field")) {
+               $overwrite_mode = get_field('overwrite_mode', 'option');
+             }
+
             $config = json_encode([
                 'post_id' => $post->ID,
                 'post_type' => $post->post_type,

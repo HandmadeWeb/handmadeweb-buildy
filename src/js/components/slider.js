@@ -1,4 +1,5 @@
 import Siema from 'siema';
+import { sizes } from '../util/breakpoints'
 
 let sliders = document.querySelectorAll('.bmcb-slider');
 let initSliders = e => e
@@ -15,11 +16,21 @@ if (sliders.length) {
       const prev = el.querySelector('.bmcb-slider__arrow-prev');
       const next = el.querySelector('.bmcb-slider__arrow-next');
 
+      let perPage = dataAtts.perpage ? JSON.parse(dataAtts.perpage) : 1;
+
+      if (typeof perPage === 'object') {
+        perPage = Object.keys(perPage).reduce((acc, cur) => {
+          acc[sizes[cur]] = perPage[cur]
+          return acc;
+        }, {})
+
+      }
+
       const slider = new Siema({
         selector: slides,
         duration: Number(dataAtts?.duration) || 200,
         easing: dataAtts?.easing || 'ease-out',
-        perPage: Number(dataAtts?.perpage) || 1,
+        perPage: perPage,
         startIndex: Number(dataAtts?.startindex) || 0,
         draggable: (dataAtts?.draggable === "false") ? false : true,
         multipleDrag: (dataAtts?.draggable === "false") ? false : true,
