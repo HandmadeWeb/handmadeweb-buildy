@@ -48,7 +48,7 @@
         "label": "Overwrite Mode",
         "name": "overwrite_mode",
         "type": "true_false",
-        "instructions": "This will allow settings inside the builder to tunnel their way through, good for when an update has changed settings from a single option to an object (e.g something is now responsive with sm, md, lg) without this enabled it won't be able to set the new object.",
+        "instructions": "This will allow settings inside the builder to tunnel their way through, can cause absolute mayhem. Enable for troubleshooting or if something isn't saving correctly, then DISABLE asap.",
         "required": 0,
         "conditional_logic": 0,
         "wrapper": {
@@ -56,8 +56,8 @@
           "class": "",
           "id": ""
         },
-        "default_value": "0",
-        "ui": "1",
+        "default_value": 0,
+        "ui": 1,
         "ui_on_text": "",
         "ui_off_text": ""
       }
