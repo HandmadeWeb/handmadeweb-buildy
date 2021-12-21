@@ -11,7 +11,7 @@ import store from '../store/index'
  */
 const setDeep = (obj, path, value, force = true, overwrite = false) => {
 
-  overwrite = store.getters.config.overwrite_mode
+  overwrite = store.getters.config?.overwrite_mode || false
 
   if (overwrite) {
     console.log('overwrite mode is enabled! ', 'background: #222; color: #bada55');
@@ -32,7 +32,7 @@ const setDeep = (obj, path, value, force = true, overwrite = false) => {
     if (overwrite && i !== path.length) {
       // Set it as a new object reference!
       Vue.set(a, b, {})
-      
+
       // Accumilate and move onto the next step
       return a[b]
     }
