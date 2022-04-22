@@ -7,6 +7,8 @@ import baguetteBox from 'baguettebox.js';
 import Macy from 'macy';
 
 
+
+
 (function () {
   let gallerySelector = '.bmcb-gallery:not(.bmcb-slider) .bmcb-gallery__items'
   let galleries = document.querySelectorAll(gallerySelector);

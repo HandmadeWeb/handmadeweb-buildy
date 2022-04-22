@@ -90,7 +90,14 @@ class FrontendLoader
         if (/*isPageBuilderEnabled() && */! get_field('disable_frontend_enqueue', 'option')) {
             // Temporary IE 11 polyfills --- These don't affect file size for non-ie browsers.
             wp_enqueue_script('ie-pollyfil', 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CCustomEvent', null, null, false);
-            wp_enqueue_script('buildy-js', BUILDY_URL.'public/frontend-bundle.js', null, '1.0.0', true);
+            wp_register_script('buildy-js', BUILDY_URL.'public/frontend-bundle.js', null, '1.0.0', true);
+            if (function_exists('get_field')) {
+              wp_localize_script( 'buildy-js', 'BMCB_SETTINGS', array(
+                'breakpoints' => json_encode(get_field('BMCB_breakpoints', 'option')),
+                'menu' => json_encode([ "breakpoint" => get_field('menu_breakpoint_size', 'option'), "open_on_click" => get_field('open_menu_items_on_click', 'option'), 'clone_menu_items' => get_field('clone_menu_items', 'option'), 'cloned_text_prefix' => get_field('menu_cloned_text_prefix', 'option'), 'move_to_nav' => get_field('move_to_nav', 'option')]),
+              ));
+            }
+            wp_enqueue_script('buildy-js');
             wp_enqueue_style('buildy-components', BUILDY_URL.'public/frontend.css', null, '1.0.0', '');
             wp_enqueue_style('buildy-layout', BUILDY_URL.'public/buildy-layout.css', null, '1.0.0', '');
         }

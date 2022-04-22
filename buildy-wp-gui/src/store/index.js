@@ -6,7 +6,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isWP: false,
-    config: {},
+    config: {
+      overwrite_mode: false,
+    },
     colours: [],
     globals: [],
     dragDisabled: false,
@@ -15,7 +17,7 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_CONFIG(state, payload) {
-      state.config = payload
+      state.config = { ...state.config, ...payload }
     },
     SET_VALID_COMPONENTS(state, payload) {
       Vue.set(state, 'validComponents', payload)
