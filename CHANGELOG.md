@@ -1,12 +1,14 @@
 # Changelog
 
-## 3.0.5 - 3.0.9
+## 3.0.5 - 3.0.10
 
 - Break components and layout css into separate files (so one can be dequeued without the other if needed)
 - Fix title of global modules
 - Add overwrite mode back into the settings
 - Make slider options "perPage" responsive.
 - Small tweak to overwrite mode in store
+- Add settings to the ACF JSON for controlling breakpoints and menu items
+- Add the options to the global BMCB_SETTINGS variable from wp_localise_scripts
 
 ## 3.0.3 - 3.0.4
 

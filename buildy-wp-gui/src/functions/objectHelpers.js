@@ -11,7 +11,7 @@ import store from '../store/index'
  */
 const setDeep = (obj, path, value, force = true, overwrite = false) => {
 
-  overwrite = store.getters.config?.overwrite_mode || false
+  overwrite = store.getters?.config?.overwrite_mode ?? false;
 
   if (overwrite) {
     console.log('overwrite mode is enabled! ', 'background: #222; color: #bada55');

@@ -44,6 +44,158 @@
         ]
       },
       {
+        "key": "field_5d81zzet43hkl2abb03",
+        "label": "Breakpoints",
+        "name": "BMCB_breakpoints",
+        "type": "repeater",
+        "instructions": "The breakpoints available to this site",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "collapsed": "",
+        "min": 0,
+        "max": 0,
+        "layout": "table",
+        "button_label": "",
+        "sub_fields": [
+          {
+            "key": "field_5dasd292argrt04",
+            "label": "Name",
+            "name": "BMCB_breakpoint_name",
+            "type": "text",
+            "instructions": "",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+          },
+          {
+            "key": "field_5dhtr4be4t6504",
+            "label": "Size",
+            "name": "BMCB_breakpoint_size",
+            "type": "text",
+            "instructions": "Enter size (in pixels without the px)",
+            "required": 1,
+            "conditional_logic": 0,
+            "wrapper": {
+              "width": "",
+              "class": "",
+              "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+          }
+        ]
+      },
+      {
+        "key": "field_5zf439sz8sdf32c",
+        "label": "Menu Breakpoint size",
+        "name": "menu_breakpoint_size",
+        "type": "text",
+        "instructions": "Add the name you used above e.g md or xl",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": "",
+        "maxlength": ""
+      },
+      {
+        "key": "field_5zf4ukid2fgc2c",
+        "label": "Teleport To Mobile Nav",
+        "name": "move_to_nav",
+        "type": "text",
+        "instructions": "A list of selectors for things you'd like to teleport to the mobile nav on break",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "placeholder": ".header-cta-block, .company_phone",
+        "prepend": "",
+        "append": "",
+        "maxlength": ""
+      },
+      {
+        "key": "field_astytr3e4324",
+        "label": "Clone Top Level Menu Items",
+        "name": "clone_menu_items",
+        "type": "true_false",
+        "instructions": "If enabled this will clone the top level menu items to the top of the submenu",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": 1,
+        "ui": 1,
+        "ui_on_text": "",
+        "ui_off_text": ""
+      },
+      {
+        "key": "field_5zf475dfgc2c",
+        "label": "Cloned Text Prefix",
+        "name": "menu_cloned_text_prefix",
+        "type": "text",
+        "instructions": "E.g 'All' Services, or 'View' Services",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": "",
+        "placeholder": "",
+        "prepend": "",
+        "append": "",
+        "maxlength": ""
+      },
+      {
+        "key": "field_ast34y67h3e4324",
+        "label": "Open Menu Items On Click",
+        "name": "open_menu_items_on_click",
+        "type": "true_false",
+        "instructions": "If enabled submenus will open on click instead of hover",
+        "required": 0,
+        "conditional_logic": 0,
+        "wrapper": {
+          "width": "",
+          "class": "",
+          "id": ""
+        },
+        "default_value": 1,
+        "ui": 1,
+        "ui_on_text": "",
+        "ui_off_text": ""
+      },
+      {
         "key": "field_asderte4e24124",
         "label": "Overwrite Mode",
         "name": "overwrite_mode",
