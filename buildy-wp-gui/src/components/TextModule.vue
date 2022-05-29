@@ -49,5 +49,8 @@ export default {
   methods: {
     moduleName,
   },
+  mounted() {
+    
+  }
 };
 </script>

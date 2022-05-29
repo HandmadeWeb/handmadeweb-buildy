@@ -8,6 +8,7 @@
     :height="'auto'"
     @opened="modalOpened"
     @closed="modalClosed"
+    @waitToSave="waitToSave"
   >
     <div class="bg-gray-700 modal-controls absolute w-full flex">
       <div class="dragHandler cursor-move flex-1">
@@ -29,7 +30,7 @@
           :selected="hasDefaultSlot"
         >
           <!-- Custom Content Tab Slot -->
-          <slot />
+          <slot ref="module" />
 
           <!-- Accordion Modules Need Different Paths -->
           <custom-fields v-if="component.type !== 'accordion-module'" />
@@ -174,6 +175,12 @@ export default {
       type: Array,
     },
   },
+  data: function() {
+    return { 
+      closeable: true, 
+      waitToSave: false,
+    }
+  },
   computed: {
     hasDefaultSlot() {
       return !!this.$slots.default;
@@ -182,6 +189,7 @@ export default {
   methods: {
     modalOpened() {
       this.$store.dispatch("dragToggle", true);
+      this.$emit("modalOpened");
     },
     modalClosed() {
       this.$store.dispatch("dragToggle", false);
@@ -190,10 +198,21 @@ export default {
       EventBus.$emit("modalClick");
     },
     saveAll() {
-      EventBus.$emit("saveAll");
+      EventBus.$emit("saveAll", this.component.id);
+      if( this.waitToSave ) {
+        return;
+      }
       this.$modal.hide(this.component.id);
     },
     UCFirst,
+  },
+  mounted() {
+    EventBus.$on('waitToSave', (e) => {
+      this.waitToSave = e
+    })
+    EventBus.$on('doSave', (e) => {
+      this.saveAll()
+    })
   },
   inject: ["component"],
   provide() {
