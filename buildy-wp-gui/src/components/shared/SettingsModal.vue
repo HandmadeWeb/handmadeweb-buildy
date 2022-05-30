@@ -177,21 +177,21 @@ export default {
     component: Object,
     clickToClose: {
       type: Boolean,
-      default: true
+      default: true,
     },
     customSlots: {
       type: Array,
     },
     width: {
       type: Number,
-      default: 600
-    }
+      default: 600,
+    },
   },
-  data: function() {
-    return { 
-      closeable: true, 
+  data: function () {
+    return {
+      closeable: true,
       waitToSave: false,
-    }
+    };
   },
   computed: {
     hasDefaultSlot() {
@@ -200,7 +200,7 @@ export default {
   },
   methods: {
     beforeClose(e) {
-      EventBus.$emit('before-close', e)
+      EventBus.$emit("before-close", e);
     },
     modalOpened() {
       this.$store.dispatch("dragToggle", true);
@@ -214,7 +214,7 @@ export default {
     },
     saveAll() {
       EventBus.$emit("saveAll", this.component.id);
-      if( this.waitToSave ) {
+      if (this.waitToSave) {
         return;
       }
       this.$modal.hide(this.component.id);
@@ -222,16 +222,16 @@ export default {
     UCFirst,
   },
   mounted() {
-    EventBus.$on('waitToSave', (e) => {
-      this.waitToSave = e
-    })
-    EventBus.$on('doSave', (e) => {
-      this.saveAll()
-    })
+    EventBus.$on("waitToSave", (e) => {
+      this.waitToSave = e;
+    });
+    EventBus.$on("doSave", () => {
+      this.saveAll();
+    });
   },
   destroyed() {
-    EventBus.$off('waitToSave')
-    EventBus.$off('doSave')
+    EventBus.$off("waitToSave");
+    EventBus.$off("doSave");
   },
   inject: ["component"],
   provide() {

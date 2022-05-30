@@ -226,6 +226,8 @@ class BackendLoader
         // Must register custom post types first
         static::acf_add_options_pages();
         static::acf_add_fields();
+
+        
     }
 
     public static function get_globals($data)
@@ -314,6 +316,8 @@ class BackendLoader
             ]
         );
     }
+
+
 
     // Get acf_form() - Used to load ACF form into ACF module - Used to create new and load existing forms into page
     public static function get_acf_form($request)
@@ -429,7 +433,7 @@ class BackendLoader
 
     public static function custom_post_types_register_globals()
     {
-        return register_post_type(
+        register_post_type(
             'bmcb-global',
             [
                 'labels' => [
@@ -448,5 +452,23 @@ class BackendLoader
                 'menu_icon' => 'dashicons-admin-site-alt2',
             ]
         );
+
+        register_post_type( "bmcb-acf", [
+                'labels' => [
+                    'name' => 'ACF Modules',
+                    "all_items" => 'ACF Modules',
+                    'singular_name' => 'ACF Module',
+                ],
+                'public' => true,
+                'publicly_queryable' => false,
+                'show_ui' => true,
+                "show_in_menu" => "edit.php?post_type=bmcb-global",
+                "show_in_nav_menus" => true,
+                'has_archive' => false,
+                'show_in_rest' => false,
+                'rewrite' => [
+                    'slug' => 'bmcb-acf',
+                ],
+            ]);
     }      
 }
