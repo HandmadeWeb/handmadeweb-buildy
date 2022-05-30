@@ -2,7 +2,7 @@
   <div id="acf-form-container" v-if="formHTML">
     <div ref="acf_form" v-html="formHTML"></div>
     <div v-if="fieldGroups" class="mb-4">
-      <div><strong>Post ID:</strong> <span v-text="postID" /></div>
+      <div><strong>Post ID:</strong> <a :href="`http://default.local/wp-admin/post.php?post=${postID}&action=edit`" target="_blank" v-text="postID" /></div>
       <div><strong>Template File:</strong> /buildy-views/modules/acf-{{ parseInt(fieldGroups) }}.blade.php</div>
     </div>
   </div>
@@ -135,7 +135,7 @@ export default {
   mounted() {
     // Event to prompt user to close modal
     EventBus.$on('before-close', (e) => {
-        confirm("Are you sure?") ? true : e.cancel()
+        confirm("Are you sure you want to close this module? If you have made any changes to the form remember to click Save All.") ? true : e.cancel()
     })
     // Event to load existing form into ACF module
     EventBus.$on('loadExisting', (data) => {

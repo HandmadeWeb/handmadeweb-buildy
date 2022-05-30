@@ -1,5 +1,7 @@
 <template>
-  <settings-modal>
+  <settings-modal
+  :width="1000"
+  >
     <div class="form-type text-right" v-if="showSelect">
       <a href="#" @click.prevent="toggleExisting">{{ formTypeLabel }}</a>
     </div>
@@ -11,7 +13,7 @@
       v-if="showSelect && showExisting"
     />
     <acf-module-select
-      label="Custom Module"
+      label="Create Module"
       class="items-center"
       key="create"
       :endpoint="`bmcb/v1/acf_modules`"

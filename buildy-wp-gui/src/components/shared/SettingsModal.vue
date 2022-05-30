@@ -7,6 +7,7 @@
     :name="component.id"
     :height="'auto'"
     :click-to-close="clickToClose"
+    :width="width"
     :max-height="600"
     @opened="modalOpened"
     @closed="modalClosed"
@@ -181,6 +182,10 @@ export default {
     customSlots: {
       type: Array,
     },
+    width: {
+      type: Number,
+      default: 600
+    }
   },
   data: function() {
     return { 
@@ -239,7 +244,7 @@ export default {
 
 <style>
 .settings-modal.vm--container {
-  padding-top: 40px;
+  padding: 40px 0;
 }
 
 .settings-modal.vm--container .v--modal {
