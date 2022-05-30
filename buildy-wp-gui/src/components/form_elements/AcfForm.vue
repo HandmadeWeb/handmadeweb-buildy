@@ -135,7 +135,7 @@ export default {
   mounted() {
     // Event to prompt user to close modal
     EventBus.$on('before-close', (e) => {
-        confirm("Are you sure you want to close this module? If you have made any changes to the form remember to click Save All.") ? true : e.cancel()
+        confirm("Are you sure you want to close this module? If you have made any changes to the form remember to click Save.") ? true : e.cancel()
     })
     // Event to load existing form into ACF module
     EventBus.$on('loadExisting', (data) => {
