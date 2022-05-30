@@ -1,10 +1,21 @@
 <template>
   <settings-modal>
+    <div class="form-type text-right" v-if="showSelect">
+      <a href="#" @click.prevent="toggleExisting">{{ formTypeLabel }}</a>
+    </div>
+    <acf-module-select
+      label="Existing Module"
+      class="items-center"
+      key="load"
+      :endpoint="`bmcb/v1/acf_posts`"
+      v-if="showSelect && showExisting"
+    />
     <acf-module-select
       label="Custom Module"
       class="items-center"
+      key="create"
       :endpoint="`bmcb/v1/acf_modules`"
-      v-if="showSelect"
+      v-if="showSelect && !showExisting"
     />
     <acf-form />
     <div class="loading" v-show="isLoading"><div></div><div></div><div></div><div></div></div>
@@ -19,19 +30,43 @@ export default {
   data: function() {
     return {
       icon: "CodeIcon",
+      showExisting: false,
+      defaultformType: "Link Existing",
+      formTypeLabel: '',
       showSelect: true,
       isLoading: false
     };
   },
   methods: {
+    // Toggle between 'Link Existing' and 'Create New' dropdowns
+    toggleExisting() {
+      // Clear form HTML in preparation for new data
+      EventBus.$emit("clearFormHTML");
+      // Toggle the dropdowns to display different data
+      this.showExisting = !this.showExisting
+      // Update the button label 
+      if( this.showExisting ) {
+        this.formTypeLabel = 'Create New'
+      } else {
+        this.formTypeLabel = this.defaultformType
+      }
+    }
   },
   mounted() {
+    // Listen for 'isLoading' event and render loading spinner as required
     EventBus.$on('isLoading', (e) => {
       this.isLoading = e
     })
+    // Listen for 'showSelect' event and show/hide the select options as required 
     EventBus.$on('showSelect', (e) => {
       this.showSelect = e
     })
+    // Update the button label on load to default value
+    this.formTypeLabel = this.defaultformType
+  },
+  destroyed() {
+    EventBus.$off('isLoading')
+    EventBus.$off('showSelect')
   },
   inject: ["component"],
 };

@@ -9,12 +9,13 @@ class BackendLoader
 {
     public static function admin_boot()
     {
-        add_action('admin_enqueue_scripts', [static::class, 'admin_enqueue_scripts']);
-        add_action('admin_footer', [static::class, 'admin_footer']);
-        add_action('admin_head', [static::class, 'admin_head']);
-        add_action('edit_form_after_editor', [static::class, 'admin_edit_form_after_editor']);
-        add_filter('wp_default_editor', [static::class, 'admin_wp_default_editor']);
-        add_action('save_post_bmcb-global', [static::class, 'clear_globals_cache'], 100, 0);
+        add_action('admin_enqueue_scripts', [static::class, 'admin_enqueue_scripts']); // Enqueue admin scripts
+        add_action('admin_footer', [static::class, 'admin_footer']); // Load various scripts
+        add_action('admin_head', [static::class, 'admin_head']); // Load various stylsheets
+        add_action('edit_form_after_editor', [static::class, 'admin_edit_form_after_editor']); // Load Buildy into backend editor
+        add_filter('wp_default_editor', [static::class, 'admin_wp_default_editor']); // Update default TinyMCE editor to return HTML
+        add_action('save_post_bmcb-global', [static::class, 'clear_globals_cache'], 100, 0); // Clear global Buildy cache
+        add_action('acf/submit_form', [static::class, 'acf_submit_form'], 10, 2); // Return Post ID and Field Groups on Buildy ACF Form save
     }
 
     public static function clear_globals_cache()
@@ -37,14 +38,40 @@ class BackendLoader
                 "
             <script type='text/javascript'>
                 var global_vars = {
-                  rest_api_base: '%s'
+                  admin_ajax_url: '%s',
+                  rest_api_base: '%s',
+                  nonce: '%s',
                 }
             </script>",
-                get_rest_url()
+                admin_url('admin-ajax.php'),
+                get_rest_url(),
+                wp_create_nonce('ajax-nonce'),
             );
 
             echo '<script src="'.BUILDY_URL.'/buildy-wp-gui/dist/chunk-vendors.js"></script>';
             echo '<script src="'.BUILDY_URL.'/buildy-wp-gui/dist/app.js"></script>';
+        }
+
+        // Load acf_form() onto Globals > ACF Modules post type - Used to edit existing modules
+        if (get_current_screen()->base == 'post' && get_current_screen()->post_type == 'bmcb-acf') {
+          echo '<div id="wpcontent" class="acf-meta-box">';
+          echo '<div class="bg-white border" style="padding: 20px; border: 1px solid #eaeaea;">';
+          echo '<h1 style="padding: 0 12px">'. get_the_title() .'</h1>';
+          // Retrieve field groups from post meta to display form correctly
+          $field_groups = get_post_meta(get_the_id(), '_bmcb_field_groups', true);
+          // Use existing acf_form() function to generate existing form. HTML data will be embedded below WP post form
+          acf_form(array(
+            'post_id' => get_the_id(),
+            'field_groups' => $field_groups,
+            'post_title' => false,
+            'post_content' => false,
+            'form' => true,
+            'submit_value' => __('Update meta')
+          )); 
+          echo '</div>';
+          echo '</div>';
+          // Some basic styles - Can be edited at a later stage if required
+          echo '<style>#wpbody { display: none; } .acf-meta-box { padding: 20px 20px 80px 20px; }</style>';
         }
     }
 
@@ -73,6 +100,14 @@ class BackendLoader
          */
         if (is_admin() && isPageBuilderEnabled()) {
             wp_enqueue_media();
+            // ACF form requirements - Not sure if required
+            acf_form_head();
+            acf_enqueue_uploader();
+        }
+
+        // Registers acf_form_head() under Globals > ACF Modules post type - Used to edit existing modules
+        if ( get_current_screen()->post_type == 'bmcb-acf' ) {
+            acf_form_head();
         }
     }
 
@@ -130,19 +165,57 @@ class BackendLoader
         return $r;
     }
 
+    public static function acf_submit_form($form, $post_id)
+    {
+        // Check that current post type is 'bmcb-acf' and status is to be published.
+        if ($form['new_post']['post_type'] == 'bmcb-acf' && $form['new_post']['post_status'] == 'publish') {
+            // Update post meta with field group IDs. Used for loading form into backend form editor
+            update_post_meta($post_id, '_bmcb_field_groups', $form['field_groups']);
+            // Return JSON success daya - Post ID and Field Groups
+            wp_send_json_success(array(
+                'post_id' => $post_id,
+                'field_groups' => $form['field_groups']
+            ));
+            exit;
+        }
+    }
+
     public static function boot()
     {
         //The Following registers an api route with multiple parameters.
         add_action('rest_api_init', function () {
+            // Get global sections - Used for Buildy globals
             register_rest_route('bmcb/v3', '/globals', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_globals'],
                 'permission_callback' => '__return_true',
             ]);
 
+            // Get module styles - Used for custom module styles
             register_rest_route('bmcb/v1', '/module_styles=(?P<module_styles>[a-zA-Z0-9-]+)', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_module_styles'],
+                'permission_callback' => '__return_true',
+            ]);
+
+            // Get ACF modules - Used to return dropdown of available module styles in ACF module
+            register_rest_route('bmcb/v1', '/acf_modules', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'get_acf_modules'],
+                'permission_callback' => '__return_true',
+            ]);
+
+            // Get posts from 'bmcb-acf' - Used to return dropdown of available posts in ACF module for existing posts
+            register_rest_route('bmcb/v1', '/acf_posts', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'get_acf_posts'],
+                'permission_callback' => '__return_true',
+            ]);
+
+            // Get acf_form() by passing post ID and field groups - Used to create new / display existing forms in ACF module
+            register_rest_route('bmcb/v1', '/acf_form/post_id=(?P<postID>[a-zA-Z0-9-]+)/field_groups=(?P<fieldIDs>[0-9_,]+)', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'get_acf_form'],
                 'permission_callback' => '__return_true',
             ]);
         });
@@ -184,6 +257,88 @@ class BackendLoader
                 ]
             );
         }
+    }
+
+    // Get list of ACF Field Groups with 'bmcb-acf-module' label
+    public static function get_acf_modules($request)
+    {
+        $data = array();
+
+        // Get list of ACF Field Groups
+        $field_groups = acf_get_field_groups();
+        
+        // Loop through array and add to field 'data'
+        foreach( $field_groups as $key => $value ) {
+
+            if ($value['location'][0][0]['param'] == 'bmcb-acf-module') {
+                $data[$key]['field_group_id'] = $value['ID'];
+                $data[$key]['field_group_title'] = $value['title'];
+            }
+                    
+        }
+
+        // Return data to AJAX to prepopulate dropdown of available module field groups - Used for new modules
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' => $data,
+            ]
+        );
+    }
+
+    // Get list of 'bmcb-acf' posts - Used to display existing ACF posts
+    public static function get_acf_posts($request)
+    {
+        $data = array();
+
+        // Get list of ACF Field Groups
+        $post_ids = get_posts(array(
+            'fields' => 'ids',
+            'post_type' => 'bmcb-acf',
+            'posts_per_page'  => -1
+        ));
+
+        // Loop tthrough array and add to field 'data'
+        foreach( $post_ids as $key => $post_id ) {
+            $data[$key]['field_group_id'] = get_post_meta($post_id, '_bmcb_field_groups', true);
+            $data[$key]['field_group_title'] = get_the_title($post_id) .' - '. $post_id;
+        }
+
+        // Return data to AJAX to prepopulate dropdown of available 'bmcb-acf' posts - Used for existing modules
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' => $data,
+            ]
+        );
+    }
+
+    // Get acf_form() - Used to load ACF form into ACF module - Used to create new and load existing forms into page
+    public static function get_acf_form($request)
+    {
+        ob_start();
+
+        // Retrieve post ID from request, otherwise create new post.
+        $postID = json_decode($request['postID']) ?? 'new_post';
+        // Retrieve field groups from request
+        $fieldIDs = explode(',', $request['fieldIDs']);
+
+        // Use existing acf_form() function to generate new / existing form. HTML data will be embedded in AJAX return request
+        acf_form(array(
+            'post_id' => $postID,
+            'new_post' => array(
+                'post_type' => 'bmcb-acf',
+                'post_status' => 'publish'
+            ),
+            'field_groups' => $fieldIDs,
+            'post_title' => false,
+            'post_content' => false,
+            'form' => true,
+        )); 
+
+        return ob_get_clean();
     }
 
     /**
@@ -261,7 +416,7 @@ class BackendLoader
         }
 
         // register options pages.
-        acf_add_options_page([
+        $parent = acf_add_options_page([
             'page_title' => 'Buildy Settings',
             'menu_title' => 'Buildy Settings',
             'menu_slug' => 'bmcb-settings',
@@ -269,6 +424,7 @@ class BackendLoader
             'redirect' => false,
             'autoload' => false,
         ]);
+
     }
 
     public static function custom_post_types_register_globals()
@@ -292,5 +448,5 @@ class BackendLoader
                 'menu_icon' => 'dashicons-admin-site-alt2',
             ]
         );
-    }
+    }      
 }

@@ -76,12 +76,36 @@ export default {
     },
   },
   methods: {
-    handleChange() {
-      EventBus.$emit('createForm', this.value || null)
+    // On select change
+    handleChange(e) {
+      // Get select value and label
+      let selectValue = this.value,
+          selectLabel = e.target.options[e.target.options.selectedIndex].text;
+      // If select is "Load Existing" 
+      if( this.$vnode.key === 'load' ) {
+        EventBus.$emit("showSelect", false)
+        // Get post ID from Label - Match numbers on end of string
+        let strippedLabel = selectLabel.match(/[0-9]+$/);
+        strippedLabel = parseInt(strippedLabel[0], 10);
+        // Remove post ID from Label - Split hyphen from end of string
+        selectLabel = selectLabel.substr(0, selectLabel.lastIndexOf("-"), 1).trim();
+        // Set title - Used for admin label only
+        EventBus.$emit('setTitle', selectLabel)
+        // Emit event to load existing form
+        EventBus.$emit('loadExisting', { post_id: strippedLabel, field_groups: selectValue })
+      }
+      // If select is "Create New"
+      if( this.$vnode.key === 'create' ) {
+        // Set title - Used for post title and admin label
+        EventBus.$emit('setTitle', selectLabel)
+        // Emit event to create new form
+        EventBus.$emit('createForm', selectValue)
+      }      
       if (this.component && this.path) {
-        setDeep(this.component, this.path, this.value);
+        setDeep(this.component, this.path, selectValue);
       }
     },
+    // Function to fetch options from Rest API
     async fetchOptions() {
       EventBus.$emit("isLoading", true);
       if (window.global_vars) {        
@@ -99,7 +123,7 @@ export default {
         this.defaultVal = 'Something went wrong connecting to the API. Please try again!'
       }
     },
-  },
+  }, 
   mounted() {
     if (this.selected) {
       this.value = this.selected.trim();

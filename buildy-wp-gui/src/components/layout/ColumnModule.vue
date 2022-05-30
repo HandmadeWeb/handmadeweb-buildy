@@ -2,7 +2,7 @@
   <div
     @mouseover="hovering = true"
     @mouseleave="hovering = false"
-    class="col px-4 pb-2 flex-col text-center column"
+    class="col px-4 pb-2 flex-col column"
     :class="[columnClasses, moduleCount ? 'hasItems' : 'empty']"
   >
     <settings-modal
