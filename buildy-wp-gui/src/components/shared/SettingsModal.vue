@@ -6,9 +6,12 @@
     :resizable="true"
     :name="component.id"
     :height="'auto'"
+    :click-to-close="clickToClose"
+    :max-height="600"
     @opened="modalOpened"
     @closed="modalClosed"
     @waitToSave="waitToSave"
+    @before-close="beforeClose"
   >
     <div class="bg-gray-700 modal-controls absolute w-full flex">
       <div class="dragHandler cursor-move flex-1">
@@ -171,6 +174,10 @@ export default {
   props: {
     header: String,
     component: Object,
+    clickToClose: {
+      type: Boolean,
+      default: true
+    },
     customSlots: {
       type: Array,
     },
@@ -187,6 +194,9 @@ export default {
     },
   },
   methods: {
+    beforeClose(e) {
+      EventBus.$emit('before-close', e)
+    },
     modalOpened() {
       this.$store.dispatch("dragToggle", true);
       this.$emit("modalOpened");
@@ -214,6 +224,10 @@ export default {
       this.saveAll()
     })
   },
+  destroyed() {
+    EventBus.$off('waitToSave')
+    EventBus.$off('doSave')
+  },
   inject: ["component"],
   provide() {
     return {
@@ -224,11 +238,11 @@ export default {
 </script>
 
 <style>
-.settings-modal.v--modal-overlay {
+.settings-modal.vm--container {
   padding-top: 40px;
 }
 
-.settings-modal.v--modal-overlay .v--modal-box {
+.settings-modal.vm--container .v--modal {
   overflow: visible;
 }
 </style>

@@ -13,5 +13,8 @@ module.exports = {
         filename: '[name].js',
         chunkFilename: '[name].js'
       }
+    },
+    css: {
+      extract: true
     }
   }

@@ -32,7 +32,7 @@ export default {
   },
   props: {
     msg: String,
-    config: Array,
+    config: String,
     content: Array,
     validComponents: Array,
   },

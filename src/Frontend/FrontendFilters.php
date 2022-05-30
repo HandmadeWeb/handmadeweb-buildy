@@ -113,6 +113,12 @@ class FrontendFilters
             $data->generatedAttributes->template = Str::slug($data->options->moduleStyle);
         }
 
+        // Create frontend template route for buildy views
+        if (! empty($data->type) && $data->type == 'acf-module') {
+            $field_group_id = $data->content->acfForm->field_groups;
+            $data->generatedAttributes->template = preg_replace("/\W|_/", '', $field_group_id[0]);
+        }
+
         // Inline Style
         $inline_style = null;
 
