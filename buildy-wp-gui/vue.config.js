@@ -17,4 +17,14 @@ module.exports = {
     css: {
       extract: true
     }
+  },
+  configureWebpack: {
+    output: {
+      filename: '[name].js',
+      chunkFilename: '[name].js'
+    }
+  },
+  css: {
+    extract: true
   }
+}
