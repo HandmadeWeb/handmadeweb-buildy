@@ -64,7 +64,7 @@ class BackendLoader
                 echo '<button class="button button-secondary" onclick="disableGlobal(event)" style="position: absolute; top: 20px; right: 20px;">Disable Global</button>';
                 echo '<script>
                 function disableGlobal(e) {
-                    fetch("'. get_rest_url() .'bmcb/v1/acf_is_linked/post_id='. $postID .'")
+                    fetch("'. get_rest_url() .'bmcb/v1/acf_is_linked/post_id='. $postID .'/data_type=set")
                     .then((response) => {
                         return response.json();
                     })
@@ -247,9 +247,9 @@ class BackendLoader
             ]);
 
              // Get acf_form() by passing post ID and field groups - Used to create new / display existing forms in ACF module
-             register_rest_route('bmcb/v1', '/acf_is_linked/post_id=(?P<postID>[a-zA-Z0-9-]+)', [
+             register_rest_route('bmcb/v1', '/acf_is_linked/post_id=(?P<postID>[a-zA-Z0-9-]+)/data_type=(?P<dataType>[a-zA-Z0-9-]+)', [
                 'methods' => 'GET',
-                'callback' => [static::class, 'set_acf_is_linked'],
+                'callback' => [static::class, 'acf_is_linked'],
                 'permission_callback' => '__return_true',
             ]);
         });
@@ -362,13 +362,11 @@ class BackendLoader
         // Retrieve field groups from request
         $fieldIDs = explode(',', $request['fieldIDs']);
         // Retrive linked status - Used to prevent globals from displaying form
-        $isLinked = json_decode($request['isLinked']) ?? false;
-
-        // Update post meta with linked status. Used to prevent globals from displaying form
-            
+        $isLinked = json_decode($request['isLinked']) ?? false;            
 
         // Use existing acf_form() function to generate new / existing form. HTML data will be embedded in AJAX return request
-        if ($isLinked == true || get_post_meta($postID, '_bmcb_is_linked', true )) {
+        if ($isLinked == true || get_post_meta($postID, '_bmcb_is_linked', true ) == true) {
+            // Update post meta with linked status. Used to prevent globals from displaying form
             update_post_meta($postID, '_bmcb_is_linked', $request['isLinked']);
             echo 'Post is linked globally. Click on the post ID below to edit.';
             return ob_get_clean();
@@ -390,9 +388,13 @@ class BackendLoader
         return ob_get_clean();
     }
 
-    public static function set_acf_is_linked($request) 
+    public static function acf_is_linked($request) 
     {
-        $data = update_post_meta($request['postID'], '_bmcb_is_linked', false);
+        if( $request['dataType'] == 'set' ) {
+            $data = update_post_meta($request['postID'], '_bmcb_is_linked', false);
+        } else {
+            $data = get_post_meta($request['postID'], '_bmcb_is_linked', true);
+        }
 
         // Return data to AJAX to notify page global has been disabled
         return new \WP_REST_Response(

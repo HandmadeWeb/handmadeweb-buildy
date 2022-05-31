@@ -73,7 +73,7 @@ export default {
     })
   },
   destroyed() {
-    EventBus.$off('isLoading')
+    // EventBus.$off('isLoading')
     EventBus.$off('showSelect')
   },
   inject: ['component'],
