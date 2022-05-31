@@ -64,7 +64,12 @@ export default {
           let res = await fetch(
             `${stripTrailingSlash(
               window.global_vars.rest_api_base
-            )}/bmcb/v1/acf_form/post_id=${postID}/field_groups=${fieldIDs}`
+            )}/bmcb/v1/acf_form/post_id=${postID}/field_groups=${fieldIDs}`,
+            {
+              headers: {
+                "X-WP-Nonce": window.global_vars.rest_nonce,
+              },
+            }
           );
           let data = await res.json();
           // Update formHTML with returned data
@@ -118,6 +123,9 @@ export default {
           jQuery.ajax({
             type: "post",
             url: window.ajaxurl,
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader("X-WP-Nonce", window.global_vars.nonce);
+            },
             data: formData,
             cache: false,
             contentType: false,

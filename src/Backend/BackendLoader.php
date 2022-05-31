@@ -41,11 +41,13 @@ class BackendLoader
                   admin_ajax_url: '%s',
                   rest_api_base: '%s',
                   nonce: '%s',
+                  rest_nonce: '%s',
                 }
             </script>",
                 admin_url('admin-ajax.php'),
                 get_rest_url(),
                 wp_create_nonce('ajax-nonce'),
+                wp_create_nonce('wp_rest'),
             );
 
             echo '<script src="'.BUILDY_URL.'/buildy-wp-gui/dist/chunk-vendors.js"></script>';
@@ -66,6 +68,7 @@ class BackendLoader
             'post_title' => false,
             'post_content' => false,
             'form' => true,
+            'uploader' => 'wp',
             'submit_value' => __('Update meta')
           )); 
           echo '</div>';
@@ -339,6 +342,7 @@ class BackendLoader
             'field_groups' => $fieldIDs,
             'post_title' => false,
             'post_content' => false,
+            'uploader' => 'wp',
             'form' => true,
         )); 
 
