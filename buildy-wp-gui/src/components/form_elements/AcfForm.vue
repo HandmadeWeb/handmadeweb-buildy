@@ -189,6 +189,8 @@ export default {
       this.postID = data.post_id
       this.fieldGroups = data.field_groups
       setDeep(this.component, 'content.acfForm', data)
+      console.log(this.component)
+      EventBus.$emit('moduleLinked', data.field_groups[0])
       this.loadForm(this.postID, this.fieldGroups, true)
       this.updateAdminLabel(this.postID)
     })

@@ -5,20 +5,18 @@
       :class="[
         isValidComponent ? 'bg-gray-800' : 'bg-gray-600',
         renderDisabled ? 'border-8 border-b-0 border-gray-500' : '',
+        is_linked && 'bg-green-700',
       ]"
-      :id="component.id"
-    >
+      :id="component.id">
       <module-settings-bar
         :customSettings="customSettings"
-        :parent_array="parent_array"
-      ></module-settings-bar>
+        :parent_array="parent_array"></module-settings-bar>
 
       <p
         ref="adminLabel"
         contenteditable="true"
         @blur="setDeep(component, 'options.admin_label', $el.innerText)"
-        class="mx-auto my-0 py-2"
-      >
+        class="mx-auto my-0 py-2">
         {{ admin_label }}
       </p>
 
@@ -26,7 +24,11 @@
         <component v-if="component" :is="component.icon" />
       </span>
 
-      <component :component="component" :is="moduleType"> </component>
+      <component
+        @moduleLinked="is_linked = $event"
+        :component="component"
+        :is="moduleType">
+      </component>
 
       <span
         v-if="renderDisabled"
@@ -38,8 +40,9 @@
 </template>
 
 <script>
-import { setDeep } from "../../functions/objectHelpers";
-import { mapGetters } from "vuex";
+import { EventBus } from '../../EventBus'
+import { setDeep } from '../../functions/objectHelpers'
+import { mapGetters } from 'vuex'
 import {
   MenuIcon,
   MinusIcon,
@@ -53,10 +56,10 @@ import {
   AlignJustifyIcon,
   BoldIcon,
   GridIcon,
-} from "vue-feather-icons";
+} from 'vue-feather-icons'
 
 export default {
-  name: "module-base",
+  name: 'module-base',
   components: {
     MenuIcon,
     MinusIcon,
@@ -75,74 +78,97 @@ export default {
     component: Object,
     parent_array: Array,
   },
+  data() {
+    return {
+      is_linked: false,
+    }
+  },
   computed: {
-    ...mapGetters(["validComponents"]),
+    ...mapGetters(['validComponents']),
     admin_label() {
       if (this.component.options && this.component.options.admin_label) {
-        return this.component.options.admin_label;
+        return this.component.options.admin_label
       } else {
         return this.component.type
           ? this.component.type
-          : "Placeholder for unknown component";
+          : 'Placeholder for unknown component'
       }
     },
     isValidComponent() {
-      return this.componentMap(this.component.type);
+      return this.componentMap(this.component.type)
     },
     moduleType() {
-      return this.isValidComponent ? this.component.type : "ShellModule";
+      return this.isValidComponent ? this.component.type : 'ShellModule'
     },
     renderDisabled() {
-      return this.component.attributes?.renderDisabled || false;
+      return this.component.attributes?.renderDisabled || false
     },
     isGlobalModule() {
-      return this.component.type === "global-module";
+      return this.component.type === 'global-module'
     },
     editPageLink() {
-      return this.component.options.editPageLink?.url || false;
+      return this.component.options.editPageLink?.url || false
     },
     customSettings() {
       if (!this.isGlobalModule && !this.editPageLink) {
-        return [];
+        return []
       }
 
       return [
         {
-          name: "Edit Page",
-          icon: "ExternalLinkIcon",
-          title: "Go to edit page",
+          name: 'Edit Page',
+          icon: 'ExternalLinkIcon',
+          title: 'Go to edit page',
           action: this.goToEditPage,
           order: 31,
         },
-      ];
+      ]
     },
   },
   methods: {
     componentMap(type) {
-      return !!this.validComponents.find((el) => el.type === type);
+      return !!this.validComponents.find((el) => el.type === type)
     },
     goToEditPage() {
-      window.open(this.editPageLink, "_blank");
+      window.open(this.editPageLink, '_blank')
     },
     setDeep,
   },
   created() {
+    EventBus.$on('moduleLinked', (fieldId) => {
+      this.is_linked =
+        this.component?.content?.acfForm?.field_groups.includes(fieldId) ||
+        false
+    })
+
+    // This will flag the module as being linked (global) so we can adjust styles accordingly
+    if (this.component.type === 'acf-module') {
+      if (this.component?.content?.acfForm?.isLinked) {
+        this.is_linked = true
+      } else {
+        // Do a fetch request
+      }
+    }
     // Deal with globals that never had the new feature (backwards compat)
     if (this.isGlobalModule && !this.editPageLink) {
       this.setDeep(
         this.component,
-        "options.editPageLink.url",
+        'options.editPageLink.url',
         `/wp-admin/post.php?post=${this.component.content.id}&action=edit`
-      );
+      )
     }
+  },
+  destroyed() {
+    EventBus.$off('moduleLinked')
   },
   provide() {
     return {
       component: this.component,
       parent_array: this.parent_array,
-    };
+      is_linked: this.is_linked,
+    }
   },
-};
+}
 </script>
 <style>
 .component-module {
