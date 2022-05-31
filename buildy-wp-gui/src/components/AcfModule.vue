@@ -31,8 +31,8 @@
       :endpoint="showExisting ? 'bmcb/v1/acf_posts' : 'bmcb/v1/acf_modules'"
       v-show="showSelect && !isLoading"
     />
-    <v-spinner v-if="isLoading" />
     <acf-form />
+    <v-spinner v-if="isLoading" />
   </settings-modal>
 </template>
 <script>

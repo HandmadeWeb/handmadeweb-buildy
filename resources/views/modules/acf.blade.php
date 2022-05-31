@@ -1,12 +1,13 @@
 @extends('modules.common')
 
 @php
-$ID = $bladeData->content->acfForm->post_id;
-$field_groups = $bladeData->content->acfForm->field_groups;
+// $ID = $bladeData->content->acfForm->post_id;
 @endphp
 
 @section('content')
 
-Create template file under child theme: /buildy-views/modules/acf-{{ $field_groups[0] }}.blade.php
+@php
+// echo $ID; 
+@endphp
 
 @overwrite

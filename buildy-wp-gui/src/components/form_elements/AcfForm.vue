@@ -7,17 +7,22 @@
     <div ref="acf_form" v-html="formHTML"></div>
     <div class="mt-4 pt-4 border-t" v-if="fieldGroups">
       <div>
-        <strong>Post ID:</strong>
+        <strong>Post ID: </strong> 
         <a
-          :href="`http://default.local/wp-admin/post.php?post=${postID}&action=edit`"
+          class="underline"
+          :href="`/wp-admin/post.php?post=${postID}&action=edit`"
           target="_blank"
           v-text="postID"
         />
       </div>
       <div>
-        <strong>Template File:</strong> /buildy-views/modules/acf-{{
-          parseInt(fieldGroups)
-        }}.blade.php
+        <strong>Template File: </strong> 
+        <a
+          class="underline"
+          :href="`/wp-admin/theme-editor.php?file=buildy-views/modules/acf-${parseInt(fieldGroups)}.blade.php`"
+          target="_blank"
+          v-text="`/buildy-views/modules/acf-${parseInt(fieldGroups)}.blade.php`"
+        />
       </div>
     </div>
   </div>
@@ -47,11 +52,11 @@ export default {
       );
       if (this.postID) {
         EventBus.$emit("showSelect", false);
-        this.loadForm(this.postID, this.fieldGroups);
+        this.loadForm(this.postID, this.fieldGroups, null);
       }
     },
     // Function to load new / existing form into module
-    async loadForm(postID = null, fieldIDs) {
+    async loadForm(postID = null, fieldIDs, isLinked = false) {
       // Disables modal from closing prior to AJAX submission
       EventBus.$emit("waitToSave", true);
       // Remove existing form HTML
@@ -64,7 +69,7 @@ export default {
           let res = await fetch(
             `${stripTrailingSlash(
               window.global_vars.rest_api_base
-            )}/bmcb/v1/acf_form/post_id=${postID}/field_groups=${fieldIDs}`,
+            )}/bmcb/v1/acf_form/post_id=${postID}/field_groups=${fieldIDs}/is_linked=${isLinked}`,
             {
               headers: {
                 "X-WP-Nonce": window.global_vars.rest_nonce,
@@ -89,12 +94,19 @@ export default {
 
     // Function to create formData and submit form for processing
     submitForm() {
-      EventBus.$emit("isLoading", true);
       // Target the current form
       var form = this.$refs.acf_form;
       // Convert to jQuery for ACF validation
       var $form = jQuery(form).find("form");
 
+      // If form does not exist, do not continue and close modal
+      if(!$form.length) {
+        // Close modal
+        this.$modal.hide(this.component.id);        
+        return;
+      }
+
+      EventBus.$emit("isLoading", true);
       const self = this;
 
       const args = {
@@ -113,6 +125,9 @@ export default {
           formData.append("action", "create_acf_module");
           // Append WP AJAX nonce
           formData.append("nonce", window.global_vars.nonce);
+          // Append linked status - Used to prevent globals from displaying form
+          formData.append("is_linked", self.isLinked);
+
           // Append post title (for new posts)
           if (self.setTitle) {
             formData.append("acf[_post_title]", self.setTitle);
@@ -176,12 +191,12 @@ export default {
       this.postID = data.post_id;
       this.fieldGroups = data.field_groups;
       setDeep(this.component, "content.acfForm", data);
-      this.loadForm(this.postID, this.fieldGroups);
+      this.loadForm(this.postID, this.fieldGroups, true);
       this.updateAdminLabel(this.postID);
     });
     // Event to create new form
     EventBus.$on("createForm", (fieldIDs) => {
-      this.loadForm(null, fieldIDs);
+      this.loadForm(null, fieldIDs, null);
     });
     // Event to set title for post title and admin label
     EventBus.$on("setTitle", (postTitle) => {

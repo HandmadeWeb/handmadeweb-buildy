@@ -56,25 +56,42 @@ class BackendLoader
 
         // Load acf_form() onto Globals > ACF Modules post type - Used to edit existing modules
         if (get_current_screen()->base == 'post' && get_current_screen()->post_type == 'bmcb-acf') {
-          echo '<div id="wpcontent" class="acf-meta-box">';
-          echo '<div class="bg-white border" style="padding: 20px; border: 1px solid #eaeaea;">';
-          echo '<h1 style="padding: 0 12px">'. get_the_title() .'</h1>';
-          // Retrieve field groups from post meta to display form correctly
-          $field_groups = get_post_meta(get_the_id(), '_bmcb_field_groups', true);
-          // Use existing acf_form() function to generate existing form. HTML data will be embedded below WP post form
-          acf_form(array(
-            'post_id' => get_the_id(),
+            $postID = get_the_id();
+            echo '<div id="wpcontent" class="acf-meta-box">';
+            echo '<div class="bg-white border" style="position: relative; padding: 20px; border: 1px solid #eaeaea;">';
+            echo '<h1 style="padding: 0 12px">'. get_the_title() .' - '. $postID .'</h1>';
+            if (get_post_meta($postID, '_bmcb_is_linked', true )) {
+                echo '<button class="button button-secondary" onclick="disableGlobal(event)" style="position: absolute; top: 20px; right: 20px;">Disable Global</button>';
+                echo '<script>
+                function disableGlobal(e) {
+                    fetch("'. get_rest_url() .'bmcb/v1/acf_is_linked/post_id='. $postID .'")
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        if(data.body === true) {
+                            e.target.remove();
+                        }
+                    })
+                }
+                </script>';
+            }
+            // Retrieve field groups from post meta to display form correctly
+            $field_groups = get_post_meta($postID, '_bmcb_field_groups', true);
+            // Use existing acf_form() function to generate existing form. HTML data will be embedded below WP post form
+            acf_form(array(
+            'post_id' => $postID,
             'field_groups' => $field_groups,
             'post_title' => false,
             'post_content' => false,
             'form' => true,
             'uploader' => 'wp',
             'submit_value' => __('Update meta')
-          )); 
-          echo '</div>';
-          echo '</div>';
-          // Some basic styles - Can be edited at a later stage if required
-          echo '<style>#wpbody { display: none; } .acf-meta-box { padding: 20px 20px 80px 20px; }</style>';
+            ));
+            echo '</div>';
+            echo '</div>';
+            // Some basic styles - Can be edited at a later stage if required
+            echo '<style>#wpbody { display: none; } .acf-meta-box { padding: 20px 20px 80px 20px; }</style>';
         }
     }
 
@@ -174,6 +191,13 @@ class BackendLoader
         if ($form['new_post']['post_type'] == 'bmcb-acf' && $form['new_post']['post_status'] == 'publish') {
             // Update post meta with field group IDs. Used for loading form into backend form editor
             update_post_meta($post_id, '_bmcb_field_groups', $form['field_groups']);
+            // Create new blade file (if not exists)
+            $field_groups = $form['field_groups'][0];
+            $file = BUILDY_URL . "resources/views/modules/acf.blade.php";
+            $newfile = get_stylesheet_directory() . "/buildy-views/modules/acf-$field_groups.blade.php";
+            if(!file_exists($newfile)) {
+                copy($file,$newfile);
+            }
             // Return JSON success daya - Post ID and Field Groups
             wp_send_json_success(array(
                 'post_id' => $post_id,
@@ -216,9 +240,16 @@ class BackendLoader
             ]);
 
             // Get acf_form() by passing post ID and field groups - Used to create new / display existing forms in ACF module
-            register_rest_route('bmcb/v1', '/acf_form/post_id=(?P<postID>[a-zA-Z0-9-]+)/field_groups=(?P<fieldIDs>[0-9_,]+)', [
+            register_rest_route('bmcb/v1', '/acf_form/post_id=(?P<postID>[a-zA-Z0-9-]+)/field_groups=(?P<fieldIDs>[0-9_,]+)/is_linked=(?P<isLinked>[a-z]+)', [
                 'methods' => 'GET',
                 'callback' => [static::class, 'get_acf_form'],
+                'permission_callback' => '__return_true',
+            ]);
+
+             // Get acf_form() by passing post ID and field groups - Used to create new / display existing forms in ACF module
+             register_rest_route('bmcb/v1', '/acf_is_linked/post_id=(?P<postID>[a-zA-Z0-9-]+)', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'set_acf_is_linked'],
                 'permission_callback' => '__return_true',
             ]);
         });
@@ -321,7 +352,6 @@ class BackendLoader
     }
 
 
-
     // Get acf_form() - Used to load ACF form into ACF module - Used to create new and load existing forms into page
     public static function get_acf_form($request)
     {
@@ -331,8 +361,18 @@ class BackendLoader
         $postID = json_decode($request['postID']) ?? 'new_post';
         // Retrieve field groups from request
         $fieldIDs = explode(',', $request['fieldIDs']);
+        // Retrive linked status - Used to prevent globals from displaying form
+        $isLinked = json_decode($request['isLinked']) ?? false;
+
+        // Update post meta with linked status. Used to prevent globals from displaying form
+            
 
         // Use existing acf_form() function to generate new / existing form. HTML data will be embedded in AJAX return request
+        if ($isLinked == true || get_post_meta($postID, '_bmcb_is_linked', true )) {
+            update_post_meta($postID, '_bmcb_is_linked', $request['isLinked']);
+            echo 'Post is linked globally. Click on the post ID below to edit.';
+            return ob_get_clean();
+        }
         acf_form(array(
             'post_id' => $postID,
             'new_post' => array(
@@ -348,6 +388,20 @@ class BackendLoader
         )); 
 
         return ob_get_clean();
+    }
+
+    public static function set_acf_is_linked($request) 
+    {
+        $data = update_post_meta($request['postID'], '_bmcb_is_linked', false);
+
+        // Return data to AJAX to notify page global has been disabled
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' => $data,
+            ]
+        );
     }
 
     /**
