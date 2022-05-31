@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { EventBus } from '../../EventBus';
+import { EventBus } from "../../EventBus";
 import { getDeep, setDeep } from "../../functions/objectHelpers";
 import { stripTrailingSlash } from "../../functions/helpers";
 
@@ -33,6 +33,7 @@ export default {
     range: Number,
     options: String,
     endpoint: String,
+    action: String,
     path: String,
     inline: Boolean,
     selected: String,
@@ -80,27 +81,32 @@ export default {
     handleChange(e) {
       // Get select value and label
       let selectValue = this.value,
-          selectLabel = e.target.options[e.target.options.selectedIndex].text;
-      // If select is "Load Existing" 
-      if( this.$vnode.key === 'load' ) {
-        EventBus.$emit("showSelect", false)
+        selectLabel = e.target.options[e.target.options.selectedIndex].text;
+      // If select is "Load Existing"
+      if (this.action === "load") {
+        EventBus.$emit("showSelect", false);
         // Get post ID from Label - Match numbers on end of string
         let strippedLabel = selectLabel.match(/[0-9]+$/);
         strippedLabel = parseInt(strippedLabel[0], 10);
         // Remove post ID from Label - Split hyphen from end of string
-        selectLabel = selectLabel.substr(0, selectLabel.lastIndexOf("-"), 1).trim();
+        selectLabel = selectLabel
+          .substr(0, selectLabel.lastIndexOf("-"), 1)
+          .trim();
         // Set title - Used for admin label only
-        EventBus.$emit('setTitle', selectLabel)
+        EventBus.$emit("setTitle", selectLabel);
         // Emit event to load existing form
-        EventBus.$emit('loadExisting', { post_id: strippedLabel, field_groups: selectValue })
+        EventBus.$emit("loadExisting", {
+          post_id: strippedLabel,
+          field_groups: selectValue,
+        });
       }
       // If select is "Create New"
-      if( this.$vnode.key === 'create' ) {
+      if (this.action === "create") {
         // Set title - Used for post title and admin label
-        EventBus.$emit('setTitle', selectLabel)
+        EventBus.$emit("setTitle", selectLabel);
         // Emit event to create new form
-        EventBus.$emit('createForm', selectValue)
-      }      
+        EventBus.$emit("createForm", selectValue);
+      }
       if (this.component && this.path) {
         setDeep(this.component, this.path, selectValue);
       }
@@ -108,22 +114,26 @@ export default {
     // Function to fetch options from Rest API
     async fetchOptions() {
       EventBus.$emit("isLoading", true);
-      if (window.global_vars) {        
+      if (window.global_vars) {
         try {
           let res = await fetch(
-            `${stripTrailingSlash(window.global_vars.rest_api_base)}/${this.endpoint}`
+            `${stripTrailingSlash(window.global_vars.rest_api_base)}/${
+              this.endpoint
+            }`
           );
           let data = await res.json();
           this.api_options = data.body;
         } catch {
-          this.defaultVal = 'Something went wrong fetching the options from the API. Please try again!'
+          this.defaultVal =
+            "Something went wrong fetching the options from the API. Please try again!";
         }
         EventBus.$emit("isLoading", false);
       } else {
-        this.defaultVal = 'Something went wrong connecting to the API. Please try again!'
+        this.defaultVal =
+          "Something went wrong connecting to the API. Please try again!";
       }
     },
-  }, 
+  },
   mounted() {
     if (this.selected) {
       this.value = this.selected.trim();

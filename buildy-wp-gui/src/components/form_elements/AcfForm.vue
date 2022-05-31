@@ -81,6 +81,7 @@ export default {
         this.formHTML = "";
       }
     },
+
     // Function to create formData and submit form for processing
     submitForm() {
       EventBus.$emit("isLoading", true);
