@@ -344,6 +344,7 @@ class BackendLoader
             'post_content' => false,
             'uploader' => 'wp',
             'form' => true,
+            'uploader' => 'wp',
         )); 
 
         return ob_get_clean();

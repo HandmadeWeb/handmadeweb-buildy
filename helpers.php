@@ -44,8 +44,8 @@ function create_acf_module() {
         die();
     } 
     // Enqueue ACF Scripts - Possibly optional
-    // acf_enqueue_scripts();
-    // acf_enqueue_uploader();
+    acf_enqueue_scripts();
+    acf_enqueue_uploader();
 
     // Decode the posted form and prepare for submission
     $form = json_decode( acf_decrypt( $_POST['_acf_form'] ), true );
