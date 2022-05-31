@@ -193,9 +193,9 @@ class BackendLoader
             update_post_meta($post_id, '_bmcb_field_groups', $form['field_groups']);
             // Create new blade file (if not exists)
             $field_groups = $form['field_groups'][0];
-            $file = BUILDY_URL . "resources/views/modules/acf.blade.php";
+            $file = BUILDY_ROOT . "resources/views/modules/acf.blade.php";
             $newfile = get_stylesheet_directory() . "/buildy-views/modules/acf-$field_groups.blade.php";
-            if(!file_exists($newfile)) {
+            if(!is_file($newfile)) {
                 copy($file,$newfile);
             }
             // Return JSON success daya - Post ID and Field Groups
