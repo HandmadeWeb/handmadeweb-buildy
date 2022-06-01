@@ -7,13 +7,14 @@ import { labelUCFirst } from './functions/helpers'
 // import 'prismjs/themes/prism.css'
 
 import { Hooks } from './functions/hooks'
+// App-wide hooks
 const hooks = new Hooks()
+// Set it on the Vue prototype so that all components can use it. e.g this.$hmw_hook.run(name, ...args)
 Object.defineProperty(Vue.prototype, '$hmw_hook', {
   get: function () {
     return hooks
   }
 })
-
 
 Vue.config.productionTip = false
 

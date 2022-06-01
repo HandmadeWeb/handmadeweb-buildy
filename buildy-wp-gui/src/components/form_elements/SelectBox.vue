@@ -1,21 +1,18 @@
 <template>
   <div
     class="select-box-module module-settings mt-0 flex relative"
-    :class="[inline ? 'flex-row' : 'flex-col']"
-  >
+    :class="[inline ? 'flex-row' : 'flex-col']">
     <label class="pr-4 pb-1 setting-label">{{ label }}:</label>
     <select
       class="select-box rounded p-2"
       v-model="value"
-      @change="handleChange"
-    >
+      @change="handleChange">
       <option :value="defaultVal">{{ defaultVal }}</option>
       <option
         v-for="(option, i) in optionsArr"
         :key="option + i"
         class="select-choice flex"
-        :value="option"
-      >
+        :value="option">
         {{ option }}
       </option>
     </select>
@@ -24,8 +21,8 @@
 
 <script>
 // import { EventBus } from '../../../EventBus';
-import { getDeep, setDeep } from "../../functions/objectHelpers";
-import { stripTrailingSlash } from "../../functions/helpers";
+import { getDeep, setDeep } from '../../functions/objectHelpers'
+import { stripTrailingSlash } from '../../functions/helpers'
 
 export default {
   props: {
@@ -38,48 +35,49 @@ export default {
     selected: String,
     defaultVal: {
       type: String,
-      default: "None",
+      default: 'None',
     },
   },
   data() {
     return {
       value: this.defaultVal,
       api_options: null,
-    };
+    }
   },
   computed: {
     optionsArr() {
       if (this.range) {
-        return Array.from(Array(this.range).keys());
+        return Array.from(Array(this.range).keys())
       }
 
       if (this.api_options) {
-        if (typeof this.api_options === "object") {
-          return this.api_options.map((el) => el.style_name.trim());
+        console.log(this.api_options)
+        if (typeof this.api_options === 'object') {
+          return this.api_options.map((el) => el.name.trim())
         } else {
-          if (this.api_options.includes(",")) {
-            return this.api_options.split(",").map((el) => el.trim());
+          if (this.api_options.includes(',')) {
+            return this.api_options.split(',').map((el) => el.trim())
           }
-          return this.api_options.split("\n").map((el) => el.trim());
+          return this.api_options.split('\n').map((el) => el.trim())
         }
       }
 
       return this.options
         ? this.options
-            .replace(/[[\]']+/g, "")
-            .split(",")
+            .replace(/[[\]']+/g, '')
+            .split(',')
             .map((el) => el.trim())
-        : null;
+        : null
     },
     valueClean() {
-      return this.value.toLowerCase().trim().replace(/ /g, "-");
+      return this.value.toLowerCase().trim().replace(/ /g, '-')
     },
   },
   methods: {
     handleChange() {
-      this.$emit("change", this.value || null);
+      this.$emit('change', this.value || null)
       if (this.component && this.path) {
-        setDeep(this.component, this.path, this.value);
+        setDeep(this.component, this.path, this.value)
       }
     },
     async fetchOptions() {
@@ -88,33 +86,33 @@ export default {
           `${stripTrailingSlash(window.global_vars.rest_api_base)}/${
             this.endpoint
           }`
-        );
-        let data = await res.json();
-        this.api_options = data.body;
+        )
+        let data = await res.json()
+        this.api_options = data.body
       }
     },
   },
   mounted() {
     if (this.selected) {
-      this.value = this.selected.trim();
+      this.value = this.selected.trim()
     }
 
     if (!this.selected && this.path) {
-      this.value = getDeep(this.component, this.path) || this.defaultVal;
+      this.value = getDeep(this.component, this.path) || this.defaultVal
     }
 
     if (!this.options && this.endpoint) {
       this.fetchOptions().then(() => {
         if (!this.value) {
-          this.value = getDeep(this.component, this.path) || this.defaultVal;
+          this.value = getDeep(this.component, this.path) || this.defaultVal
         }
-      });
+      })
     }
 
-    this.$emit("change", this.value);
+    this.$emit('change', this.value)
   },
-  inject: ["component"],
-};
+  inject: ['component'],
+}
 </script>
 
 <style lang="scss" scoped>

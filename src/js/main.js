@@ -6,7 +6,15 @@ import youtubeVideos from './components/youtube'
 import baguetteBox from 'baguettebox.js';
 import Macy from 'macy';
 
-
+// This is a helper that will automatically generate field keys for ACF fields and console log the result so you can copy/paste into the file
+// import { replaceACFFieldKeys } from './util/replaceACFFieldKeys';
+/* 
+fetch("../../acf/buildy-module-styles.json").then(res => res.json()).then(data => {
+  data.forEach(option => {
+    option.fields.forEach(field => {console.log(recursifyID(field))})
+  })
+});
+*/
 
 
 (function () {

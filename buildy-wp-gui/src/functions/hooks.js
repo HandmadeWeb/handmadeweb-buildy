@@ -76,6 +76,7 @@ export class Hooks {
 
   /**
    * get(name)
+   * Get the callbacks in the queue for a particular hook.
    * Example:
    * hooks.get('myHook')
    * @param  {String} name The name of the hook.
