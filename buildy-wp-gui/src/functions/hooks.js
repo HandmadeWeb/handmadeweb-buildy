@@ -3,21 +3,16 @@ export class Hooks {
     this.queue = [];
   }
 
-  // add(name, callback)
-  //
-  // Add a callback to the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //   callback - The callback to add.
-  //  
-  // Returns:
-  //   void
-  //
-  // Example:
-  //   hooks.add('myHook', () => {
-  //     console.log('myHook ran!')
-  //   })
+  /**
+   * add(name, callback)
+   * Example:
+   * hooks.add('myHook', () => {
+   *    console.log('myHook ran!')
+   * })
+   * @param  {String} name        [description]
+   * @param  {Function} callback  [description]
+   * @return {Void}
+   */
   add(name, callback) {
     if (!this.queue[name]) {
       this.queue[name] = [];
@@ -25,20 +20,14 @@ export class Hooks {
     this.queue[name].push(callback);
   }
 
-
-  // run(name, ...args)
-  //
-  // Run a hook.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //   args - The arguments to pass to the callback.
-  //
-  // Returns:
-  //   void
-  //
-  // Example:
-  //   hooks.run('myHook', 'foo', 'bar')
+  /**
+   * run(name, ...args)
+   * Example:
+   * hooks.run('myHook', 'foo', 'bar')
+   * @param  {String} name The name of the hook.
+   * @param  {...*} args  The arguments to pass to the callback.
+   * @return {Void}
+   */
   run(name, ...args) {
     if (this.queue[name]) {
       this.queue[name].forEach(callback => {
@@ -47,73 +36,53 @@ export class Hooks {
     }
   }
 
-  // remove(name, callback)
-  //
-  // Remove a callback from the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //   callback - The callback to remove.
-  //
-  // Returns:
-  //   void
-  //
-  // Example:
-  //   hooks.remove('myHook', () => {
-  //     console.log('myHook ran!')
-  //   })
+  /**
+   * remove(name, callback)
+   * Example:
+   * hooks.remove('myHook', () => {
+   *    console.log('myHook ran!')
+   * })
+   * @param  {String} name The name of the hook.
+   * @param  {Function} callback  The callback to remove.
+   * @return {Void}
+   */
   remove(name, callback) {
     if (this.queue[name]) {
       this.queue[name] = this.queue[name].filter(cb => cb !== callback);
     }
   }
 
-  // clear(name)
-  //
-  // Clear all callbacks from the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //
-  // Returns:
-  //   void
-  //
-  // Example:
-  //   hooks.clear('myHook')
+  /**
+   * clear(name)
+   * Example:
+   * hooks.clear('myHook')
+   * @param  {String} name The name of the hook.
+   * @return {Void}
+   */
   clear(name) {
     if (this.queue[name]) {
       this.queue[name] = [];
     }
   }
 
-  // clearAll()
-  //
-  // Clear all callbacks from all queues.
-  //
-  // Parameters:
-  //   void
-  //
-  // Returns:
-  //   void
-  //
-  // Example:
-  //   hooks.clearAll()
+  /**
+   * clearAll()
+   * Example:
+   * hooks.clearAll()
+   * @param  {Void}
+   * @return {Void}
+   */
   clearAll() {
     this.queue = {};
   }
 
-  // get(name)
-  //
-  // Get all callbacks from the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //
-  // Returns:
-  //   Array
-  //
-  // Example:
-  //   hooks.get('myHook')
+  /**
+   * get(name)
+   * Example:
+   * hooks.get('myHook')
+   * @param  {String} name The name of the hook.
+   * @return {Array}
+   */
   get(name) {
     if (this.queue[name]) {
       return this.queue[name];
@@ -121,34 +90,25 @@ export class Hooks {
     return [];
   }
 
-  // has(name)
-  //
-  // Check if a hook exists.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //
-  // Returns:
-  //   Boolean
-  //
-  // Example:
-  //   hooks.has('myHook')
+  /**
+   * has(name)
+   * Example:
+   * hooks.has('myHook')
+   * @param  {String} name The name of the hook.
+   * @return {Boolean}
+   */
   has(name) {
     return !!this.queue[name];
   }
 
-  // count(name)
-  //
-  // Get the number of callbacks in the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //
-  // Returns:
-  //   Number
-  //
-  // Example:
-  //   hooks.count('myHook')
+  /**
+   * count(name)
+   * Get the number of callbacks in the queue for a particular hook.
+   * Example:
+   * hooks.count('myHook')
+   * @param  {String} name The name of the hook.
+   * @return {Number}
+   */
   count(name) {
     if (this.queue[name]) {
       return this.queue[name].length;
@@ -156,39 +116,30 @@ export class Hooks {
     return 0;
   }
 
-  // hasCallbacks(name)
-  //
-  // Check if the queue has any callbacks.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //
-  // Returns:
-  //   Boolean
-  //
-  // Example:
-  //   hooks.hasCallbacks('myHook')
+  /**
+   * hasCallbacks(name)
+   * Check if the queue has any callbacks for a particular hook.
+   * Example:
+   * hooks.hasCallbacks('myHook')
+   * @param  {String} name The name of the hook.
+   * @return {Boolean}
+   */
   hasCallbacks(name) {
     return !!this.queue[name] && this.queue[name].length > 0;
   }
 
-  // hasCallback(name, callback)
-  //
-  // Check if a callback exists in the queue.
-  //
-  // Parameters:
-  //   name - The name of the hook.
-  //   callback - The callback to check for.
-  //
-  // Returns:
-  //   Boolean
-  //
-  // Example:
-  //   hooks.hasCallback('myHook', () => {
-  //     console.log('myHook ran!')
-  //   })
+  /**
+   * hasCallback(name, callback)
+   * Check if a callback exists in the queue.
+   * Example:
+   * hooks.hasCallback('myHook', () => {
+   *    console.log('myHook ran!')
+   * })
+   * @param  {String} name The name of the hook.
+   * @param  {Function} callback The callback to check for.
+   * @return {Boolean}
+   */
   hasCallback(name, callback) {
     return !!this.queue[name] && this.queue[name].includes(callback);
   }
-
 }
