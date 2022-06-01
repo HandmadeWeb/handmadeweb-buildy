@@ -44,10 +44,13 @@ import { LinkIcon, PlusIcon } from 'vue-feather-icons'
 
 export default {
   components: { VSpinner, LinkIcon, PlusIcon },
-  name: 'acf-module',
+  name: 'custom-fields',
   data: function () {
     return {
-      icon: 'CodeIcon',
+      icon: 'LayoutIcon',
+      customSettings: {
+        clone: false,
+      },
       showExisting: false,
       showSelect: true,
       isLoading: false,

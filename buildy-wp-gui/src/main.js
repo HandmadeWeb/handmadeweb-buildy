@@ -6,6 +6,15 @@ import { labelUCFirst } from './functions/helpers'
 // import 'prismjs'
 // import 'prismjs/themes/prism.css'
 
+import { Hooks } from './functions/hooks'
+const hooks = new Hooks()
+Object.defineProperty(Vue.prototype, '$hmw_hook', {
+  get: function () {
+    return hooks
+  }
+})
+
+
 Vue.config.productionTip = false
 
 import '@/assets/css/tailwind.css'
@@ -29,7 +38,8 @@ files.keys().map(key => {
     validComponents.push({
       name: component.data().alias ? labelUCFirst(component.data().alias) : labelUCFirst(component.name),
       type: component.name,
-      icon: component.data().icon
+      icon: component.data().icon,
+      customSettings: component.data().customSettings
     })
   }
 })
@@ -50,3 +60,4 @@ new Vue({
   store,
   render: h => h(App, { props: { config: config || [], content: content, validComponents: validComponents } })
 }).$mount('#app')
+

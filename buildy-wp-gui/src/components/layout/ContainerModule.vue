@@ -7,20 +7,17 @@
             v-if="component.type === 'section-module'"
             :parent_array="pageBuilder"
             :key="component.id"
-            :component="component"
-          ></section-module>
+            :component="component"></section-module>
           <module-base
             v-else
             :key="component.id"
             :parent_array="pageBuilder"
-            :component="component"
-          />
+            :component="component" />
         </template>
       </transition-group>
     </draggable>
     <div
-      class="p-4 pt-0 flex justify-center items-center text-center empty-controls"
-    >
+      class="p-4 pt-0 flex justify-center items-center text-center empty-controls">
       <a
         @click.prevent="addSection"
         class="flex pr-6 items-center justify-center"
@@ -29,7 +26,7 @@
       >
       <a
         @click.prevent="
-          [$modal.show('global-selection-selector'), fetchGlobals()]
+          ;[$modal.show('global-selection-selector'), fetchGlobals()]
         "
         class="flex pr-6 items-center justify-center"
         href="#"
@@ -54,21 +51,18 @@
         <x-icon
           @click="$modal.hide('global-selection-selector')"
           class="text-gray-800 cursor-pointer inset-y-0 m-2 absolute right-0"
-          size="1.5x"
-        ></x-icon>
+          size="1.5x"></x-icon>
         <div class="w-full bg-gray-400 px-12 py-6">
           <h2 class="mb-6 text-2xl">Choose Module:</h2>
           <div v-if="globals" class="flex flex-wrap">
             <div
               v-for="globalModule in globals"
               :key="globalModule.id"
-              class="mb-1 md:w-1/2"
-            >
+              class="mb-1 md:w-1/2">
               <label
                 @click="addGlobal(globalModule)"
                 :for="globalModule.id"
-                class="flex items-center cursor-pointer text-large"
-              >
+                class="flex items-center cursor-pointer text-large">
                 <span
                   class="px-2 py-1 flex-b inline-block mr-2 bg-gray-200 rounded border border-grey flex-no-shrink flex items-center justify-center"
                   >{{ globalModule.title }}
@@ -88,34 +82,33 @@
     <textarea
       v-show="showTextarea"
       @paste.prevent="pasteSection"
-      class="flex mx-auto w-1/2 items-center bg-gray-200 justify-center"
-    />
+      class="flex mx-auto w-1/2 items-center bg-gray-200 justify-center" />
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
-import { EventBus } from "../../EventBus";
-import { Module } from "../../classes/ModuleClass";
-import { PlusCircleIcon, XIcon, ClipboardIcon } from "vue-feather-icons";
-import draggable from "vuedraggable";
-import { recursifyID } from "../../functions/idHelpers";
-import { tryParseJSON } from "../../functions/helpers";
+import { mapGetters, mapActions } from 'vuex'
+import { EventBus } from '../../EventBus'
+import { Module } from '../../classes/ModuleClass'
+import { PlusCircleIcon, XIcon, ClipboardIcon } from 'vue-feather-icons'
+import draggable from 'vuedraggable'
+import { recursifyID } from '../../functions/idHelpers'
+import { tryParseJSON } from '../../functions/helpers'
 export default {
-  name: "container-module",
+  name: 'container-module',
   data: function () {
     return {
       dragArray: this.pageBuilder,
       showTextarea: false,
-    };
+    }
   },
   computed: {
-    ...mapGetters(["dragDisabled", "globals"]),
+    ...mapGetters(['dragDisabled', 'globals']),
     dragOptions() {
       return {
-        group: "sections",
-        ghostClass: "ghost",
+        group: 'sections',
+        ghostClass: 'ghost',
         disabled: this.dragDisabled,
-      };
+      }
     },
   },
   components: {
@@ -125,42 +118,43 @@ export default {
     draggable,
   },
   methods: {
-    ...mapActions(["fetchGlobals"]),
+    ...mapActions(['fetchGlobals']),
     addSection() {
-      let newObj = new Module();
-      let newComponent = newObj.newSection();
-      this.pageBuilder.push(newComponent);
+      let newObj = new Module()
+      let newComponent = newObj.newSection()
+      this.pageBuilder.push(newComponent)
     },
     addGlobal(payload) {
-      let newObj = new Module();
-      let newComponent = newObj.newGlobalSection(payload);
-      this.pageBuilder.push(newComponent);
+      let newObj = new Module()
+      let newComponent = newObj.newGlobalSection(payload)
+      this.pageBuilder.push(newComponent)
     },
     addHR() {
-      let newObj = new Module({ type: "hr-module", alias: "Divider" });
-      this.pageBuilder.push(newObj.newModule());
+      let newObj = new Module({ type: 'hr-module', alias: 'Divider' })
+      this.pageBuilder.push(newObj.newModule())
     },
     pasteSection(e) {
-      if (!e.clipboardData.getData("text")) {
-        return;
+      if (!e.clipboardData.getData('text')) {
+        return
       }
-      let content = tryParseJSON(e.clipboardData.getData("text"));
+      let content = tryParseJSON(e.clipboardData.getData('text'))
 
       if (content) {
-        recursifyID(content);
-        this.pageBuilder.push(content);
+        recursifyID(content)
+        this.$hmw_hook.run('before-paste', content)
+        this.pageBuilder.push(content)
       }
     },
   },
   mounted() {
-    EventBus.$on("dragToggle", (val) => {
-      this.dragOptions.disabled = val;
-    });
+    EventBus.$on('dragToggle', (val) => {
+      this.dragOptions.disabled = val
+    })
   },
   props: {
     pageBuilder: Array,
   },
-};
+}
 </script>
 <style scoped>
 .hidden {

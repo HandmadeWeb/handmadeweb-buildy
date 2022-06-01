@@ -114,7 +114,7 @@ class FrontendFilters
         }
 
         // Create frontend template route for buildy views
-        if (! empty($data->type) && $data->type == 'acf-module') {
+        if (! empty($data->type) && $data->type == 'custom-fields') {
             $field_group_id = $data->content->acfForm->field_groups;
             $data->generatedAttributes->template = preg_replace("/\W|_/", '', $field_group_id[0]);
         }

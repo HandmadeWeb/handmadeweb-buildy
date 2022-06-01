@@ -5,25 +5,25 @@
     :class="[
       settingsOpen ? 'highlight-section' : '',
       renderDisabled ? 'border-8 border-b-0 border-gray-500' : '',
-    ]"
-  >
+    ]">
     <module-settings-bar
       :parent_array="parent_array"
       :customSettings="customSettings"
-      direction="col"
-    ></module-settings-bar>
+      direction="col"></module-settings-bar>
 
     <settings-modal>
       <toggle-switch
         label="Boxed layout"
         path="options.layout_boxed"
-        :status="component.options && component.options.layout_boxed"
-      ></toggle-switch>
+        :status="
+          component.options && component.options.layout_boxed
+        "></toggle-switch>
       <toggle-switch
         label="Inner Container?"
         path="options.inner_container"
-        :status="component.options && component.options.inner_container"
-      ></toggle-switch>
+        :status="
+          component.options && component.options.inner_container
+        "></toggle-switch>
     </settings-modal>
 
     <div
@@ -31,14 +31,12 @@
       :class="[
         settingsOpen ? 'highlight-section' : '',
         renderDisabled ? 'opacity-50' : '',
-      ]"
-    >
+      ]">
       <draggable :list="dragArray" v-bind="dragOptions">
         <transition-group
           name="fadeHeight"
           tag="div"
-          class="section-inner p-6 pb-2 flex-col flex-wrap flex-1"
-        >
+          class="section-inner p-6 pb-2 flex-col flex-wrap flex-1">
           <template v-for="(row, index) in dragArray">
             <row-module
               v-if="row.type === 'row-module'"
@@ -48,20 +46,17 @@
               :key="row.id"
               :components="row.content"
               :parent_array="component.content"
-              :component="row"
-            />
+              :component="row" />
             <module-base
               v-else
               :key="row.id"
               :parent_array="component.content"
-              :component="row"
-            />
+              :component="row" />
           </template>
         </transition-group>
       </draggable>
       <div
-        class="empty-controls__row p-4 pt-0 pb-2 text-center empty-controls flex justify-center"
-      >
+        class="empty-controls__row p-4 pt-0 pb-2 text-center empty-controls flex justify-center">
         <a
           @click.prevent="addRow"
           class="add-row flex w-auto mx-6 items-center justify-center"
@@ -85,45 +80,45 @@
   </div>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import { PlusCircleIcon } from "vue-feather-icons";
-import draggable from "vuedraggable";
-import { Module } from "../../classes/ModuleClass";
-import { copyToClipboard } from "../../functions/helpers";
+import { mapGetters } from 'vuex'
+import { PlusCircleIcon } from 'vue-feather-icons'
+import draggable from 'vuedraggable'
+import { Module } from '../../classes/ModuleClass'
+import { copyToClipboard } from '../../functions/helpers'
 
 export default {
-  name: "section-module",
+  name: 'section-module',
   data: function () {
     return {
       settingsOpen: false,
       dragArray: this.component.content,
       hovering: false,
       dragging: false,
-      customSettings: [
-        {
-          name: "Copy Code",
-          icon: "ClipboardIcon",
-          title: "Copy section code",
+      customSettings: {
+        copy: {
+          name: 'Copy Code',
+          icon: 'ClipboardIcon',
+          title: 'Copy section code',
           action: this.copyCode,
           order: 31,
         },
-      ],
-    };
+      },
+    }
   },
   computed: {
-    ...mapGetters(["dragDisabled"]),
+    ...mapGetters(['dragDisabled']),
     dragOptions() {
       return {
-        group: "rows",
-        ghostClass: "ghost",
+        group: 'rows',
+        ghostClass: 'ghost',
         disabled: this.dragDisabled,
-      };
+      }
     },
     renderDisabled() {
-      return this.component.attributes?.renderDisabled || false;
+      return this.component.attributes?.renderDisabled || false
     },
     rowCount() {
-      return this.dragArray.length;
+      return this.dragArray.length
     },
   },
   components: {
@@ -132,19 +127,19 @@ export default {
   },
   methods: {
     openSectionSettings() {
-      this.$modal.show(this.component.id);
+      this.$modal.show(this.component.id)
     },
     addRow() {
-      let newObj = new Module();
-      let newComponent = newObj.newRow();
-      this.component.content.push(newComponent);
+      let newObj = new Module()
+      let newComponent = newObj.newRow()
+      this.component.content.push(newComponent)
     },
     addHR() {
-      let newObj = new Module({ type: "hr-module", alias: "Divider" });
-      this.component.content.push(newObj.newModule());
+      let newObj = new Module({ type: 'hr-module', alias: 'Divider' })
+      this.component.content.push(newObj.newModule())
     },
     copyCode() {
-      copyToClipboard(this.component);
+      copyToClipboard(this.component)
     },
   },
   props: {
@@ -154,9 +149,9 @@ export default {
   provide() {
     return {
       component: this.component,
-    };
+    }
   },
-};
+}
 </script>
 
 <style scoped>
