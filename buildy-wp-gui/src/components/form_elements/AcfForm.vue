@@ -34,7 +34,7 @@ import { EventBus } from '../../EventBus'
 import { setDeep, getDeep } from '../../functions/objectHelpers'
 
 export default {
-  name: 'acf-module',
+  name: 'acf-form',
   data: function () {
     return {
       postID: '',

@@ -12,8 +12,7 @@
     @opened="modalOpened"
     @closed="modalClosed"
     @waitToSave="waitToSave"
-    @before-close="beforeClose"
-  >
+    @before-close="beforeClose">
     <div class="bg-gray-700 modal-controls absolute w-full flex">
       <div class="dragHandler cursor-move flex-1">
         <span class="block text-gray-400 pl-6 h-full flex items-center">{{
@@ -23,27 +22,21 @@
       <x-icon
         @click="$modal.hide(component.id)"
         class="text-gray-400 cursor-pointer inset-y-0 m-2 right-0"
-        size="1.5x"
-      ></x-icon>
+        size="1.5x"></x-icon>
     </div>
     <div @click="modalClick" class="p-0 pt-10 bg-gray-300 text-gray-800">
       <vue-tabs :id="component.id">
         <vue-tab
           name="Content"
           v-if="hasDefaultSlot"
-          :selected="hasDefaultSlot"
-        >
+          :selected="hasDefaultSlot">
           <!-- Custom Content Tab Slot -->
           <slot ref="module" />
-
-          <!-- Accordion Modules Need Different Paths -->
-          <custom-fields v-if="component.type !== 'accordion-module'" />
 
           <!-- Admin label moved to content tab -->
           <attribute-editor
             label="Admin Label"
-            path="options.admin_label"
-          ></attribute-editor>
+            path="options.admin_label"></attribute-editor>
         </vue-tab>
         <vue-tab class="design-tab" name="Design">
           <!-- Design Options -->
@@ -61,13 +54,11 @@
 
           <color-picker
             label="Background Color:"
-            path="inline.backgroundColor"
-          />
+            path="inline.backgroundColor" />
           <image-uploader
             path="inline.backgroundImage"
             :key="'background-image-' + component.id"
-            label="Background Image:"
-          ></image-uploader>
+            label="Background Image:"></image-uploader>
 
           <!-- Add things to design tab -->
           <slot name="design"></slot>
@@ -77,14 +68,12 @@
           <attribute-editor
             label="ID"
             path="attributes.id"
-            attribute="id"
-          ></attribute-editor>
+            attribute="id"></attribute-editor>
           <attribute-editor
             label="Class"
             path="attributes.class"
             attribute="class"
-            sibblingLink
-          ></attribute-editor>
+            sibblingLink></attribute-editor>
           <field-repeater label="data-" path="attributes.data"></field-repeater>
 
           <attribute-editor
@@ -95,16 +84,14 @@
             label="External Link"
             path="options.module_link.url"
             attribute="Module LinkLink"
-            sibblingLink
-          ></attribute-editor>
+            sibblingLink></attribute-editor>
 
           <attribute-editor
             v-if="
               component.attributes && component.attributes.in_page_link_enabled
             "
             label="Internal Link Text"
-            path="attributes.in_page_link_text"
-          ></attribute-editor>
+            path="attributes.in_page_link_text"></attribute-editor>
           <div class="flex items-center">
             <toggle-switch
               label="In-page Link instead?"
@@ -112,8 +99,7 @@
                 component.attributes &&
                 component.attributes.in_page_link_enabled
               "
-              path="attributes.in_page_link_enabled"
-            ></toggle-switch>
+              path="attributes.in_page_link_enabled"></toggle-switch>
 
             <toggle-switch
               class="ml-10"
@@ -127,8 +113,7 @@
                 component.options.module_link &&
                 component.options.module_link.new_tab
               "
-              path="options.module_link.new_tab"
-            ></toggle-switch>
+              path="options.module_link.new_tab"></toggle-switch>
           </div>
 
           <toggle-switch
@@ -136,8 +121,7 @@
             :status="
               component.attributes && component.attributes.renderDisabled
             "
-            path="attributes.renderDisabled"
-          ></toggle-switch>
+            path="attributes.renderDisabled"></toggle-switch>
 
           <!-- Custom Options Tab Slot -->
           <slot name="options"></slot>
@@ -146,8 +130,7 @@
           <vue-tab
             v-for="customSlot in customSlots"
             :key="customSlot"
-            :name="UCFirst(customSlot)"
-          >
+            :name="UCFirst(customSlot)">
             <!-- Custom Content Tab Slot -->
             <slot :name="customSlot" />
           </vue-tab>
@@ -164,11 +147,11 @@
 </template>
 
 <script>
-import { EventBus } from "../../EventBus";
-import { UCFirst } from "../../functions/helpers";
-import { XIcon } from "vue-feather-icons";
+import { EventBus } from '../../EventBus'
+import { UCFirst } from '../../functions/helpers'
+import { XIcon } from 'vue-feather-icons'
 export default {
-  name: "settings-modal",
+  name: 'settings-modal',
   components: {
     XIcon,
   },
@@ -191,55 +174,55 @@ export default {
     return {
       closeable: true,
       waitToSave: false,
-    };
+    }
   },
   computed: {
     hasDefaultSlot() {
-      return !!this.$slots.default;
+      return !!this.$slots.default
     },
   },
   methods: {
     beforeClose(e) {
-      EventBus.$emit("before-close", e);
+      EventBus.$emit('before-close', e)
     },
     modalOpened() {
-      this.$store.dispatch("dragToggle", true);
-      this.$emit("modalOpened");
+      this.$store.dispatch('dragToggle', true)
+      this.$emit('modalOpened')
     },
     modalClosed() {
-      this.$store.dispatch("dragToggle", false);
+      this.$store.dispatch('dragToggle', false)
     },
     modalClick() {
-      EventBus.$emit("modalClick");
+      EventBus.$emit('modalClick')
     },
     saveAll() {
-      EventBus.$emit("saveAll", this.component.id);
+      EventBus.$emit('saveAll', this.component.id)
       if (this.waitToSave) {
-        return;
+        return
       }
-      this.$modal.hide(this.component.id);
+      this.$modal.hide(this.component.id)
     },
     UCFirst,
   },
   mounted() {
-    EventBus.$on("waitToSave", (e) => {
-      this.waitToSave = e;
-    });
-    EventBus.$on("doSave", () => {
-      this.saveAll();
-    });
+    EventBus.$on('waitToSave', (e) => {
+      this.waitToSave = e
+    })
+    EventBus.$on('doSave', () => {
+      this.saveAll()
+    })
   },
   destroyed() {
-    EventBus.$off("waitToSave");
-    EventBus.$off("doSave");
+    EventBus.$off('waitToSave')
+    EventBus.$off('doSave')
   },
-  inject: ["component"],
+  inject: ['component'],
   provide() {
     return {
       component: this.component,
-    };
+    }
   },
-};
+}
 </script>
 
 <style>

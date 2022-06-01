@@ -8,34 +8,28 @@
       <attribute-editor
         label="Interval"
         placeholder="Time between slide changes - Default: 5000"
-        path="options.slider.interval"
-      />
+        path="options.slider.interval" />
       <attribute-editor
         label="Duration"
         placeholder="Duration of the slide animation - Default: 200"
-        path="options.slider.duration"
-      />
+        path="options.slider.duration" />
       <attribute-editor
         label="Easing"
         placeholder="Default: ease-out"
-        path="options.slider.easing"
-      />
+        path="options.slider.easing" />
       <attribute-editor
         label="Per Page"
         placeholder="Default: 1"
         :key="`options.slider.perPage.${breakpoint}`"
-        :path="`options.slider.perPage.${breakpoint}`"
-      />
+        :path="`options.slider.perPage.${breakpoint}`" />
       <attribute-editor
         label="Start Index"
         placeholder="Default: 0"
-        path="options.slider.startIndex"
-      />
+        path="options.slider.startIndex" />
       <attribute-editor
         label="Threshold"
         placeholder="Default: 20"
-        path="options.slider.threshold"
-      />
+        path="options.slider.threshold" />
       <toggle-switch
         label="Autoplay"
         :status="
@@ -44,8 +38,7 @@
             ? component.options.slider.autoplay
             : true
         "
-        path="options.slider.autoplay"
-      ></toggle-switch>
+        path="options.slider.autoplay"></toggle-switch>
       <toggle-switch
         label="Draggable"
         :status="
@@ -54,8 +47,7 @@
             ? component.options.slider.draggable
             : true
         "
-        path="options.slider.draggable"
-      ></toggle-switch>
+        path="options.slider.draggable"></toggle-switch>
       <toggle-switch
         label="Loop"
         :status="
@@ -64,13 +56,11 @@
             ? component.options.slider.loop
             : true
         "
-        path="options.slider.loop"
-      ></toggle-switch>
+        path="options.slider.loop"></toggle-switch>
       <toggle-switch
         label="Right to left?"
         :status="component.options.slider && component.options.slider.rtl"
-        path="options.slider.rtl"
-      ></toggle-switch>
+        path="options.slider.rtl"></toggle-switch>
       <toggle-switch
         label="Arrow Navigation"
         :status="
@@ -79,8 +69,7 @@
             ? component.options.slider.arrow_nav
             : true
         "
-        path="options.slider.arrow_nav"
-      ></toggle-switch>
+        path="options.slider.arrow_nav"></toggle-switch>
       <toggle-switch
         label="Dot Navigation"
         :status="
@@ -89,28 +78,26 @@
             ? component.options.slider.paginationDots
             : true
         "
-        path="options.slider.paginationDots"
-      ></toggle-switch>
+        path="options.slider.paginationDots"></toggle-switch>
     </fieldset>
   </settings-modal>
 </template>
 <script>
 export default {
-  name: "slider-module",
+  name: 'slider-module',
   data: function () {
     return {
-      icon: "SlidersIcon",
-      breakpoint: "xl",
-    };
+      icon: 'SlidersIcon',
+      breakpoint: 'xl',
+    }
   },
   methods: {
     swapBreakpoint(breakpoint) {
-      breakpoint ? (this.breakpoint = breakpoint) : (this.breakpoint = "xl");
-      console.log(this.component);
+      breakpoint ? (this.breakpoint = breakpoint) : (this.breakpoint = 'xl')
     },
   },
   props: {
     component: Object,
   },
-};
+}
 </script>

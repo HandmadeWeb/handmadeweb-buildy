@@ -9,6 +9,7 @@ export class Module {
       type: (options && options.type) ? options.type : '',
       content: [],
       icon: options && options.icon,
+      customSettings: options && (options.customSettings ?? {}),
       options: {
         isEditable: true,
         admin_label: options && options.alias ? options.alias : options && options.name

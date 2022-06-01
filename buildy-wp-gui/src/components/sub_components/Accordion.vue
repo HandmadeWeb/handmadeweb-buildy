@@ -7,23 +7,20 @@
             <draggable
               :list="dragArray"
               v-bind="dragOptions"
-              @change="updateListOrder"
-            >
+              @change="updateListOrder">
               <div
                 class="accordion__item"
                 v-for="(item, i) in items"
-                :key="`accordion-item-${i}`"
-              >
+                :key="`accordion-item-${i}`">
                 <div
                   class="accordion__title-text p-3"
                   :class="generateModuleClasses(i)"
-                  @click.prevent="toggleActive(i, item)"
-                >
+                  @click.prevent="toggleActive(i, item)">
                   <p class="mb-0">
                     {{
                       item.editMode
-                        ? "..."
-                        : item[titleProperty] || "Click to enter content"
+                        ? '...'
+                        : item[titleProperty] || 'Click to enter content'
                     }}
                   </p>
                   <div class="accordion-controls flex items-center">
@@ -35,21 +32,18 @@
                 <collapse-transition>
                   <div
                     class="accordion__body px-3 pb-3"
-                    v-if="i === activeItemIndex"
-                  >
+                    v-if="i === activeItemIndex">
                     <input
                       @change="updateItem(item, i, 'title', $event)"
                       type="text"
                       class="px-4 py-2 w-full mb-2 border"
                       :value="item[titleProperty]"
-                      placeholder="Enter title content"
-                    />
+                      placeholder="Enter title content" />
                     <slot v-bind:item="item">
                       <component
                         :is="editorType"
                         :index="i"
-                        :path="`${path}.${i}.body`"
-                      >
+                        :path="`${path}.${i}.body`">
                       </component>
                       <!-- <p class="accordion__value" v-html="item[answerProperty]"></p> -->
                       <!-- <label class="mt-3 block"> Add to tab:
@@ -61,10 +55,7 @@
                       :path="`${path}.${i}.image`"
                       :key="`image-${i}`"
                       imageType="img"
-                      label="Slide Image:"
-                    ></image-uploader>
-
-                    <custom-fields :path="`${path}.${i}.customFields`" />
+                      label="Slide Image:"></image-uploader>
                   </div>
                 </collapse-transition>
               </div>
@@ -75,13 +66,13 @@
     </transition>
     <a class="mt-4 flex" @click.prevent="addItem" href="#"
       ><plus-circle-icon class="mr-2" /> Add
-      {{ isSlider ? "slide" : "item" }}</a
+      {{ isSlider ? 'slide' : 'item' }}</a
     >
   </section>
 </template>
 
 <script>
-import { setDeep, getDeep } from "../../functions/objectHelpers";
+import { setDeep, getDeep } from '../../functions/objectHelpers'
 import {
   EditIcon,
   XIcon,
@@ -89,13 +80,13 @@ import {
   CopyIcon,
   PlusCircleIcon,
   ChevronRightIcon,
-  PlusIcon
-} from "vue-feather-icons";
-import { CollapseTransition } from "vue2-transitions";
-import draggable from "vuedraggable";
-import { mapGetters } from "vuex";
+  PlusIcon,
+} from 'vue-feather-icons'
+import { CollapseTransition } from 'vue2-transitions'
+import draggable from 'vuedraggable'
+import { mapGetters } from 'vuex'
 export default {
-  name: "VueFaqAccordion",
+  name: 'VueFaqAccordion',
   components: {
     CollapseTransition,
     draggable,
@@ -105,16 +96,16 @@ export default {
     PlusIcon,
     ChevronRightIcon,
     TrashIcon,
-    CopyIcon
+    CopyIcon,
   },
   data() {
     return {
-      activeTab: "",
+      activeTab: '',
       activeItemIndex: null,
       showAccordion: true,
       disableDrag: false,
-      items: []
-    };
+      items: [],
+    }
   },
   props: {
     /**
@@ -124,28 +115,28 @@ export default {
      */
     itemPayload: {
       type: Array,
-      required: false
+      required: false,
     },
     /**
      * Key name of object in items array for specifying title of title
      */
     titleProperty: {
       type: String,
-      default: "title"
+      default: 'title',
     },
     /**
      * Path on the component where this module stores the content
      */
     path: {
       type: String,
-      default: "content.accordion.items"
+      default: 'content.accordion.items',
     },
     /**
      * Key name of object in items array for specifying content text of open title
      */
     answerProperty: {
       type: String,
-      default: "body"
+      default: 'body',
     },
     /**
      * Color for hover and active tab/title
@@ -153,126 +144,124 @@ export default {
      */
     activeColor: {
       type: String,
-      default: "#D50000"
+      default: '#D50000',
     },
     /**
      * Color for borders
      */
     borderColor: {
       type: String,
-      default: "#9E9E9E"
+      default: '#9E9E9E',
     },
     /**
      * Color for fonts
      */
     fontColor: {
       type: String,
-      default: "#000000"
+      default: '#000000',
     },
     /**
      * Enable Image
      */
     isSlider: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   computed: {
-    ...mapGetters(["isWP"]),
+    ...mapGetters(['isWP']),
     editorType() {
-      return this.isWP ? "rich-tiny" : "rich-text";
+      return this.isWP ? 'rich-tiny' : 'rich-text'
     },
     htmlTag() {
-      if (this.componentType === "input") {
-        return "input";
+      if (this.componentType === 'input') {
+        return 'input'
       }
-      return this.tag;
+      return this.tag
     },
     dragArray() {
-      return this.items;
+      return this.items
     },
     dragOptions() {
       return {
-        group: "accordion_items",
-        ghostClass: "ghost",
-        disabled: this.disableDrag
-      };
-    }
+        group: 'accordion_items',
+        ghostClass: 'ghost',
+        disabled: this.disableDrag,
+      }
+    },
   },
   methods: {
     toggleActive(itemIndex, item) {
       this.activeItemIndex =
-        this.activeItemIndex === itemIndex ? null : itemIndex;
+        this.activeItemIndex === itemIndex ? null : itemIndex
 
       // Set any previous ones back to false
-      this.items = this.items.map(item => {
-        item.editMode = false;
-        return item;
-      });
+      this.items = this.items.map((item) => {
+        item.editMode = false
+        return item
+      })
 
       // Set the current index one to true
       if (this.activeItemIndex === itemIndex) {
-        item.editMode = true;
+        item.editMode = true
       } else {
-        item.editMode = false;
+        item.editMode = false
       }
     },
     addItem() {
-      let newItem = { title: "", body: "", editMode: false };
-      this.items.push(newItem);
-      this.toggleActive(this.items.length - 1, newItem);
+      let newItem = { title: '', body: '', editMode: false }
+      this.items.push(newItem)
+      this.toggleActive(this.items.length - 1, newItem)
     },
     cloneItem(item) {
-      let newItem = JSON.parse(JSON.stringify(item));
-      this.items.push(newItem);
-      this.toggleActive(this.items.length - 1, newItem);
+      let newItem = JSON.parse(JSON.stringify(item))
+      this.items.push(newItem)
+      this.toggleActive(this.items.length - 1, newItem)
     },
     updateItem(item, index, prop, val) {
-      this.items[index][prop] = val.target.value;
-      setDeep(this.component, this.path, this.items);
+      this.items[index][prop] = val.target.value
+      setDeep(this.component, this.path, this.items)
     },
     removeItem(item) {
-      const index = this.items.findIndex(el => el.title === item.title);
-      let confirm = window.confirm(
-        "Are you sure you want to delete this item?"
-      );
+      const index = this.items.findIndex((el) => el.title === item.title)
+      let confirm = window.confirm('Are you sure you want to delete this item?')
       if (confirm) {
-        this.items.splice(index, 1);
+        this.items.splice(index, 1)
       }
     },
     generateButtonClasses(buttonIndex) {
       return [
-        "accordion__toggle-button",
+        'accordion__toggle-button',
         this.activeItemIndex === buttonIndex
-          ? "accordion__toggle-button_active"
-          : null
-      ];
+          ? 'accordion__toggle-button_active'
+          : null,
+      ]
     },
     generateModuleClasses(titleIndex) {
       return [
-        "accordion__title",
-        this.activeItemIndex === titleIndex ? "accordion__title_active" : null
-      ];
+        'accordion__title',
+        this.activeItemIndex === titleIndex ? 'accordion__title_active' : null,
+      ]
     },
     updateListOrder() {
-      setDeep(this.component, this.path, this.dragArray);
+      setDeep(this.component, this.path, this.dragArray)
       // this.updateStoreComponent({ path: 'content.accordion.items', prop: this.dragArray})
-    }
+    },
   },
   mounted() {
-    let currentItems = getDeep(this.component, this.path);
-    this.items = currentItems || [];
-    this.$refs.rootEl.style.setProperty("--active-color", this.activeColor);
-    this.$refs.rootEl.style.setProperty("--border-color", this.borderColor);
-    this.$refs.rootEl.style.setProperty("--font-color", this.fontColor);
+    let currentItems = getDeep(this.component, this.path)
+    this.items = currentItems || []
+    this.$refs.rootEl.style.setProperty('--active-color', this.activeColor)
+    this.$refs.rootEl.style.setProperty('--border-color', this.borderColor)
+    this.$refs.rootEl.style.setProperty('--font-color', this.fontColor)
   },
-  inject: ["component"],
+  inject: ['component'],
   provide() {
     return {
-      component: this.component
-    };
-  }
-};
+      component: this.component,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>

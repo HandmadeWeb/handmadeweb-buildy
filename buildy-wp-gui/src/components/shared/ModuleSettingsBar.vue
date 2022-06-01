@@ -1,21 +1,18 @@
 <template>
   <div
     class="settings-bar rounded rounded-r-none rounded-b-none module"
-    :class="[`bg-${colorClasses}`]"
-  >
+    :class="[`bg-${colorClasses}`]">
     <ul class="list-unstyled flex py-1" :class="[`flex-${direction}`]">
       <li
         v-for="setting in settings"
         :key="component.id + setting.name"
         class="flex px-3 items-center m-0"
-        :title="setting.title"
-      >
+        :title="setting.title">
         <component
           :is="setting.icon"
           @click="setting.action"
           class="text-white cursor-pointer"
-          size="1.5x"
-        ></component>
+          size="1.5x"></component>
       </li>
     </ul>
   </div>
@@ -29,10 +26,10 @@ import {
   ColumnsIcon,
   ClipboardIcon,
   ExternalLinkIcon,
-} from "vue-feather-icons";
-import { recursifyID } from "../../functions/idHelpers";
+} from 'vue-feather-icons'
+import { recursifyID } from '../../functions/idHelpers'
 export default {
-  name: "module-settings-bar",
+  name: 'module-settings-bar',
   components: {
     MenuIcon,
     Trash2Icon,
@@ -44,83 +41,89 @@ export default {
   computed: {
     colorClasses() {
       switch (this.component.type) {
-        case "row-module":
-          return "green-500";
-        case "section-module":
-          return "blue-500";
+        case 'row-module':
+          return 'green-500'
+        case 'section-module':
+          return 'blue-500'
         default:
-          return "none";
+          return 'none'
       }
     },
     settings() {
-      return [
-        {
-          name: "Menu",
-          icon: "MenuIcon",
-          title: "Open settings modal",
+      return Object.values({
+        menu: {
+          name: 'Menu',
+          icon: 'MenuIcon',
+          title: 'Open settings modal',
           action: this.openModal,
           order: 10,
         },
-        {
-          name: "Clone",
-          icon: "CopyIcon",
-          title: "Clone Module",
+        clone: {
+          name: 'Clone',
+          icon: 'CopyIcon',
+          title: 'Clone Module',
           action: this.cloneModule,
           order: 20,
         },
-        {
-          name: "Delete",
-          icon: "Trash2Icon",
-          title: "Delete Module",
+        delete: {
+          name: 'Delete',
+          icon: 'Trash2Icon',
+          title: 'Delete Module',
           action: this.deleteModule,
           order: 30,
         },
+        ...(this?.component?.customSettings || {}),
         ...this.customSettings,
-      ].sort((a, b) => a.order - b.order);
+      })
+        .filter((el) => el)
+        .sort((a, b) => a.order - b.order)
     },
   },
   methods: {
     cloneModule() {
       // Stringify is a deep-clone
-      let clone = JSON.parse(JSON.stringify(this.component));
+      let clone = JSON.parse(JSON.stringify(this.component))
 
       // Generate ID's recursively
-      recursifyID(clone);
+      recursifyID(clone)
+
+      // Fire off a hook that allows altering of the clone result before it is saved to the JSON
+      this.$hmw_hook.run(`clone-${clone.type}`, clone)
 
       // Find index of current item in parent
       let index = this.parent_array.findIndex(
         (el) => el.id === this.component.id
-      );
+      )
 
       // Add clone directly after it
-      this.parent_array.splice(index + 1, 0, clone);
+      this.parent_array.splice(index + 1, 0, clone)
     },
     deleteModule() {
       // Find index of current item in parent
       let index = this.parent_array.findIndex(
         (el) => el.id === this.component.id
-      );
+      )
 
       // Delete it
-      this.parent_array.splice(index, 1);
+      this.parent_array.splice(index, 1)
     },
     openModal() {
-      this.$modal.show(this.component.id);
+      this.$modal.show(this.component.id)
     },
   },
   props: {
     customSettings: {
-      type: Array,
-      default: () => [],
+      type: Object,
+      default: () => {},
     },
     direction: {
       type: String,
-      default: "row",
+      default: 'row',
     },
     parent_array: Array,
   },
-  inject: ["component"],
-};
+  inject: ['component'],
+}
 </script>
 
 <style lang="scss" scoped>
