@@ -39,9 +39,7 @@ export class Hooks {
   /**
    * remove(name, callback)
    * Example:
-   * hooks.remove('myHook', () => {
-   *    console.log('myHook ran!')
-   * })
+   * hooks.remove('myHook', callback)
    * @param  {String} name The name of the hook.
    * @param  {Function} callback  The callback to remove.
    * @return {Void}
