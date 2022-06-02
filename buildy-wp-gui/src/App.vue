@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import { searchJSON } from './functions/jsonSearch'
 export default {
   data: function () {
     return {
@@ -50,21 +49,21 @@ export default {
 
     // This code will be moved into plugin when plugins are enabled
     // Looks for columns, if found, it will filter out all "custom-fields" modules from inside them.
-    const filterACFModulesOnClone = (clone = {}) => {
-      const columns = searchJSON(clone, 'column-module', 'type')
-      if (columns.length && Array.isArray(columns)) {
-        columns.forEach((column) => {
-          if (!column.content || !Array.isArray(column.content)) return
-          return (column.content = column.content.filter(
-            (item) => item.type !== 'custom-fields'
-          ))
-        })
-      }
-      return clone
-    }
-    this.$hmw_hook.add('clone-row-module', filterACFModulesOnClone)
-    this.$hmw_hook.add('clone-section-module', filterACFModulesOnClone)
-    this.$hmw_hook.add('before-paste', filterACFModulesOnClone)
+    // const filterACFModulesOnClone = (clone = {}) => {
+    //   const columns = searchJSON(clone, 'column-module', 'type')
+    //   if (columns.length && Array.isArray(columns)) {
+    //     columns.forEach((column) => {
+    //       if (!column.content || !Array.isArray(column.content)) return
+    //       return (column.content = column.content.filter(
+    //         (item) => item.type !== 'custom-fields-module'
+    //       ))
+    //     })
+    //   }
+    //   return clone
+    // }
+    // this.$hmw_hook.add('clone-row-module', filterACFModulesOnClone)
+    // this.$hmw_hook.add('clone-section-module', filterACFModulesOnClone)
+    // this.$hmw_hook.add('before-paste', filterACFModulesOnClone)
   },
 }
 </script>

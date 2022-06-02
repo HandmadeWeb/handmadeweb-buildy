@@ -87,7 +87,7 @@ export default {
         strippedLabel = parseInt(strippedLabel[0], 10)
         // Remove post ID from Label - Split hyphen from end of string
         selectLabel = selectLabel
-          .substr(0, selectLabel.lastIndexOf('-'), 1)
+          .substring(0, selectLabel.lastIndexOf('-'))
           .trim()
         // Set title - Used for admin label only
         EventBus.$emit('setTitle', selectLabel)

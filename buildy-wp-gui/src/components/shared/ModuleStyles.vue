@@ -6,25 +6,27 @@
     label="Module Style"
     class="items-center"
     inline
-    :endpoint="`bmcb/v1/module_styles=${moduleType}`"
-  />
+    :endpoint="`bmcb/v1/module_styles=${moduleType}`" />
 </template>
 
 <script>
 export default {
-  name: "module-styles",
-  data: function() {
+  name: 'module-styles',
+  data: function () {
     return {
-      moduleType: null
-    };
+      moduleType: null,
+    }
   },
-  inject: ["component"],
+  inject: ['component'],
   mounted() {
     if (this.component) {
-      this.moduleType = this.component.type.split("-")[0];
+      this.moduleType = this.component.type.substring(
+        0,
+        this.component.type.lastIndexOf('-')
+      )
     }
-  }
-};
+  },
+}
 </script>
 
 <style></style>

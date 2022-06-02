@@ -40,7 +40,7 @@ files.keys().map(key => {
       name: component.data().alias ? labelUCFirst(component.data().alias) : labelUCFirst(component.name),
       type: component.name,
       icon: component.data().icon,
-      customSettings: component.data().customSettings
+      customSettings: component.data().customSettings,
     })
   }
 })

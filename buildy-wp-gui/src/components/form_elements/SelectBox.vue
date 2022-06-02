@@ -51,9 +51,10 @@ export default {
       }
 
       if (this.api_options) {
-        console.log(this.api_options)
         if (typeof this.api_options === 'object') {
-          return this.api_options.map((el) => el.name.trim())
+          return this.api_options.map((el) => {
+            return el?.name?.trim() || ''
+          })
         } else {
           if (this.api_options.includes(',')) {
             return this.api_options.split(',').map((el) => el.trim())
@@ -88,7 +89,7 @@ export default {
           }`
         )
         let data = await res.json()
-        this.api_options = data.body
+        this.api_options = data ? data.body : null
       }
     },
   },
