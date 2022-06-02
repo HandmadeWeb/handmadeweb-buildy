@@ -41,6 +41,8 @@
 import { EventBus } from '../EventBus'
 import VSpinner from './shared/VSpinner.vue'
 import { LinkIcon, PlusIcon } from 'vue-feather-icons'
+import { mapGetters } from 'vuex'
+import { setDeep, getDeep } from '../functions/objectHelpers'
 
 export default {
   components: { VSpinner, LinkIcon, PlusIcon },
@@ -63,7 +65,20 @@ export default {
       this.showExisting = !this.showExisting
     },
   },
+  computed: {
+    ...mapGetters(['post_id']),
+  },
   mounted() {
+    const original_post_id = getDeep(
+      this.component,
+      'content.acfForm.original_post_id'
+    )
+    const current_post_id = this.post_id
+
+    if (original_post_id !== current_post_id) {
+      setDeep(this.component, 'content.acfForm.post_id', null)
+      setDeep(this.component, 'options.admin_label', 'Custom Fields')
+    }
     // Listen for 'isLoading' event and render loading spinner as required
     EventBus.$on('isLoading', (e) => {
       this.isLoading = e

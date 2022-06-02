@@ -32,15 +32,18 @@
 import { stripTrailingSlash } from '../../functions/helpers'
 import { EventBus } from '../../EventBus'
 import { setDeep, getDeep } from '../../functions/objectHelpers'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'acf-form',
   data: function () {
     return {
+      original_post_id: '',
       postID: '',
       fieldGroups: '',
       formHTML: '',
-      setTitle: '',
+      setTitle:
+        getDeep(this.component, 'content.acfForm.field_groups_title') ?? '',
     }
   },
   methods: {
@@ -48,7 +51,7 @@ export default {
     checkForm() {
       this.postID = getDeep(this.component, 'content.acfForm.post_id')
       this.fieldGroups = getDeep(this.component, 'content.acfForm.field_groups')
-      if (this.postID) {
+      if (this.fieldGroups) {
         EventBus.$emit('showSelect', false)
         this.loadForm(this.postID, this.fieldGroups, null)
       }
@@ -144,9 +147,16 @@ export default {
             contentType: false,
             processData: false,
             success: (response) => {
+              const postID = getDeep(self.component, 'content.acfForm.post_id')
               // If no post ID has been set (new module), set content (post ID and field groups) on ACF module
-              if (!getDeep(self.component, 'content.acfForm.post_id')) {
-                setDeep(self.component, 'content.acfForm', response.data)
+              if (!postID && postID !== false) {
+                setDeep(self.component, 'content.acfForm', {
+                  field_groups_title:
+                    self.component.content.acfForm.field_groups_title,
+                  ...response.data,
+                  original_post_id: self.post_id,
+                })
+
                 // Update admin label
                 self.updateAdminLabel(response.data.post_id)
               }
@@ -169,11 +179,14 @@ export default {
     },
     // Function to update Admin Label
     updateAdminLabel(postID) {
-      if (this.component.options.admin_label === 'Acf') {
+      if (this.component.options.admin_label === 'Custom Fields') {
         this.component.options.admin_label =
-          'ACF - ' + this.setTitle + ' - ' + postID
+          'Custom Fields - ' + this.setTitle + ' - ' + postID
       }
     },
+  },
+  computed: {
+    ...mapGetters(['post_id']),
   },
   mounted() {
     // Event to prompt user to close modal
@@ -188,7 +201,13 @@ export default {
     EventBus.$on('loadExisting', (data) => {
       this.postID = data.post_id
       this.fieldGroups = data.field_groups
-      setDeep(this.component, 'content.acfForm', data)
+
+      // When linking an existing one, original post id becomes the current post id??
+      setDeep(this.component, 'content.acfForm', {
+        ...data,
+        original_post_id: this.post_id,
+      })
+
       this.loadForm(this.postID, this.fieldGroups, true)
       this.updateAdminLabel(this.postID)
     })
@@ -198,6 +217,7 @@ export default {
     })
     // Event to set title for post title and admin label
     EventBus.$on('setTitle', (postTitle) => {
+      setDeep(this.component, 'content.acfForm.field_groups_title', postTitle)
       this.setTitle = postTitle
     })
     // Event to save all - Check if ID matches, disable prompt and submit form

@@ -16,7 +16,7 @@ export const findObj = async (store, id) => {
 
 export function searchJSON(tree, target, property = 'id') {
   if (tree && tree[property] === target) {
-    return tree;
+    return [tree];
   }
 
   let found = []

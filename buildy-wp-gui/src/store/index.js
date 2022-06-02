@@ -97,6 +97,7 @@ export default new Vuex.Store({
     globals: state => state.globals,
     dragDisabled: state => state.dragDisabled,
     imageSizes: state => Object.keys(state.imageSizes).join(','),
-    validComponents: state => state.validComponents
+    validComponents: state => state.validComponents,
+    post_id: state => state.config.post_id,
   }
 })

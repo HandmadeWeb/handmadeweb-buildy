@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { searchJSON } from './functions/jsonSearch'
 export default {
   data: function () {
     return {
@@ -61,9 +62,23 @@ export default {
     //   }
     //   return clone
     // }
-    // this.$hmw_hook.add('clone-row-module', filterACFModulesOnClone)
-    // this.$hmw_hook.add('clone-section-module', filterACFModulesOnClone)
-    // this.$hmw_hook.add('before-paste', filterACFModulesOnClone)
+
+    const resetACFModulePostID = (clone) => {
+      const acfModules = searchJSON(clone, 'acf-module', 'type')
+      if (acfModules !== null || acfModules !== undefined) {
+        acfModules.forEach((acfModule) => {
+          if (!acfModule?.content?.acfForm) return
+          acfModule.content.acfForm.post_id = null
+          acfModule.options.admin_label = 'Custom Fields'
+          return acfModule
+        })
+      }
+    }
+
+    this.$hmw_hook.add('clone-acf-module', resetACFModulePostID)
+    this.$hmw_hook.add('clone-row-module', resetACFModulePostID)
+    this.$hmw_hook.add('clone-section-module', resetACFModulePostID)
+    this.$hmw_hook.add('before-paste', resetACFModulePostID)
   },
 }
 </script>
