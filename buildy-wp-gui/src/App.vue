@@ -65,7 +65,12 @@ export default {
 
     const resetACFModulePostID = (clone) => {
       const acfModules = searchJSON(clone, 'acf-module', 'type')
-      if (acfModules !== null || acfModules !== undefined) {
+      if (
+        acfModules !== null &&
+        acfModules !== undefined &&
+        !acfModules.length
+      ) {
+        console.log(acfModules)
         acfModules.forEach((acfModule) => {
           if (!acfModule?.content?.acfForm) return
           acfModule.content.acfForm.post_id = null
