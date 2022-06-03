@@ -3,8 +3,9 @@
     <div
       class="module component-module rounded text-module relative flex flex-wrap items-center text-gray-400 p-1"
       :class="[
-        isValidComponent ? 'bg-gray-800' : 'bg-gray-600',
+        !is_linked && isValidComponent ? 'bg-gray-800' : 'bg-gray-600',
         renderDisabled ? 'border-8 border-b-0 border-gray-500' : '',
+        is_linked && 'bg-gray-600',
       ]"
       :id="component.id">
       <module-settings-bar
@@ -23,7 +24,11 @@
         <component v-if="component" :is="component.icon" />
       </span>
 
-      <component :component="component" :is="moduleType"> </component>
+      <component
+        @moduleLinked="is_linked = $event"
+        :component="component"
+        :is="moduleType">
+      </component>
 
       <span
         v-if="renderDisabled"
@@ -35,7 +40,8 @@
 </template>
 
 <script>
-import { setDeep } from '../../functions/objectHelpers'
+import { EventBus } from '../../EventBus'
+import { setDeep, getDeep } from '../../functions/objectHelpers'
 import { mapGetters } from 'vuex'
 import {
   MenuIcon,
@@ -51,6 +57,7 @@ import {
   BoldIcon,
   GridIcon,
   LayoutIcon,
+  LockIcon,
 } from 'vue-feather-icons'
 
 export default {
@@ -69,10 +76,16 @@ export default {
     BoldIcon,
     GridIcon,
     LayoutIcon,
+    LockIcon,
   },
   props: {
     component: Object,
     parent_array: Array,
+  },
+  data() {
+    return {
+      is_linked: false,
+    }
   },
   computed: {
     ...mapGetters(['validComponents']),
@@ -125,6 +138,27 @@ export default {
     setDeep,
   },
   created() {
+    EventBus.$on('moduleLinked', (postID, isLinked) => {
+      if (this.component?.content?.acfForm?.post_id == postID) {
+        this.setDeep(this.component, 'content.acfForm.is_linked', isLinked)
+        this.is_linked = isLinked
+        this.component.icon = isLinked ? 'LockIcon' : 'LayoutIcon'
+      }
+    })
+
+    // This will flag the module as being linked (global) so we can adjust styles accordingly
+    if (this.component.type === 'acf-module') {
+      if (this.component?.content?.acfForm?.is_linked) {
+        this.setDeep(this.component, 'content.acfForm.is_linked', true)
+        this.is_linked = true
+        this.component.icon = 'LockIcon'
+      } else {
+        this.setDeep(this.component, 'content.acfForm.is_linked', false)
+        this.is_linked = false
+        this.component.icon = 'LayoutIcon'
+      }
+    }
+
     // Deal with globals that never had the new feature (backwards compat)
     if (this.isGlobalModule && !this.editPageLink) {
       this.setDeep(
