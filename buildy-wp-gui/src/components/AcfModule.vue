@@ -74,8 +74,9 @@ export default {
       'content.acfForm.original_post_id'
     )
     const current_post_id = this.post_id
+    const isLinked = getDeep(this.component, 'content.acfForm.is_linked')
 
-    if (original_post_id !== current_post_id) {
+    if (!isLinked && original_post_id !== current_post_id) {
       setDeep(this.component, 'content.acfForm.post_id', null)
       setDeep(this.component, 'options.admin_label', 'Custom Fields')
     }
