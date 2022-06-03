@@ -168,6 +168,9 @@ export default {
       )
     }
   },
+  destroyed() {
+    EventBus.$off('moduleLinked')
+  },
   provide() {
     return {
       component: this.component,

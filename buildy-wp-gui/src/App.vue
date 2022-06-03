@@ -101,6 +101,7 @@ export default {
               }
 
               acfModule.content.acfForm.post_id = null
+              acfModule.content.acfForm.is_linked = false
               acfModule.options.admin_label = 'Custom Fields'
 
               return acfModule
