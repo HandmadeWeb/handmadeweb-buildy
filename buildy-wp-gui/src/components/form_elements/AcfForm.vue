@@ -104,6 +104,7 @@ export default {
           this.formHTML = data.body.form
           this.isLinked = data.body.is_linked ?? false
           setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
+          EventBus.$emit('moduleLinked', this.postID, this.isLinked)
           // On nextTick, trigger ACF for validation and rendering
           this.$nextTick(() => {
             window.acf.do_action('append', jQuery('#acf-form-container'))
@@ -229,6 +230,8 @@ export default {
         ...data,
         original_post_id: this.post_id,
       })
+
+      EventBus.$emit('moduleLinked', data.post_id, true)
 
       this.loadForm(this.postID, this.fieldGroups, true)
       this.updateAdminLabel(this.postID)
