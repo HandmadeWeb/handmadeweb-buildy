@@ -83,37 +83,32 @@ export default {
           // Get the postID of the current one
           const postID = acfModule.content.acfForm.post_id
 
-          // Instantiate var
-          let res
-
-          try {
-            res = await fetch(
-              `${stripTrailingSlash(
-                window.global_vars.rest_api_base
-              )}/bmcb/v1/acf_duplicate_post/post_id=${postID}`,
-              {
-                headers: {
-                  'X-WP-Nonce': window.global_vars.rest_nonce,
-                },
+          jQuery.ajax({
+            url: window.global_vars.admin_ajax_url,
+            data: {
+              action: 'acf_duplicate_post',
+              post_id: postID,
+              nonce: window.global_vars.nonce,
+            },
+            method: 'POST', //Post method
+            success: function (response) {
+              console.log(response)
+              if (response) {
+                acfModule.content.acfForm.post_id = response
+                acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${response}`
+                // set is_linked to false??
+                return acfModule
               }
-            )
-          } catch (error) {
-            console.log(error)
-          }
 
-          const data = await res.json()
+              acfModule.content.acfForm.post_id = null
+              acfModule.options.admin_label = 'Custom Fields'
 
-          if (data.body) {
-            acfModule.content.acfForm.post_id = data.body.id
-            acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.title} - ${data.body.id}`
-            // set is_linked to false??
-            return acfModule
-          }
-
-          acfModule.content.acfForm.post_id = null
-          acfModule.options.admin_label = 'Custom Fields'
-
-          return acfModule
+              return acfModule
+            },
+            error: function (error) {
+              console.log(error)
+            },
+          })
         })
       }
     }
