@@ -73,42 +73,48 @@ export default {
       ) {
         // Loop over all acfModules that are found in any context (directly, row, section, column, etc)
         acfModules.forEach(async (acfModule) => {
-          if (
-            !acfModule?.content?.acfForm ||
-            acfModule?.content?.acfForm.is_linked
-          ) {
+          if (acfModule.content.acfForm.is_linked) {
+            this.$vToast.warning(
+              'Cloning "linked" acf modules will not make a copy, instead it will clone them as a global, meaning they can overwrite each other.',
+              { duration: 6000 }
+            )
+            return
+          }
+          if (!acfModule?.content?.acfForm) {
             return
           }
 
           // Get the postID of the current one
           const postID = acfModule.content.acfForm.post_id
 
-          jQuery.ajax({
-            url: window.global_vars.admin_ajax_url,
-            data: {
-              action: 'acf_duplicate_post',
-              post_id: postID,
-              nonce: window.global_vars.nonce,
-            },
-            method: 'POST', //Post method
-            success: function (response) {
-              console.log(response)
-              if (response) {
-                acfModule.content.acfForm.post_id = response
-                acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${response}`
-                // set is_linked to false??
-                return acfModule
-              }
+          if (postID) {
+            jQuery.ajax({
+              url: window.global_vars.admin_ajax_url,
+              data: {
+                action: 'acf_duplicate_post',
+                post_id: postID,
+                nonce: window.global_vars.nonce,
+              },
+              method: 'POST', //Post method
+              success: function (response) {
+                console.log(response)
+                if (response) {
+                  acfModule.content.acfForm.post_id = response
+                  acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${response}`
+                  // set is_linked to false??
+                  return acfModule
+                }
+              },
+              error: function (error) {
+                console.log(error)
+              },
+            })
+          }
 
-              acfModule.content.acfForm.post_id = null
-              acfModule.options.admin_label = 'Custom Fields'
+          acfModule.content.acfForm.post_id = null
+          acfModule.options.admin_label = 'Custom Fields'
 
-              return acfModule
-            },
-            error: function (error) {
-              console.log(error)
-            },
-          })
+          return acfModule
         })
       }
     }
@@ -122,6 +128,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import 'assets/css/vanilla-toast.css';
+
 img {
   border: none;
   border-style: none;

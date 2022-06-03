@@ -6,6 +6,9 @@ import { labelUCFirst } from './functions/helpers'
 // import 'prismjs'
 // import 'prismjs/themes/prism.css'
 
+import VanillaToast from "vanilla-toast";
+// Import the CSS or use your own!
+
 import { Hooks } from './functions/hooks'
 // App-wide hooks
 const hooks = new Hooks()
@@ -15,6 +18,7 @@ Object.defineProperty(Vue.prototype, '$hmw_hook', {
     return hooks
   }
 })
+Vue.prototype.$vToast = VanillaToast;
 
 Vue.config.productionTip = false
 
