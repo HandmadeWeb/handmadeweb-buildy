@@ -13,6 +13,7 @@
 
 <script>
 import { searchJSON } from './functions/jsonSearch'
+import { stripTrailingSlash } from './functions/helpers'
 export default {
   data: function () {
     return {
@@ -63,30 +64,64 @@ export default {
     //   return clone
     // }
 
-    const resetACFModulePostID = (clone) => {
+    const cloneACFModule = (clone) => {
       const acfModules = searchJSON(clone, 'acf-module', 'type')
       if (
         acfModules !== null &&
         acfModules !== undefined &&
         acfModules.length
       ) {
-        acfModules.forEach((acfModule) => {
+        // Loop over all acfModules that are found in any context (directly, row, section, column, etc)
+        acfModules.forEach(async (acfModule) => {
           if (
             !acfModule?.content?.acfForm ||
             acfModule?.content?.acfForm.is_linked
-          )
+          ) {
             return
+          }
+
+          // Get the postID of the current one
+          const postID = acfModule.content.acfForm.post_id
+
+          // Instantiate var
+          let res
+
+          try {
+            res = await fetch(
+              `${stripTrailingSlash(
+                window.global_vars.rest_api_base
+              )}/bmcb/v1/acf_duplicate_post/post_id=${postID}`,
+              {
+                headers: {
+                  'X-WP-Nonce': window.global_vars.rest_nonce,
+                },
+              }
+            )
+          } catch (error) {
+            console.log(error)
+          }
+
+          const data = await res.json()
+
+          if (data.body) {
+            acfModule.content.acfForm.post_id = data.body.id
+            acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.title} - ${data.body.id}`
+            // set is_linked to false??
+            return acfModule
+          }
+
           acfModule.content.acfForm.post_id = null
           acfModule.options.admin_label = 'Custom Fields'
+
           return acfModule
         })
       }
     }
 
-    this.$hmw_hook.add('clone-acf-module', resetACFModulePostID)
-    this.$hmw_hook.add('clone-row-module', resetACFModulePostID)
-    this.$hmw_hook.add('clone-section-module', resetACFModulePostID)
-    this.$hmw_hook.add('before-paste', resetACFModulePostID)
+    this.$hmw_hook.add('clone-acf-module', cloneACFModule)
+    this.$hmw_hook.add('clone-row-module', cloneACFModule)
+    this.$hmw_hook.add('clone-section-module', cloneACFModule)
+    this.$hmw_hook.add('before-paste', cloneACFModule)
   },
 }
 </script>

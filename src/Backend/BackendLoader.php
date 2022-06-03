@@ -16,6 +16,7 @@ class BackendLoader
         add_filter('wp_default_editor', [static::class, 'admin_wp_default_editor']); // Update default TinyMCE editor to return HTML
         add_action('save_post_bmcb-global', [static::class, 'clear_globals_cache'], 100, 0); // Clear global Buildy cache
         add_action('acf/submit_form', [static::class, 'acf_submit_form'], 10, 2); // Return Post ID and Field Groups on Buildy ACF Form save
+        
     }
 
     public static function clear_globals_cache()
@@ -252,6 +253,12 @@ class BackendLoader
                 'callback' => [static::class, 'acf_is_linked'],
                 'permission_callback' => '__return_true',
             ]);
+
+            register_rest_route('bmcb/v1', '/acf_duplicate_post/post_id=(?P<postID>[a-zA-Z0-9-]+)', [
+                'methods' => 'GET',
+                'callback' => [static::class, 'acf_duplicate_post'],
+                'permission_callback' => '__return_true',
+            ]);
         });
 
         // Must register custom post types first
@@ -390,6 +397,31 @@ class BackendLoader
                 'status' => 200,
                 'response' => 'API hit success',
                 'body' => $data,
+            ]
+        );
+    }
+
+    public static function acf_duplicate_post($request) 
+    {
+      if (!function_exists('duplicate_post_create_duplicate') || !$request['postID']) {
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' =>  null,
+            ]
+        );
+      }
+
+        $post = get_post($request['postID']);
+        $new_post_id = duplicate_post_create_duplicate($post);
+
+        // Return data to AJAX to notify page global has been disabled
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' => $new_post_id,
             ]
         );
     }
