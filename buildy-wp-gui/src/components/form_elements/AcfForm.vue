@@ -1,29 +1,43 @@
 <template>
-  <div
-    id="acf-form-container"
-    class="bg-white shadow rounded mb-6 p-4"
-    v-if="formHTML">
-    <div ref="acf_form" v-html="formHTML"></div>
-    <div class="mt-4 pt-4 border-t" v-if="fieldGroups">
-      <div>
-        <strong>Post ID: </strong>
-        <a
-          class="underline"
-          :href="`/wp-admin/post.php?post=${postID}&action=edit`"
-          target="_blank"
-          v-text="postID" />
+  <div ref="acf_module">
+    <div
+      id="acf-form-container"
+      class="bg-white shadow rounded mb-6 p-4"
+      v-if="formHTML">
+      <div v-if="isLinked">
+        <div
+          class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4"
+          role="alert">
+          <p class="font-bold mb-1">WARNING!</p>
+          <p class="mb-0">
+            This module is linked as a global. This means it is displayed in
+            another location. Be careful when editing this form as it will
+            overwrite other modules with the same ID.
+          </p>
+        </div>
       </div>
-      <div>
-        <strong>Template File: </strong>
-        <a
-          class="underline"
-          :href="`/wp-admin/theme-editor.php?file=buildy-views/modules/acf-${parseInt(
-            fieldGroups
-          )}.blade.php`"
-          target="_blank"
-          v-text="
-            `/buildy-views/modules/acf-${parseInt(fieldGroups)}.blade.php`
-          " />
+      <div ref="acf_form" v-html="formHTML"></div>
+      <div class="mt-4 pt-4 border-t" v-if="fieldGroups">
+        <div>
+          <strong>Post ID: </strong>
+          <a
+            class="underline"
+            :href="`/wp-admin/post.php?post=${postID}&action=edit`"
+            target="_blank"
+            v-text="postID" />
+        </div>
+        <div>
+          <strong>Template File: </strong>
+          <a
+            class="underline"
+            :href="`/wp-admin/theme-editor.php?file=buildy-views/modules/acf-${parseInt(
+              fieldGroups
+            )}.blade.php`"
+            target="_blank"
+            v-text="
+              `/buildy-views/modules/acf-${parseInt(fieldGroups)}.blade.php`
+            " />
+        </div>
       </div>
     </div>
   </div>
@@ -41,6 +55,7 @@ export default {
       original_post_id: '',
       postID: '',
       fieldGroups: '',
+      isLinked: false,
       formHTML: '',
       setTitle:
         getDeep(this.component, 'content.acfForm.field_groups_title') ?? '',
@@ -55,6 +70,13 @@ export default {
         EventBus.$emit('showSelect', false)
         this.loadForm(this.postID, this.fieldGroups, null)
       }
+      // Prevent submission on 'enter' keybind
+      var $formContainer = this.$el
+      jQuery($formContainer).on('keypress keydown keyup', 'form', function (e) {
+        if (e.keyCode == 13) {
+          e.preventDefault()
+        }
+      })
     },
     // Function to load new / existing form into module
     async loadForm(postID = null, fieldIDs, isLinked = false) {
@@ -79,7 +101,9 @@ export default {
           )
           let data = await res.json()
           // Update formHTML with returned data
-          this.formHTML = data
+          this.formHTML = data.body.form
+          this.isLinked = data.body.is_linked ?? false
+          setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
           // On nextTick, trigger ACF for validation and rendering
           this.$nextTick(() => {
             window.acf.do_action('append', jQuery('#acf-form-container'))
@@ -95,10 +119,8 @@ export default {
 
     // Function to create formData and submit form for processing
     submitForm() {
-      // Target the current form
-      var form = this.$refs.acf_form
       // Convert to jQuery for ACF validation
-      var $form = jQuery(form).find('form')
+      var $form = jQuery(this.$refs.acf_form).find('form')
 
       // If form does not exist, do not continue and close modal
       if (!$form.length) {

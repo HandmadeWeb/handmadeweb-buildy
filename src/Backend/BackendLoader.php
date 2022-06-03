@@ -355,8 +355,6 @@ class BackendLoader
     // Get acf_form() - Used to load ACF form into ACF module - Used to create new and load existing forms into page
     public static function get_acf_form($request)
     {
-        ob_start();
-
         // Retrieve post ID from request, otherwise create new post.
         $postID = json_decode($request['postID']) ?? 'new_post';
         // Retrieve field groups from request
@@ -365,12 +363,7 @@ class BackendLoader
         $isLinked = json_decode($request['isLinked']) ?? false;            
 
         // Use existing acf_form() function to generate new / existing form. HTML data will be embedded in AJAX return request
-        if ($isLinked == true || get_post_meta($postID, '_bmcb_is_linked', true ) == true) {
-            // Update post meta with linked status. Used to prevent globals from displaying form
-            update_post_meta($postID, '_bmcb_is_linked', $request['isLinked']);
-            echo 'Post is linked globally. Click on the post ID below to edit.';
-            return ob_get_clean();
-        }
+        ob_start();
         acf_form(array(
             'post_id' => $postID,
             'new_post' => array(
@@ -384,8 +377,21 @@ class BackendLoader
             'form' => true,
             'uploader' => 'wp',
         )); 
+        $data['form'] = ob_get_clean();
 
-        return ob_get_clean();
+        // Update post meta with linked status. Used to display notice on globals warning users
+        if ($isLinked == true || get_post_meta($postID, '_bmcb_is_linked', true ) == true) {
+            update_post_meta($postID, '_bmcb_is_linked', $request['isLinked']);
+            $data['is_linked'] = true;
+        }
+
+        return new \WP_REST_Response(
+            [
+                'status' => 200,
+                'response' => 'API hit success',
+                'body' => $data,
+            ]
+        );
     }
 
     public static function acf_is_linked($request) 

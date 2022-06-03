@@ -68,11 +68,14 @@ export default {
       if (
         acfModules !== null &&
         acfModules !== undefined &&
-        !acfModules.length
+        acfModules.length
       ) {
-        console.log(acfModules)
         acfModules.forEach((acfModule) => {
-          if (!acfModule?.content?.acfForm) return
+          if (
+            !acfModule?.content?.acfForm ||
+            acfModule?.content?.acfForm.is_linked
+          )
+            return
           acfModule.content.acfForm.post_id = null
           acfModule.options.admin_label = 'Custom Fields'
           return acfModule
