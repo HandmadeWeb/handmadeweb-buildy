@@ -77,6 +77,7 @@ export default {
           e.preventDefault()
         }
       })
+      console.log(this.component.content.acfForm.is_linked)
     },
     // Function to load new / existing form into module
     async loadForm(postID = null, fieldIDs, isLinked = false) {
