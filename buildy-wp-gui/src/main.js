@@ -3,8 +3,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import { labelUCFirst } from './functions/helpers'
-// import 'prismjs'
-// import 'prismjs/themes/prism.css'
+import { acfHooks } from './components/modules_acf/acfHooks'
 
 import VanillaToast from "vanilla-toast";
 // Import the CSS or use your own!
@@ -61,8 +60,13 @@ if (document.getElementById('content') && document.getElementById('content').val
   content = JSON.parse(document.getElementById('content').value)
 }
 
-new Vue({
+export const buildy_instance = new Vue({
   store,
   render: h => h(App, { props: { config: config || [], content: content, validComponents: validComponents } })
 }).$mount('#app')
 
+
+/**** Run any built in hooks that require buildy instance */
+
+// These are the hooks that the ACF module needs to tap into cloning and deleting modules
+acfHooks(buildy_instance)

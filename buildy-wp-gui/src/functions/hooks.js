@@ -1,6 +1,6 @@
 export class Hooks {
   constructor() {
-    this.queue = [];
+    this.queue = {};
   }
 
   /**
@@ -13,11 +13,11 @@ export class Hooks {
    * @param  {Function} callback  [description]
    * @return {Void}
    */
-  add(name, callback) {
-    if (!this.queue[name]) {
+  add(name, callback, priority = 10) {
+    if (this.queue[name] === undefined) {
       this.queue[name] = [];
     }
-    this.queue[name].push(callback);
+    this.queue[name].push({ callback, priority });
   }
 
   /**
@@ -28,12 +28,37 @@ export class Hooks {
    * @param  {...*} args  The arguments to pass to the callback.
    * @return {Void}
    */
+
   run(name, ...args) {
-    if (this.queue[name]) {
-      this.queue[name].forEach(callback => {
-        callback(...args);
+    return new Promise((resolve, reject) => {
+      const callbacks = this.getCallbacks(name);
+      // If the below causes issue (spreading results) then args will need to be wrapped in an array here
+      if (!callbacks.length) resolve(...args)
+      this.getCallbacks(name)
+        .sort((a, b) => b.priority - a.priority)
+        .map(hook => this._convertToPromiseCallback(hook.callback, ...args))
+        .reduce((promise, callback) => {
+          return promise.then(result => callback().then(Array.prototype.concat.bind(result)));
+        }, Promise.resolve([]))
+        // Return result, we mau need this to be non-spreaded for some reason if so.
+        .then(results => resolve(...results))
+        .catch(error => reject(error));
+    });
+  }
+
+  /**
+  * convertToPromiseCallback(callback, payload)
+  * Convert a callback to a promise callback. So that hooks always return a promise.
+  * @param  {Function} callback The name of the hook.
+  * @param  {...*} args  The data being passed to the callback.
+  * @return {Void}
+  */
+  _convertToPromiseCallback(callback, ...args) {
+    return () => {
+      return new Promise((resolve, reject) => {
+        callback(resolve, reject, ...args)
       });
-    }
+    };
   }
 
   /**
@@ -46,7 +71,7 @@ export class Hooks {
    */
   remove(name, callback) {
     if (this.queue[name]) {
-      this.queue[name] = this.queue[name].filter(cb => cb !== callback);
+      this.queue[name] = this.queue[name].filter(el => !el.includes(callback));
     }
   }
 
@@ -75,29 +100,15 @@ export class Hooks {
   }
 
   /**
-   * get(name)
+   * getCallbacks(name)
    * Get the callbacks in the queue for a particular hook.
    * Example:
    * hooks.get('myHook')
    * @param  {String} name The name of the hook.
    * @return {Array}
    */
-  get(name) {
-    if (this.queue[name]) {
-      return this.queue[name];
-    }
-    return [];
-  }
-
-  /**
-   * has(name)
-   * Example:
-   * hooks.has('myHook')
-   * @param  {String} name The name of the hook.
-   * @return {Boolean}
-   */
-  has(name) {
-    return !!this.queue[name];
+  getCallbacks(name) {
+    return this.queue[name] || [];
   }
 
   /**
@@ -139,6 +150,6 @@ export class Hooks {
    * @return {Boolean}
    */
   hasCallback(name, callback) {
-    return !!this.queue[name] && this.queue[name].includes(callback);
+    return !!this.queue[name] && this.queue[name].filter(el => el.includes(callback));
   }
 }
