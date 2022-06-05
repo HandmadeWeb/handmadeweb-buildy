@@ -80,24 +80,28 @@ export default {
     },
   },
   methods: {
-    cloneModule() {
+    async cloneModule() {
       // Stringify is a deep-clone
       let clone = JSON.parse(JSON.stringify(this.component))
 
       // Generate ID's recursively
       recursifyID(clone)
 
-      // Fire off a hook that allows altering of the clone result before it is saved to the JSON
-      this.$hmw_hook.run(`clone-${clone.type}`, clone)
-
       // Find index of current item in parent
       let index = this.parent_array.findIndex(
         (el) => el.id === this.component.id
       )
 
-      // Add clone directly after it
-      this.parent_array.splice(index + 1, 0, clone)
+      // Fire off a hook that allows altering of the clone result before it is saved to the JSON
+      try {
+        clone = await this.$hmw_hook.run(`clone-${clone.type}`, clone)
+        // Add clone into page (after teh current item)
+        this.parent_array.splice(index + 1, 0, clone)
+      } catch (error) {
+        console.log(error)
+      }
     },
+
     deleteModule() {
       // Find index of current item in parent
       let index = this.parent_array.findIndex(
