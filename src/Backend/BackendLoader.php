@@ -64,8 +64,7 @@ class BackendLoader
             if (get_post_meta($postID, '_bmcb_is_linked', true )) {
                 echo '<button class="button button-secondary" onclick="disableGlobal(event)" style="position: absolute; top: 20px; right: 20px;">Disable Global</button>';
                 echo '<script>
-                function disableGlobal(e) {
-                    confirm("Warning: This method is only to be used in an emergency. Changing this setting will unlink ALL modules with this ID and there will be no notice of the form being a global. This could result in content being overwritten if you are not careful. Only proceed if you understand the consequences.")
+                    confirm("Warning: This method is only to be used in an emergency. Changing this setting will unlink ALL modules with this ID and there will be no notice of the module being a global. This could result in content being overwritten if you are not careful. Only proceed if you understand the consequences.")
                     fetch("'. get_rest_url() .'bmcb/v1/acf_is_linked/post_id='. $postID .'/data_type=set")
                     .then((response) => {
                         return response.json();
