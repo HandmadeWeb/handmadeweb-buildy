@@ -97,12 +97,9 @@ export default {
               },
               method: 'POST', //Post method
               success: function (response) {
-                console.log(response)
                 if (response) {
                   acfModule.content.acfForm.post_id = response
-                  acfModule.options.acfForm.is_linked = false
                   acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${response}`
-                  // set is_linked to false??
                   return acfModule
                 }
               },
