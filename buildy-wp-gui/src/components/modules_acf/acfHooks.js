@@ -43,7 +43,9 @@ export const acfHooks = (vm) => {
 
           if (data) {
             acfModule.content.acfForm.post_id = data
-            acfModule.content.acfForm.is_linked = false
+            if (acfModule.content.acfForm.hasOwnProperty('is_linked')) {
+              acfModule.content.acfForm?.is_linked = false
+            }
             acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${data}`
             return acfModule
           }
