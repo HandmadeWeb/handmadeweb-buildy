@@ -4,8 +4,6 @@ import App from './App.vue'
 import store from './store'
 import { labelUCFirst } from './functions/helpers'
 import { acfHooks } from './components/modules_acf/acfHooks'
-// import 'prismjs'
-// import 'prismjs/themes/prism.css'
 
 import VanillaToast from "vanilla-toast";
 // Import the CSS or use your own!
@@ -69,5 +67,6 @@ export const buildy_instance = new Vue({
 
 
 /**** Run any built in hooks that require buildy instance */
+
 // These are the hooks that the ACF module needs to tap into cloning and deleting modules
 acfHooks(buildy_instance)

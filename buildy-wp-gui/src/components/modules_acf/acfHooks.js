@@ -61,8 +61,41 @@ export const acfHooks = (vm) => {
       resolve(clone)
     }
   }
-  vm.$hmw_hook.add('clone-acf-module', cloneACFModule)
+
+
+  const deleteACFModule = (resolve, reject, el) => {
+    const acfModules = searchJSON(el, 'acf-module', 'type')
+    if (
+      acfModules !== null &&
+      acfModules !== undefined &&
+      acfModules.length
+    ) {
+      acfModules.forEach(acfModule => {
+        if (acfModule.content.acfForm.is_linked) {
+          vm.$vToast.warning(
+            `You just deleted a global (linked) module, you can re-link it back at anytime by clicking "link existing" inside a new ACF Module and choosing module with ID: ${acfModule.content.acfForm.post_id}`,
+            { duration: 6000 }
+          )
+        }
+        if (acfModule.options.admin_label.toLowerCase().includes('protected')) {
+          vm.$vToast.error(
+            'This module is important for the design of this layout and cannot be deleted from here',
+            { duration: 6000 }
+          )
+          reject(`ACF Module: ${acfModule.content.acfForm.post_id} cannot be deleted.`)
+        }
+      });
+      resolve(true);
+    }
+    resolve(true)
+  }
+
+  // Example of delete hook
+  vm.$hmw_hook.add('delete-module', deleteACFModule)
+
+  // Handle cloning of ACF modules
   vm.$hmw_hook.add('clone-row-module', cloneACFModule)
   vm.$hmw_hook.add('clone-section-module', cloneACFModule)
+  vm.$hmw_hook.add('clone-acf-module', cloneACFModule)
   vm.$hmw_hook.add('before-paste', cloneACFModule)
 }

@@ -92,9 +92,16 @@ export default {
         (el) => el.id === this.component.id
       )
 
-      // Fire off a hook that allows altering of the clone result before it is saved to the JSON
       try {
-        clone = await this.$hmw_hook.run(`clone-${clone.type}`, clone)
+        // Fire off a hook that allows altering of the clone result before it is saved to the JSON
+        // You can hook into this event which fires on any module type
+        clone = await this.$hmw_hook.run(`clone-module`, clone)
+
+        // Check if any specific callbacks back have been registered for this module type and run those too
+        if (this.$hmw_hook.getCallbacks(`clone-${this.component.type}`)) {
+          clone = await this.$hmw_hook.run(`clone-${clone.type}`, clone)
+        }
+
         // Add clone into page (after teh current item)
         this.parent_array.splice(index + 1, 0, clone)
       } catch (error) {
@@ -102,14 +109,35 @@ export default {
       }
     },
 
-    deleteModule() {
+    async deleteModule() {
       // Find index of current item in parent
       let index = this.parent_array.findIndex(
         (el) => el.id === this.component.id
       )
 
-      // Delete it
-      this.parent_array.splice(index, 1)
+      try {
+        // Fire off a hook that allows running some code before a the module is deleted
+        let continueDelete = await this.$hmw_hook.run(
+          `delete-module`,
+          this.component
+        )
+
+        // Check if any specific callbacks back have been registered for this module type and run those too
+        if (this.$hmw_hook.getCallbacks(`delete-${this.component.type}`)) {
+          continueDelete = await this.$hmw_hook.run(
+            `delete-${this.component.type}`,
+            this.component
+          )
+        }
+
+        // if the hook returns false, we won't delete the module
+        if (!continueDelete) return
+
+        // Remove module from page
+        this.parent_array.splice(index, 1)
+      } catch (error) {
+        console.log(error)
+      }
     },
     openModal() {
       this.$modal.show(this.component.id)
