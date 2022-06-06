@@ -3,11 +3,7 @@ import { searchJSON } from '../../functions/jsonSearch'
 export const acfHooks = (vm) => {
   const cloneACFModule = async (resolve, reject, clone) => {
     const acfModules = searchJSON(clone, 'acf-module', 'type')
-    if (
-      acfModules !== null &&
-      acfModules !== undefined &&
-      acfModules.length
-    ) {
+    if (acfModules !== null && acfModules !== undefined && acfModules.length) {
       // Loop over all acfModules that are found in any context (directly, row, section, column, etc)
       const promises = acfModules.map(async (acfModule) => {
         if (acfModule.content.acfForm.is_linked) {
@@ -44,7 +40,7 @@ export const acfHooks = (vm) => {
           if (data) {
             acfModule.content.acfForm.post_id = data
             if (acfModule.content.acfForm.hasOwnProperty('is_linked')) {
-              acfModule.content.acfForm?.is_linked = false
+              acfModule.content.acfForm.is_linked = false
             }
             acfModule.options.admin_label = `Custom Fields - ${acfModule.content.acfForm.field_groups_title} - ${data}`
             return acfModule
@@ -64,15 +60,10 @@ export const acfHooks = (vm) => {
     }
   }
 
-
   const deleteACFModule = (resolve, reject, el) => {
     const acfModules = searchJSON(el, 'acf-module', 'type')
-    if (
-      acfModules !== null &&
-      acfModules !== undefined &&
-      acfModules.length
-    ) {
-      acfModules.forEach(acfModule => {
+    if (acfModules !== null && acfModules !== undefined && acfModules.length) {
+      acfModules.forEach((acfModule) => {
         if (acfModule.content.acfForm.is_linked) {
           vm.$vToast.warning(
             `You just deleted a global (linked) module, you can re-link it back at anytime by clicking "link existing" inside a new ACF Module and choosing module with ID: ${acfModule.content.acfForm.post_id}`,
@@ -84,10 +75,12 @@ export const acfHooks = (vm) => {
             'This module is important for the design of this layout and cannot be deleted from here',
             { duration: 6000 }
           )
-          reject(`ACF Module: ${acfModule.content.acfForm.post_id} cannot be deleted.`)
+          reject(
+            `ACF Module: ${acfModule.content.acfForm.post_id} cannot be deleted.`
+          )
         }
-      });
-      resolve(true);
+      })
+      resolve(true)
     }
     resolve(true)
   }
