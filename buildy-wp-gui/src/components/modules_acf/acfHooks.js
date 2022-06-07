@@ -1,4 +1,5 @@
 import { searchJSON } from '../../functions/jsonSearch'
+import store from '../../store/index'
 
 export const acfHooks = (vm) => {
   const cloneACFModule = async (resolve, reject, clone) => {
@@ -24,6 +25,7 @@ export const acfHooks = (vm) => {
         const form = new FormData()
         form.append('action', 'acf_duplicate_post')
         form.append('post_id', postID)
+        form.append('current_post_id', store.getters.post_id)
         form.append('nonce', window.global_vars.nonce)
 
         const params = new URLSearchParams(form)
@@ -35,10 +37,11 @@ export const acfHooks = (vm) => {
           body: params,
         })
 
-        const data = await res.json()
+        const data = await res.json();
 
         if (data) {
           acfModule.content.acfForm.post_id = data
+          acfModule.content.acfForm.original_post_id = store.getters.post_id
           if (acfModule.content.acfForm.hasOwnProperty('is_linked')) {
             acfModule.content.acfForm.is_linked = false
           }
@@ -85,10 +88,18 @@ export const acfHooks = (vm) => {
     resolve(true)
   }
 
+  const ACFModuleBaseCreated = (resolve, reject, moduleBase) => {
+    if (moduleBase.content.acfForm.is_linked) {
+      this.component.icon = 'LockIcon'
+    }
+  }
+
   // Example of delete hook
   vm.$hmw_hook.add('delete-module', deleteACFModule)
 
   // Handle cloning of ACF modules
+  vm.$hmw_hook.add('acf-module-mounted-id-mismatch', cloneACFModule)
+  vm.$hmw_hook.add('acf-module-base-created', ACFModuleBaseCreated)
   vm.$hmw_hook.add('clone-row-module', cloneACFModule)
   vm.$hmw_hook.add('clone-section-module', cloneACFModule)
   vm.$hmw_hook.add('clone-acf-module', cloneACFModule)

@@ -289,7 +289,11 @@ export default {
       let newComponent
 
       if (!options.atts) {
-        newComponent = newObj.newModule()
+        if (newObj[`new-${options.type}`]) {
+          newComponent = newObj[`new-${options.type}`]()
+        } else {
+          newComponent = newObj.newModule()
+        }
       } else {
         newComponent = newObj.customAtts(options.atts)
       }

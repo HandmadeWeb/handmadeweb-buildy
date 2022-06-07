@@ -80,8 +80,6 @@ export default {
     },
     // Function to load new / existing form into module
     async loadForm(postID = null, fieldIDs, isLinked = false) {
-      // Disables modal from closing prior to AJAX submission
-      EventBus.$emit('waitToSave', true)
       // Remove existing form HTML
       this.formHTML = ''
       // Check that form is ready to be loaded and data is available
@@ -103,8 +101,15 @@ export default {
           // Update formHTML with returned data
           this.formHTML = data.body.form
           this.isLinked = data.body.is_linked ?? false
-          setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
-          EventBus.$emit('moduleLinked', this.postID, this.isLinked)
+
+          if (this.isLinked) {
+            setDeep(this.component, 'icon', 'LockIcon')
+            setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
+          } else {
+            setDeep(this.component, 'icon', 'LayoutIcon')
+            setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
+          }
+
           // On nextTick, trigger ACF for validation and rendering
           this.$nextTick(() => {
             window.acf.do_action('append', jQuery('#acf-form-container'))
@@ -119,82 +124,88 @@ export default {
     },
 
     // Function to create formData and submit form for processing
-    submitForm() {
+    submitForm(resolve, reject) {
       // Convert to jQuery for ACF validation
-      var $form = jQuery(this.$refs.acf_form).find('form')
+      let form = this.$refs.acf_form.querySelector('form')
 
       // If form does not exist, do not continue and close modal
-      if (!$form.length) {
+      if (!form) {
         // Close modal
         this.$modal.hide(this.component.id)
         return
       }
 
       EventBus.$emit('isLoading', true)
-      const self = this
 
       const args = {
-        form: $form,
+        form: jQuery(form),
         reset: false,
-        loading: function ($form) {},
-        complete: function ($form) {},
-        failure: function ($form) {
+        failure: function () {
           EventBus.$emit('isLoading', false)
           jQuery('.settings-modal').scrollTop(0)
+          resolve()
         },
-        success: function ($form) {
+        success: async (form) => {
           // Create form data
-          var formData = new FormData($form[0])
+          const formData = new FormData(form[0])
           // Append WP AJAX action
           formData.append('action', 'create_acf_module')
           // Append WP AJAX nonce
           formData.append('nonce', window.global_vars.nonce)
           // Append linked status - Used to prevent globals from displaying form
-          formData.append('is_linked', self.isLinked)
+          formData.append('is_linked', this.isLinked)
+          // Append the current post ID (wordpress editing page) to form data so we can save it to post meta of module
+          formData.append('current_post_id', this.post_id)
 
           // Append post title (for new posts)
-          if (self.setTitle) {
-            formData.append('acf[_post_title]', self.setTitle)
+          if (this.setTitle) {
+            formData.append('acf[_post_title]', this.setTitle)
           }
           // Lock ACF form (prevents updates whilst AJAX is running)
-          window.acf.lockForm($form)
-          // Begin AJAX Request
-          jQuery.ajax({
-            type: 'post',
-            url: window.ajaxurl,
-            beforeSend: function (xhr) {
-              xhr.setRequestHeader('X-WP-Nonce', window.global_vars.nonce)
-            },
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: (response) => {
-              const postID = getDeep(self.component, 'content.acfForm.post_id')
-              // If no post ID has been set (new module), set content (post ID and field groups) on ACF module
-              if (!postID && postID !== false) {
-                setDeep(self.component, 'content.acfForm', {
-                  field_groups_title:
-                    self.component.content.acfForm.field_groups_title,
-                  ...response.data,
-                  original_post_id: self.post_id,
-                })
+          window.acf.lockForm(form)
+          const params = new URLSearchParams(formData)
 
-                // Update admin label
-                self.updateAdminLabel(response.data.post_id)
-              }
-              // Unlock ACF form
-              window.acf.unlockForm($form)
-              EventBus.$emit('isLoading', false)
-              // Re-enable modal closing
-              EventBus.$emit('waitToSave', false)
-              // Close modal
-              EventBus.$emit('doSave')
-            },
-            error: function (xhr, textStatus, error) {
-              console.log({ Error: xhr, textStatus, error })
-            },
-          })
+          try {
+            const res = await fetch(window.ajaxurl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-WP-Nonce': window.global_vars.nonce,
+              },
+              body: params,
+            })
+
+            const { data, success } = await res.json()
+
+            if (!success) {
+              reject('YOU SHALL NOT PASS!')
+              throw new Error('Issue with ACF form submission')
+            }
+
+            const postID = getDeep(this.component, 'content.acfForm.post_id')
+
+            // If no post ID has been set (new module), set content (post ID and field groups) on ACF module
+            if (!postID && postID !== false) {
+              setDeep(this.component, 'content.acfForm', {
+                field_groups_title:
+                  this.component.content.acfForm.field_groups_title,
+                ...data,
+                original_post_id: this.post_id,
+                is_linked: false,
+              })
+
+              // Update admin label
+              this.updateAdminLabel(data.post_id)
+            }
+            // Unlock ACF form
+            window.acf.unlockForm(form)
+            EventBus.$emit('isLoading', false)
+
+            // Close modal
+            resolve()
+          } catch (error) {
+            console.log(error)
+          }
         },
       }
       // Validate ACF Form
@@ -212,6 +223,7 @@ export default {
     ...mapGetters(['post_id']),
   },
   mounted() {
+    this.$hmw_hook.add('modal-save', this.submitForm)
     // Event to prompt user to close modal
     EventBus.$on('before-close', (e) => {
       confirm(
@@ -220,19 +232,19 @@ export default {
         ? true
         : e.cancel()
     })
+
     // Event to load existing form into ACF module
     EventBus.$on('loadExisting', (data) => {
       this.postID = data.post_id
       this.fieldGroups = data.field_groups
 
-      // When linking an existing one, original post id becomes the current post id??
+      // When linking an existing one, original post id becomes the current post id
       setDeep(this.component, 'content.acfForm', {
         ...data,
         original_post_id: this.post_id,
       })
 
-      EventBus.$emit('moduleLinked', data.post_id, true)
-
+      // Load in existing form, the "true" parameter will flag the form as linked
       this.loadForm(this.postID, this.fieldGroups, true)
       this.updateAdminLabel(this.postID)
     })
@@ -245,13 +257,6 @@ export default {
       setDeep(this.component, 'content.acfForm.field_groups_title', postTitle)
       this.setTitle = postTitle
     })
-    // Event to save all - Check if ID matches, disable prompt and submit form
-    EventBus.$on('saveAll', (e) => {
-      if (e === this.component.id) {
-        EventBus.$off('before-close')
-        this.submitForm()
-      }
-    })
     // Clear form HTML
     EventBus.$on('clearFormHTML', () => {
       this.formHTML = ''
@@ -260,11 +265,11 @@ export default {
     this.checkForm()
   },
   destroyed() {
+    this.$hmw_hook.remove('modal-save', this.submitForm)
     EventBus.$off('before-close')
     EventBus.$off('loadExisting')
     EventBus.$off('createForm')
     EventBus.$off('setTitle')
-    EventBus.$off('saveAll')
     EventBus.$off('clearFormHTML')
   },
   inject: ['component'],

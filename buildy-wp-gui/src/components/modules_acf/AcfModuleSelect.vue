@@ -89,6 +89,7 @@ export default {
         selectLabel = selectLabel
           .substring(0, selectLabel.lastIndexOf('-'))
           .trim()
+
         // Set title - Used for admin label only
         EventBus.$emit('setTitle', selectLabel)
         // Emit event to load existing form

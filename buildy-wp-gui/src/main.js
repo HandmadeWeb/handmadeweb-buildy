@@ -60,7 +60,7 @@ if (document.getElementById('content') && document.getElementById('content').val
   content = JSON.parse(document.getElementById('content').value)
 }
 
-export const buildy_instance = new Vue({
+const buildy_instance = new Vue({
   store,
   render: h => h(App, { props: { config: config || [], content: content, validComponents: validComponents } })
 }).$mount('#app')

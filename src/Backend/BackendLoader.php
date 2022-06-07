@@ -193,6 +193,12 @@ class BackendLoader
         if ($form['new_post']['post_type'] == 'bmcb-acf' && $form['new_post']['post_status'] == 'publish') {
             // Update post meta with field group IDs. Used for loading form into backend form editor
             update_post_meta($post_id, '_bmcb_field_groups', $form['field_groups']);
+
+            // On submit, check that the original post id has been set on meta, if not, set it.
+            if (!get_post_meta($post_id, '_bmcb_original_post_id', true)) {
+              update_post_meta($post_id, '_bmcb_original_post_id', $_POST['current_post_id']);
+            }
+
             // Create new blade file (if not exists)
             $field_groups = $form['field_groups'][0];
             $file = BUILDY_ROOT . "resources/views/modules/acf.blade.php";
