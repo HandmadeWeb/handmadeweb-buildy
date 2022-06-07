@@ -111,6 +111,10 @@ export default {
             this.isLinked ? 'LockIcon' : 'LayoutIcon'
           )
 
+          if (this.isLinked) {
+            EventBus.$emit('moduleLinked', this.postID, this.isLinked)
+          }
+
           // On nextTick, trigger ACF for validation and rendering
           this.$nextTick(() => {
             window.acf.do_action('append', window.jQuery('#acf-form-container'))

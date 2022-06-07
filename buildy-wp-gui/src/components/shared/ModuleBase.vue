@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { EventBus } from '../../EventBus'
 import { setDeep, getDeep } from '../../functions/objectHelpers'
 import { mapGetters } from 'vuex'
 import {
@@ -135,6 +136,13 @@ export default {
     setDeep,
   },
   created() {
+    EventBus.$on('moduleLinked', (postID, isLinked) => {
+      if (this.component?.content?.acfForm?.post_id == postID) {
+        this.setDeep(this.component, 'content.acfForm.is_linked', isLinked)
+        this.component.icon = isLinked ? 'LockIcon' : 'LayoutIcon'
+      }
+    })
+
     // Deal with globals that never had the new feature (backwards compat)
     if (this.isGlobalModule && !this.editPageLink) {
       this.setDeep(
@@ -143,6 +151,9 @@ export default {
         `/wp-admin/post.php?post=${this.component.content.id}&action=edit`
       )
     }
+  },
+  destroyed() {
+    EventBus.$off('moduleLinked')
   },
   provide() {
     return {
