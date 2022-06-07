@@ -59,18 +59,19 @@ function create_acf_module() {
     wp_die();
 }
 
-// AJAX to post ACF form to DB - Can possibly be placed in a different location but won't work under 'admin_boot' for some reason
+// This is how we are currently handling duplication of ACF Modules. (Using yoast duplicate post)
 add_action("wp_ajax_acf_duplicate_post", "acf_duplicate_post"); 
 function acf_duplicate_post() {
-    if ( !wp_verify_nonce( $_POST['nonce'], "ajax-nonce")) {
-        die();
-    } 
+  if ( !wp_verify_nonce( $_POST['nonce'], "ajax-nonce")) {
+    die();
+  } 
 
-    // Decode the posted form and prepare for submission
+  if (!function_exists('duplicate_post_create_duplicate')) return null;
     $post = get_post( $_POST['post_id']);
     $new_post_id = duplicate_post_create_duplicate($post);
-    echo json_encode($new_post_id ?? null);
-    return wp_die();
+  
+  echo json_encode($new_post_id ?? null);
+  return wp_die();
 }
 
 // Create additional location routes for ACF
