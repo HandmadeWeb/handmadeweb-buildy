@@ -72,11 +72,13 @@ export default {
       }
       // Prevent submission on 'enter' keybind
       var $formContainer = this.$el
-      jQuery($formContainer).on('keypress keydown keyup', 'form', function (e) {
-        if (e.keyCode == 13) {
-          e.preventDefault()
-        }
-      })
+      window
+        .jQuery($formContainer)
+        .on('keypress keydown keyup', 'form', function (e) {
+          if (e.keyCode == 13) {
+            e.preventDefault()
+          }
+        })
     },
     // Function to load new / existing form into module
     async loadForm(postID = null, fieldIDs, isLinked = false) {
@@ -102,17 +104,16 @@ export default {
           this.formHTML = data.body.form
           this.isLinked = data.body.is_linked ?? false
 
-          if (this.isLinked) {
-            setDeep(this.component, 'icon', 'LockIcon')
-            setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
-          } else {
-            setDeep(this.component, 'icon', 'LayoutIcon')
-            setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
-          }
+          setDeep(this.component, 'content.acfForm.is_linked', this.isLinked)
+          setDeep(
+            this.component,
+            'icon',
+            this.isLinked ? 'LockIcon' : 'LayoutIcon'
+          )
 
           // On nextTick, trigger ACF for validation and rendering
           this.$nextTick(() => {
-            window.acf.do_action('append', jQuery('#acf-form-container'))
+            window.acf.do_action('append', window.jQuery('#acf-form-container'))
             EventBus.$emit('isLoading', false)
           })
         } catch {
@@ -125,7 +126,7 @@ export default {
 
     // Function to create formData and submit form for processing
     submitForm(resolve, reject) {
-      // Convert to jQuery for ACF validation
+      // Convert to window.jQuery for ACF validation
       let form = this.$refs.acf_form.querySelector('form')
 
       // If form does not exist, do not continue and close modal
@@ -138,11 +139,11 @@ export default {
       EventBus.$emit('isLoading', true)
 
       const args = {
-        form: jQuery(form),
+        form: window.jQuery(form),
         reset: false,
         failure: function () {
           EventBus.$emit('isLoading', false)
-          jQuery('.settings-modal').scrollTop(0)
+          window.jQuery('.settings-modal').scrollTop(0)
           resolve()
         },
         success: async (form) => {
@@ -181,9 +182,7 @@ export default {
               reject('YOU SHALL NOT PASS!')
               throw new Error('Issue with ACF form submission')
             }
-
             const postID = getDeep(this.component, 'content.acfForm.post_id')
-
             // If no post ID has been set (new module), set content (post ID and field groups) on ACF module
             if (!postID && postID !== false) {
               setDeep(this.component, 'content.acfForm', {
@@ -204,6 +203,7 @@ export default {
             // Close modal
             resolve()
           } catch (error) {
+            reject(error)
             console.log(error)
           }
         },
