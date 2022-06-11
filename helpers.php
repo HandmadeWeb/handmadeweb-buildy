@@ -63,14 +63,19 @@ function create_acf_module() {
 add_action("wp_ajax_acf_duplicate_post", "acf_duplicate_post"); 
 function acf_duplicate_post() {
   if ( !wp_verify_nonce( $_POST['nonce'], "ajax-nonce")) {
-    die();
+    return wp_die();
   } 
 
   if (!function_exists('duplicate_post_create_duplicate')) return null;
-    $post = get_post( $_POST['post_id']);
-    $new_post_id = duplicate_post_create_duplicate($post);
-  
-  echo json_encode($new_post_id ?? null);
+
+    $currentModuleID = get_post( $_POST['post_id']);
+    $currentPostID = $_POST['current_post_id'];
+    // $original_post_id = get_post_meta($currentModuleID, '_bmcb_original_post_id', true);
+
+    $newModuleID = duplicate_post_create_duplicate($currentModuleID);
+    update_post_meta($newModuleID, '_bmcb_original_post_id', $currentPostID);
+    echo json_encode($newModuleID);
+    
   return wp_die();
 }
 

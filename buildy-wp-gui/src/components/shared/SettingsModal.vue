@@ -11,7 +11,6 @@
     :max-height="600"
     @opened="modalOpened"
     @closed="modalClosed"
-    @waitToSave="waitToSave"
     @before-close="beforeClose">
     <div class="bg-gray-700 modal-controls absolute w-full flex">
       <div class="dragHandler cursor-move flex-1">
@@ -172,8 +171,7 @@ export default {
   },
   data: function () {
     return {
-      closeable: true,
-      waitToSave: false,
+      closeable: false,
     }
   },
   computed: {
@@ -182,8 +180,11 @@ export default {
     },
   },
   methods: {
-    beforeClose(e) {
-      EventBus.$emit('before-close', e)
+    async beforeClose(e) {
+      // Hook for closing a modal if save wasn't hit
+      if (!this.closable) {
+        EventBus.$emit('before-close', e)
+      }
     },
     modalOpened() {
       this.$store.dispatch('dragToggle', true)
@@ -195,26 +196,16 @@ export default {
     modalClick() {
       EventBus.$emit('modalClick')
     },
-    saveAll() {
-      EventBus.$emit('saveAll', this.component.id)
-      if (this.waitToSave) {
-        return
-      }
+    async saveAll() {
+      // Hook to tap into save button
+      await this.$hmw_hook.run('modal-save', this.component)
+
+      // Modal has been saved so can be closed without warning
+      this.closable = true
+
       this.$modal.hide(this.component.id)
     },
     UCFirst,
-  },
-  mounted() {
-    EventBus.$on('waitToSave', (e) => {
-      this.waitToSave = e
-    })
-    EventBus.$on('doSave', () => {
-      this.saveAll()
-    })
-  },
-  destroyed() {
-    EventBus.$off('waitToSave')
-    EventBus.$off('doSave')
   },
   inject: ['component'],
   provide() {

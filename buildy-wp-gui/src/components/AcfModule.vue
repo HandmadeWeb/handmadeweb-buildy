@@ -68,18 +68,20 @@ export default {
   computed: {
     ...mapGetters(['post_id']),
   },
-  mounted() {
+  async mounted() {
     const original_post_id = getDeep(
       this.component,
       'content.acfForm.original_post_id'
     )
     const current_post_id = this.post_id
     const isLinked = getDeep(this.component, 'content.acfForm.is_linked')
-
     if (!isLinked && original_post_id !== current_post_id) {
-      setDeep(this.component, 'content.acfForm.post_id', null)
-      setDeep(this.component, 'options.admin_label', 'Custom Fields')
+      this.component = await this.$hmw_hook.run(
+        'acf-module-mounted-id-mismatch',
+        this.component
+      )
     }
+
     // Listen for 'isLoading' event and render loading spinner as required
     EventBus.$on('isLoading', (e) => {
       this.isLoading = e

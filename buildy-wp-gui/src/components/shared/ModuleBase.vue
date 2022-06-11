@@ -82,13 +82,11 @@ export default {
     component: Object,
     parent_array: Array,
   },
-  data() {
-    return {
-      is_linked: false,
-    }
-  },
   computed: {
     ...mapGetters(['validComponents']),
+    is_linked() {
+      return this.component.content?.acfForm?.is_linked
+    },
     admin_label() {
       if (this.component.options && this.component.options.admin_label) {
         return this.component.options.admin_label
@@ -141,23 +139,9 @@ export default {
     EventBus.$on('moduleLinked', (postID, isLinked) => {
       if (this.component?.content?.acfForm?.post_id == postID) {
         this.setDeep(this.component, 'content.acfForm.is_linked', isLinked)
-        this.is_linked = isLinked
         this.component.icon = isLinked ? 'LockIcon' : 'LayoutIcon'
       }
     })
-
-    // This will flag the module as being linked (global) so we can adjust styles accordingly
-    if (this.component.type === 'acf-module') {
-      if (this.component?.content?.acfForm?.is_linked) {
-        this.setDeep(this.component, 'content.acfForm.is_linked', true)
-        this.is_linked = true
-        this.component.icon = 'LockIcon'
-      } else {
-        this.setDeep(this.component, 'content.acfForm.is_linked', false)
-        this.is_linked = false
-        this.component.icon = 'LayoutIcon'
-      }
-    }
 
     // Deal with globals that never had the new feature (backwards compat)
     if (this.isGlobalModule && !this.editPageLink) {

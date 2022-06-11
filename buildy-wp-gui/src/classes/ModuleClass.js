@@ -73,6 +73,13 @@ export class Module {
     return base
   }
 
+  "new-acf-module"() {
+    const base = this.base;
+    base.content = {}
+    setDeep(base, 'content.acfForm.is_linked', false)
+    return base
+  }
+
 
   customAtts(atts) {
     const base = JSON.parse(JSON.stringify(this.base))

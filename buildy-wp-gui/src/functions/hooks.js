@@ -71,7 +71,7 @@ export class Hooks {
    */
   remove(name, callback) {
     if (this.queue[name]) {
-      this.queue[name] = this.queue[name].filter(el => !el.includes(callback));
+      this.queue[name] = this.queue[name].filter(el => !el === callback);
     }
   }
 
