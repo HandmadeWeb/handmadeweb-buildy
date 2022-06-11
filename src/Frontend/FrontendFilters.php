@@ -72,7 +72,7 @@ class FrontendFilters
                     continue;
                 }
                 $first_char = substr($name, 0, 1);
-                $paddingClasses = ($breakpoint === 'xs' ? '' : "{$breakpoint}:")."p{$first_char}-{$val}";
+                $paddingClasses = $breakpoint === 'xs' ? "p{$first_char}-{$val}" : "p{$first_char}-{$breakpoint}-{$val}";
                 if (! empty($spacingClasses)) {
                     $spacingClasses .= " {$paddingClasses}";
                 } else {
