@@ -21,7 +21,7 @@
       </p>
 
       <span class="mr-2 mb-0" :title="component.type">
-        <component v-if="component" :is="component.icon" />
+        <component v-if="component" :is="icon" />
       </span>
 
       <component
@@ -41,7 +41,7 @@
 
 <script>
 import { EventBus } from '../../EventBus'
-import { setDeep, getDeep } from '../../functions/objectHelpers'
+import { setDeep } from '../../functions/objectHelpers'
 import { mapGetters } from 'vuex'
 import {
   MenuIcon,
@@ -81,6 +81,11 @@ export default {
   props: {
     component: Object,
     parent_array: Array,
+  },
+  data() {
+    return {
+      icon: this.component.icon,
+    }
   },
   computed: {
     ...mapGetters(['validComponents']),
@@ -139,7 +144,7 @@ export default {
     EventBus.$on('moduleLinked', (postID, isLinked) => {
       if (this.component?.content?.acfForm?.post_id == postID) {
         this.setDeep(this.component, 'content.acfForm.is_linked', isLinked)
-        this.component.icon = isLinked ? 'LockIcon' : 'LayoutIcon'
+        this.icon = isLinked ? 'LockIcon' : 'LayoutIcon'
       }
     })
 

@@ -5,22 +5,19 @@
       v-model="value"
       @change="change"
       class="code-input w-full p-4"
-      rows="3"
-    />
-    <!-- <prism-editor :code="value" language="html" @change="change"></prism-editor> -->
+      rows="3" />
   </div>
 </template>
 <script>
-import { setDeep, getDeep } from "../../functions/objectHelpers";
-// import PrismEditor from "vue-prism-editor";
+import { setDeep, getDeep } from '../../functions/objectHelpers'
 
 // @ts-ignore
 export default {
-  name: "code-editor",
+  name: 'code-editor',
   data: function () {
     return {
-      value: "",
-    };
+      value: '',
+    }
   },
   props: {
     path: String,
@@ -28,21 +25,18 @@ export default {
   },
   methods: {
     change(e) {
-      this.value = e.target.value;
-      setDeep(this.component, this.path, this.value);
-      this.$emit("change", { data: this.value, path: this.path });
+      this.value = e.target.value
+      setDeep(this.component, this.path, this.value)
+      this.$emit('change', { data: this.value, path: this.path })
     },
   },
-  components: {
-    // PrismEditor
-  },
   mounted() {
-    let data = getDeep(this.component, this.path);
+    let data = getDeep(this.component, this.path)
 
     if (data) {
-      return (this.value = data);
+      return (this.value = data)
     }
   },
-  inject: ["component"],
-};
+  inject: ['component'],
+}
 </script>

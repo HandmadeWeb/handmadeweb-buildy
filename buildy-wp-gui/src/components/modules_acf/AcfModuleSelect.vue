@@ -122,13 +122,15 @@ export default {
           let data = await res.json()
           this.api_options = data.body
         } catch {
-          this.defaultVal =
+          console.log(
             'Something went wrong fetching the options from the API. Please try again!'
+          )
         }
         EventBus.$emit('isLoading', false)
       } else {
-        this.defaultVal =
+        console.log(
           'Something went wrong connecting to the API. Please try again!'
+        )
       }
     },
   },

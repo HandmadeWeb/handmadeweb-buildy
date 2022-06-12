@@ -42,7 +42,7 @@ import { EventBus } from '../EventBus'
 import VSpinner from './shared/VSpinner.vue'
 import { LinkIcon, PlusIcon } from 'vue-feather-icons'
 import { mapGetters } from 'vuex'
-import { setDeep, getDeep } from '../functions/objectHelpers'
+import { getDeep } from '../functions/objectHelpers'
 
 export default {
   components: { VSpinner, LinkIcon, PlusIcon },
