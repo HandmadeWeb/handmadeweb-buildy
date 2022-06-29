@@ -19,8 +19,8 @@ $options = $bladeData->options ?? null;
 $moduleStyle = $options ? $bladeData->options->moduleStyle ?? null : null;
 
 if (isset($moduleStyle) && $moduleStyle !== 'none') {
-  $moduleStyle = strtolower(preg_replace("/\s+/", "-", $moduleStyle));
-  $moduleClasses .= " module-style__$moduleStyle";
+  // $moduleStyle = strtolower(preg_replace("/\s+/", "-", $moduleStyle));
+  $moduleClasses .= " $moduleStyle";
 }
 
 if (isset($customAtts)) {

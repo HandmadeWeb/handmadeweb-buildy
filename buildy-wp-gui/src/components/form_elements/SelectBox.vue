@@ -12,8 +12,8 @@
         v-for="(option, i) in optionsArr"
         :key="option + i"
         class="select-choice flex"
-        :value="option">
-        {{ option }}
+        :value="option.classes">
+        {{ option.name }}
       </option>
     </select>
   </div>
@@ -52,9 +52,7 @@ export default {
 
       if (this.api_options) {
         if (typeof this.api_options === 'object') {
-          return this.api_options.map((el) => {
-            return el?.name?.trim() || ''
-          })
+          return this.api_options
         } else {
           if (this.api_options.includes(',')) {
             return this.api_options.split(',').map((el) => el.trim())
