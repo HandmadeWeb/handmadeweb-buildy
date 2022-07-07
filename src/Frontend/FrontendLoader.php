@@ -56,18 +56,22 @@ class FrontendLoader
             }
 
             // Get the current post.
-            $post = get_queried_object();
+            $post = get_post(get_the_ID());
 
             $thisPost = (object) [
                 'ID' => $post->ID,
                 'post_content' => json_decode($post->post_content),
             ];
 
-            Buildy::pushToCache($thisPost);
-            Buildy::preFetchGlobals($thisPost);
+            if (!empty($thisPost->post_content)) {
+                Buildy::pushToCache($thisPost);
 
-            return Buildy::fromContent($thisPost->post_content)->render();
+                Buildy::preFetchGlobals($thisPost);
+    
+                return Buildy::fromContent($thisPost->post_content)->render();
+            }
         }
+
 
         /*
          * If the Page Builder was not enabled on this post.
@@ -92,7 +96,7 @@ class FrontendLoader
             wp_enqueue_script('ie-pollyfil', 'https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver%2CIntersectionObserverEntry%2CCustomEvent', null, null, false);
             wp_register_script('buildy-js', BUILDY_URL.'public/frontend-bundle.js', null, '1.0.0', true);
             if (function_exists('get_field')) {
-              wp_localize_script( 'buildy-js', 'BMCB_SETTINGS', array(
+                wp_localize_script('buildy-js', 'BMCB_SETTINGS', array(
                 'breakpoints' => json_encode(get_field('BMCB_breakpoints', 'option')),
                 'menu' => json_encode([ "breakpoint" => get_field('menu_breakpoint_size', 'option'), "open_on_click" => get_field('open_menu_items_on_click', 'option'), 'clone_menu_items' => get_field('clone_menu_items', 'option'), 'cloned_text_prefix' => get_field('menu_cloned_text_prefix', 'option'), 'move_to_nav' => get_field('move_to_nav', 'option')]),
               ));
